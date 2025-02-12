@@ -1,2 +1,3 @@
-# zayyyid-go
-golang boilerplate v1
+# golang-template
+
+golang template version 1

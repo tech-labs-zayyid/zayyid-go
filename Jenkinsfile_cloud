@@ -1,0 +1,104 @@
+pipeline{
+    environment {
+        servicename         = 'middleware-cms-api'
+        url                 = 'https://harbor-img.nabatisnack.co.id'
+        urlnonprotocol      = 'harbor-img.nabatisnack.co.id'
+        credentialId        = 'harbor-img'
+        projectdocker       = 'middleware'
+        envpath             = '/home/epcadmin/.deploy/.config/middleware-cms-api/'
+        storagepath         = '/home/epcadmin/.deploy/storage/middleware-cms/'
+        dockerapppath       = '/app/'
+        dockernetwork       = 'epc'
+        sshid               = 'cicd'
+        sshidNewServer      = 'cicd_120'
+        envpathNewServer    = '/root/deploy/.config/middleware-api/'
+        storagepathNewServer= '/root/deploy/storage/middleware/'
+    }
+    agent any
+
+    stages {
+        stage('Set Environment') {
+            steps {
+                echo 'Setup environment'
+                script {
+                    switch (env.BRANCH_NAME) {
+                        case 'develop':
+                            env.flavor        = 'development'
+                            env.serviceflavor = 'dev'
+                            env.servertarget  = env.EPC_DEV_SERVER
+                            env.apptag        = "latest"
+                            break
+                        case 'qa':
+                            env.flavor           = 'qa'
+                            env.serviceflavor    = 'qa'
+                            env.servertarget     = env.WMS_QA_SERVER
+                            env.lokiservertarget = env.EPC_DEV_SERVER
+                            env.apptag           = 'latest'
+                            env.exposeport       = '9000'
+                            break
+                        case 'master':
+                            env.flavor           = 'production'
+                            env.serviceflavor    = 'prod'
+                            env.servertarget     = env.WMS_PRD_SERVER
+                            env.lokiservertarget = env.EPC_DEV_SERVER
+                            env.apptag           = 'latest'
+                            env.exposeport       = '9001'
+                            break
+                        }
+                }
+            }
+        }
+
+        stage('Build Image') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'qa'
+                }
+            }
+            steps {
+                echo 'Build Image '+env.flavor
+                sh 'docker build . -t ${servicename}:${serviceflavor}-${apptag} --build-arg version=${BUILD_NUMBER}-$(git rev-parse HEAD)'
+            }
+        }
+
+        stage('Docker Login tag and push') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'qa'
+                }
+            }
+            steps {
+                script {
+                    echo 'Push docker image to docker registry Harbor '+env.flavor
+                    docker.withRegistry(url, credentialId) {
+                        echo 'ini ${flavor} '+flavor
+                        sh 'docker tag ${servicename}:${serviceflavor}-${apptag} ${urlnonprotocol}/${projectdocker}/${servicename}:${serviceflavor}-${apptag}'
+                        sh 'docker push ${urlnonprotocol}/${projectdocker}/${servicename}:${serviceflavor}-${apptag}'
+                    }
+                }
+            }
+        }
+
+		stage('Set Image VM') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'develop' || env.BRANCH_NAME == 'qa'
+                }
+            }
+            steps {
+                sh 'echo ssh connecting...'
+                script {
+                    if (env.BRANCH_NAME == 'develop') {
+                        sshagent (credentials: [sshid]) {
+                            sh 'ssh -t -o StrictHostKeyChecking=no -l cicd ${servertarget} -p 22 "pwd; sudo docker rm ${servicename}-${serviceflavor} -f;sudo docker pull ${urlnonprotocol}/${projectdocker}/${servicename}:${serviceflavor}-${apptag}; sudo docker run -d --name ${servicename}-${serviceflavor} --restart unless-stopped --network=${dockernetwork} -v ${storagepath}${flavor}/log:/app/log --log-driver=loki --log-opt loki-url=http://${servertarget}:3100/loki/api/v1/push --log-opt no-file=false --log-opt max-size=50M --log-opt keep-file=true -v ${envpath}${flavor}/.env:${dockerapppath}.env --pid=host ${urlnonprotocol}/${projectdocker}/${servicename}:${serviceflavor}-${apptag}"'
+                        }
+                    } else {
+                            sshagent (credentials: [sshidNewServer]) {
+                            sh 'ssh -t -o StrictHostKeyChecking=no -l cicd ${servertarget} -p 22 "pwd; sudo docker rm ${servicename}-${serviceflavor} -f;sudo docker pull ${urlnonprotocol}/${projectdocker}/${servicename}:${serviceflavor}-${apptag}; sudo docker run -d --name ${servicename}-${serviceflavor} --restart unless-stopped --network=${dockernetwork} -v ${storagepathNewServer}${flavor}/log:/app/log --log-driver=loki --log-opt loki-url=http://${lokiservertarget}:3100/loki/api/v1/push --log-opt no-file=false --log-opt max-size=50M --log-opt keep-file=true -v ${envpathNewServer}${flavor}/.env:${dockerapppath}.env --pid=host -p ${exposeport}:9000 ${urlnonprotocol}/${projectdocker}/${servicename}:${serviceflavor}-${apptag}"'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
