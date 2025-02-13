@@ -1,8 +1,8 @@
 package helper
 
 import (
-	sharedError "middleware-cms-api/domain/shared/helper/error"
-	"middleware-cms-api/domain/user_menu/model"
+	sharedError "zayyid-go/domain/shared/helper/error"
+	"zayyid-go/domain/user_menu/model"
 )
 
 type nilByteRequest struct {

@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	userMenuModel "middleware-cms-api/domain/user_menu/model"
 	"time"
+	userMenuModel "zayyid-go/domain/user_menu/model"
 )
 
 func (r AtomicOperation) CreateDataUser(ctx context.Context, request userMenuModel.User) (err error) {

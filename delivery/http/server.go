@@ -6,11 +6,11 @@ import (
 	"os"
 	"strconv"
 
-	"middleware-cms-api/delivery/container"
-	"middleware-cms-api/delivery/http/middleware"
-	errHelper "middleware-cms-api/domain/shared/helper/error"
-	sharedResponse "middleware-cms-api/domain/shared/response"
-	"middleware-cms-api/infrastructure/logger"
+	"zayyid-go/delivery/container"
+	"zayyid-go/delivery/http/middleware"
+	errHelper "zayyid-go/domain/shared/helper/error"
+	sharedResponse "zayyid-go/domain/shared/response"
+	"zayyid-go/infrastructure/logger"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"

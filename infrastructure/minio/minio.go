@@ -2,8 +2,8 @@ package minio
 
 import (
 	"log"
-	"middleware-cms-api/config"
 	"strconv"
+	"zayyid-go/config"
 
 	minioMain "github.com/minio/minio-go/v7"
 	minioCredentials "github.com/minio/minio-go/v7/pkg/credentials"

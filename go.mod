@@ -1,4 +1,4 @@
-module middleware-cms-api
+module zayyid-go
 
 go 1.22
 
@@ -16,6 +16,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/golang/mock v1.6.0
 	github.com/minio/minio-go/v7 v7.0.70
+	github.com/slack-go/slack v0.16.0
 	github.com/streadway/amqp v1.1.0
 	github.com/thanhpk/randstr v1.0.6
 	golang.org/x/crypto v0.21.0
@@ -24,6 +25,7 @@ require (
 require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
+	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.6 // indirect
 	github.com/minio/md5-simd v1.1.2 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect

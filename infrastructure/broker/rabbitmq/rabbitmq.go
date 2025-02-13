@@ -2,7 +2,7 @@ package rabbitmq
 
 import (
 	"fmt"
-	sharedConstant "middleware-cms-api/infrastructure/shared/constant"
+	sharedConstant "zayyid-go/infrastructure/shared/constant"
 
 	"github.com/streadway/amqp"
 )

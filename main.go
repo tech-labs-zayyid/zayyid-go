@@ -1,7 +1,7 @@
 package main
 
 import (
-	"middleware-cms-api/cmd"
+	"zayyid-go/cmd"
 )
 
 func main() {

@@ -2,7 +2,7 @@ package queue
 
 import (
 	"context"
-	"middleware-cms-api/infrastructure/broker/rabbitmq"
+	"zayyid-go/infrastructure/broker/rabbitmq"
 )
 
 type QueueService interface {

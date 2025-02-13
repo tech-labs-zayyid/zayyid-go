@@ -3,9 +3,9 @@ package error
 import (
 	"errors"
 	"fmt"
-	"middleware-cms-api/infrastructure/logger"
-	sharedConstant "middleware-cms-api/infrastructure/shared/constant"
 	"strings"
+	"zayyid-go/infrastructure/logger"
+	sharedConstant "zayyid-go/infrastructure/shared/constant"
 )
 
 func New(tipe string, msg string, err error) error {

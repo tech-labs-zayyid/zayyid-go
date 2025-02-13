@@ -3,15 +3,16 @@ package container
 import (
 	"log"
 
-	"middleware-cms-api/config"
-	"middleware-cms-api/delivery/cron"
-	atomicRepo "middleware-cms-api/domain/shared/repository"
-	UserMenu "middleware-cms-api/domain/user_menu/feature"
-	UserRepo "middleware-cms-api/domain/user_menu/repository"
-	"middleware-cms-api/infrastructure/database"
-	"middleware-cms-api/infrastructure/logger"
-	"middleware-cms-api/infrastructure/minio"
-	"middleware-cms-api/infrastructure/service/queue"
+	"zayyid-go/config"
+	"zayyid-go/delivery/cron"
+	atomicRepo "zayyid-go/domain/shared/repository"
+	UserMenu "zayyid-go/domain/user_menu/feature"
+	UserRepo "zayyid-go/domain/user_menu/repository"
+	"zayyid-go/infrastructure/database"
+	"zayyid-go/infrastructure/logger"
+	"zayyid-go/infrastructure/minio"
+	"zayyid-go/infrastructure/service/queue"
+	"zayyid-go/infrastructure/service/slack"
 )
 
 type Container struct {
@@ -19,6 +20,7 @@ type Container struct {
 	QueueServices     queue.QueueService
 	EnvironmentConfig config.EnvironmentConfig
 	UserMenuFeature   *UserMenu.UserMenuFeature
+	Slack             *slack.ConfigSlack
 }
 
 func SetupContainer() Container {
@@ -41,6 +43,8 @@ func SetupContainer() Container {
 		log.Panic(err)
 	}
 
+	notifBug := slack.InitConnectionSlack(config.Slack)
+
 	// rmq := rabbitmq.NewConnection(config.RabbitMq)
 	// // Connect RabbitMQ
 	// err = rmq.Connect()
@@ -54,6 +58,7 @@ func SetupContainer() Container {
 			config,
 			UserRepo.NewUserMenuRepository(db),
 			atomicRepo.NewUOWRepository(db),
+			notifBug,
 		),
 	}
 }

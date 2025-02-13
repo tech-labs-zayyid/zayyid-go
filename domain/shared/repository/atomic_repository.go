@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"middleware-cms-api/infrastructure/database"
+	"zayyid-go/infrastructure/database"
 )
 
 type AtomicOperation struct {
