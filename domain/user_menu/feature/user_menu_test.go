@@ -3,11 +3,11 @@ package feature
 import (
 	"context"
 	"encoding/json"
-	sharedModel "middleware-cms-api/domain/shared/model"
-	"middleware-cms-api/domain/user_menu/helper"
-	"middleware-cms-api/domain/user_menu/model"
-	mockRepo "middleware-cms-api/domain/user_menu/repository/mocks"
 	"testing"
+	sharedModel "zayyid-go/domain/shared/model"
+	"zayyid-go/domain/user_menu/helper"
+	"zayyid-go/domain/user_menu/model"
+	mockRepo "zayyid-go/domain/user_menu/repository/mocks"
 
 	"github.com/golang/mock/gomock"
 	"github.com/jmoiron/sqlx"

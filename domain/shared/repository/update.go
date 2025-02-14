@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	userMenuModel "middleware-cms-api/domain/user_menu/model"
 	"strings"
+	userMenuModel "zayyid-go/domain/user_menu/model"
 )
 
 func (r AtomicOperation) UpdateDataUser(ctx context.Context, request userMenuModel.User) (err error) {

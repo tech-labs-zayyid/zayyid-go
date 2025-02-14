@@ -3,7 +3,7 @@ package http
 import (
 	"fmt"
 
-	"middleware-cms-api/infrastructure/helper"
+	"zayyid-go/infrastructure/helper"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -29,15 +29,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 
 	api := app.Group("/api")
 	{
-		api.Get("/user-list", handler.userMenuHandler.GetListHandler)
-		api.Get("/user/:id", handler.userMenuHandler.GetDataByIdHandler)
-		api.Post("/user", handler.userMenuHandler.CreateDataHandler)
-		api.Put("/user", handler.userMenuHandler.UpdateDataHandler)
-		api.Delete("/user", handler.userMenuHandler.DeleteDataHandler)
-		api.Patch("/user-activate", handler.userMenuHandler.ActivatedHandler)
-
-		api.Get("/menu-list", handler.userMenuHandler.GetListMenuHandler)
-		api.Get("/app-type", handler.userMenuHandler.GetAppTypeHandler)
+		api.Get("/ping", handler.userMenuHandler.Ping)
 	}
 
 	// app.All("/:base_path/*", middleware.SignatureMiddleware(), handler.applicationMenuHandler.Handle)

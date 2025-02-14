@@ -1,10 +1,10 @@
 package http
 
 import (
-	"middleware-cms-api/delivery/container"
-	UserMenuHandler "middleware-cms-api/domain/user_menu/handler"
 	"os"
 	"strconv"
+	"zayyid-go/delivery/container"
+	UserMenuHandler "zayyid-go/domain/user_menu/handler"
 )
 
 type Handler struct {

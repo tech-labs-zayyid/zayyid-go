@@ -1,8 +1,8 @@
 package logger
 
 import (
-	"middleware-cms-api/infrastructure/logger/logrus"
-	"middleware-cms-api/infrastructure/logger/zap"
+	"zayyid-go/infrastructure/logger/logrus"
+	"zayyid-go/infrastructure/logger/zap"
 )
 
 const (

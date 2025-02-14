@@ -6,7 +6,7 @@ import (
 	"math/rand"
 	"time"
 
-	errHelper "middleware-cms-api/domain/shared/helper/error"
+	errHelper "zayyid-go/domain/shared/helper/error"
 
 	"github.com/thanhpk/randstr"
 	"golang.org/x/crypto/bcrypt"

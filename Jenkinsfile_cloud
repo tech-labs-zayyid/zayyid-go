@@ -5,7 +5,7 @@ pipeline{
         urlnonprotocol      = 'harbor-img.nabatisnack.co.id'
         credentialId        = 'harbor-img'
         projectdocker       = 'middleware'
-        envpath             = '/home/epcadmin/.deploy/.config/middleware-cms-api/'
+        envpath             = '/home/epcadmin/.deploy/.config/zayyid-go/'
         storagepath         = '/home/epcadmin/.deploy/storage/middleware-cms/'
         dockerapppath       = '/app/'
         dockernetwork       = 'epc'

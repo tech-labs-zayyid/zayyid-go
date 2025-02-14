@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"middleware-cms-api/infrastructure/logger"
-	sharedConstant "middleware-cms-api/infrastructure/shared/constant"
-	logError "middleware-cms-api/infrastructure/shared/error"
 	"time"
+	"zayyid-go/infrastructure/logger"
+	sharedConstant "zayyid-go/infrastructure/shared/constant"
+	logError "zayyid-go/infrastructure/shared/error"
 
 	"github.com/streadway/amqp"
 )

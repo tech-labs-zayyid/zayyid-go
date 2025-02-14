@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"middleware-cms-api/delivery/container"
+	"zayyid-go/delivery/container"
 )
 
 func StartQueueServices(cont container.Container) {

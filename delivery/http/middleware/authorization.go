@@ -3,7 +3,7 @@ package middleware
 import (
 	"fmt"
 
-	sharedConstant "middleware-cms-api/domain/shared/helper/constant"
+	sharedConstant "zayyid-go/domain/shared/helper/constant"
 
 	"github.com/golang-jwt/jwt/v4"
 )

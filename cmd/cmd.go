@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"middleware-cms-api/delivery/container"
-	"middleware-cms-api/delivery/http"
+	"zayyid-go/delivery/container"
+	"zayyid-go/delivery/http"
 )
 
 func Execute() {

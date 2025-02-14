@@ -1,8 +1,8 @@
 package model
 
 import (
-	sharedModel "middleware-cms-api/domain/shared/model"
 	"time"
+	sharedModel "zayyid-go/domain/shared/model"
 )
 
 type UserMenuResponse struct {

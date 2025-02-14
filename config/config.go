@@ -5,10 +5,10 @@ import (
 	"os"
 	"strconv"
 
-	"middleware-cms-api/infrastructure/broker/rabbitmq"
-	"middleware-cms-api/infrastructure/database"
-
 	"github.com/joho/godotenv"
+	"zayyid-go/infrastructure/broker/rabbitmq"
+	"zayyid-go/infrastructure/database"
+	"zayyid-go/infrastructure/service/slack"
 )
 
 type EnvironmentConfig struct {
@@ -25,6 +25,7 @@ type EnvironmentConfig struct {
 	StorageMinioPMAGateway string
 
 	RabbitMq rabbitmq.RabbitmqConfig
+	Slack    slack.ConfigSlack
 }
 
 type App struct {
@@ -83,6 +84,10 @@ func LoadENVConfig() (config EnvironmentConfig, err error) {
 			Port:         rmqPort,
 			ProducerName: os.Getenv("RABBITMQ_PRODUCER_NAME"),
 			ConsumerName: os.Getenv("RABBITMQ_CONSUMER_NAME"),
+		},
+		Slack: slack.ConfigSlack{
+			ApiToken:  os.Getenv("API_TOKEN"),
+			ChannelId: os.Getenv("CHANNEL_ID"),
 		},
 	}
 
