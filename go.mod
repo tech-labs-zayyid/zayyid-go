@@ -13,7 +13,7 @@ require (
 
 require (
 	github.com/go-co-op/gocron v1.37.0
-	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/golang-jwt/jwt/v4 v4.5.1
 	github.com/golang/mock v1.6.0
 	github.com/minio/minio-go/v7 v7.0.70
 	github.com/slack-go/slack v0.16.0
