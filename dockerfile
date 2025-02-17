@@ -1,20 +1,30 @@
-FROM golang:1.22-alpine
+# Gunakan image Golang sebagai base image
+FROM golang:1.19-alpine as builder
 
+# Set working directory
 WORKDIR /app
 
-COPY go.mod ./
-COPY go.sum ./
-
-RUN go mod download
-
-COPY . ./
-COPY .env.example .env
-
+# Copy file Go Modules dan download dependencies
+COPY go.mod go.sum ./
 RUN go mod tidy
 
-RUN go build -o ./api -v main.go
-RUN chmod +x ./api
+# Copy kode aplikasi
+COPY . .
 
-EXPOSE 9005
+# Build aplikasi
+RUN go build -o myapp .
 
-CMD [ "./api" ]
+# Stage kedua untuk mengurangi ukuran image
+FROM alpine:latest
+
+# Set working directory
+WORKDIR /root/
+
+# Copy aplikasi yang sudah dibuild dari stage pertama
+COPY --from=builder /app/myapp .
+
+# Expose port aplikasi berjalan
+EXPOSE 8080
+
+# Jalankan aplikasi
+CMD ["./myapp"]
