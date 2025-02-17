@@ -13,3 +13,10 @@ lint:
 	staticcheck ./...
 	gocritic check ./... 
 	golangci-lint run
+create-migration $$(enter):
+	@read -p "Migration name:" migration_name; \
+	dbmate -d "./migrations" new $$migration_name
+migration-up:
+	dbmate -d "./migrations" -e "DATABASE_URL" up
+npx-migration-up:
+	npx dbmate -d "./migrations" -e "DATABASE_URL" up
