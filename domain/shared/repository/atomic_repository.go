@@ -46,7 +46,7 @@ func (u uowRepository) ExecTx(ctx context.Context, fn func(*AtomicOperation) err
 		Isolation: sql.LevelRepeatableRead,
 	}
 
-	tx, err := u.db.BeginTxx(ctx, &sqlOpt)
+	tx, err := u.db.BeginTx(ctx, &sqlOpt)
 	if err != nil {
 		return err
 	}

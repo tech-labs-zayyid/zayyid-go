@@ -1,15 +1,14 @@
 package repository
 
 import (
+	"database/sql"
 	"zayyid-go/infrastructure/database"
-
-	"github.com/jmoiron/sqlx"
 )
 
 type UserMenuRepository interface {
-	OpenTransaction() (tx *sqlx.Tx)
-	RollbackTransaction(tx *sqlx.Tx) (rollBack error)
-	CommitTransaction(tx *sqlx.Tx) (commit error)
+	OpenTransaction() (tx *sql.Tx)
+	RollbackTransaction(tx *sql.Tx) (rollBack error)
+	CommitTransaction(tx *sql.Tx) (commit error)
 }
 
 type userMenuRepository struct {
