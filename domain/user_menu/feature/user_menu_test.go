@@ -2,6 +2,7 @@ package feature
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"testing"
 	sharedModel "zayyid-go/domain/shared/model"
@@ -10,7 +11,6 @@ import (
 	mockRepo "zayyid-go/domain/user_menu/repository/mocks"
 
 	"github.com/golang/mock/gomock"
-	"github.com/jmoiron/sqlx"
 )
 
 func Test_GetList(t *testing.T) {
@@ -204,7 +204,7 @@ func Test_UpsertDataManual(t *testing.T) {
 	mockUserMenu := mockRepo.NewMockUserMenuRepository(mockCtrl)
 	id := "pamungkas@mail.com"
 	ctx := context.Background()
-	var tx *sqlx.Tx
+	var tx *sql.Tx
 
 	expectedUser := model.User{
 		Id:               id,
@@ -336,7 +336,7 @@ func Test_DeleteData(t *testing.T) {
 	mockUserMenu := mockRepo.NewMockUserMenuRepository(mockCtrl)
 	id := "pamungkas@mail.com"
 	ctx := context.Background()
-	var tx *sqlx.Tx
+	var tx *sql.Tx
 
 	mockUserMenu.EXPECT().OpenTransaction().Return(tx)
 	startTransaction := mockUserMenu.OpenTransaction()

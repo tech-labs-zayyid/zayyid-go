@@ -9,8 +9,8 @@ import (
 	reflect "reflect"
 	model "zayyid-go/domain/user_menu/model"
 
+	sql "database/sql"
 	gomock "github.com/golang/mock/gomock"
-	sqlx "github.com/jmoiron/sqlx"
 )
 
 // MockUserMenuRepository is a mock of UserMenuRepository interface.
@@ -37,7 +37,7 @@ func (m *MockUserMenuRepository) EXPECT() *MockUserMenuRepositoryMockRecorder {
 }
 
 // CommitTransaction mocks base method.
-func (m *MockUserMenuRepository) CommitTransaction(tx *sqlx.Tx) error {
+func (m *MockUserMenuRepository) CommitTransaction(tx *sql.Tx) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CommitTransaction", tx)
 	ret0, _ := ret[0].(error)
@@ -51,7 +51,7 @@ func (mr *MockUserMenuRepositoryMockRecorder) CommitTransaction(tx interface{}) 
 }
 
 // CreateData mocks base method.
-func (m *MockUserMenuRepository) CreateData(ctx context.Context, request model.User, tx *sqlx.Tx) error {
+func (m *MockUserMenuRepository) CreateData(ctx context.Context, request model.User, tx *sql.Tx) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateData", ctx, request, tx)
 	ret0, _ := ret[0].(error)
@@ -65,7 +65,7 @@ func (mr *MockUserMenuRepositoryMockRecorder) CreateData(ctx, request, tx interf
 }
 
 // CreateDataUserAuth mocks base method.
-func (m *MockUserMenuRepository) CreateDataUserAuth(ctx context.Context, request model.UserAuth, tx *sqlx.Tx) error {
+func (m *MockUserMenuRepository) CreateDataUserAuth(ctx context.Context, request model.UserAuth, tx *sql.Tx) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDataUserAuth", ctx, request, tx)
 	ret0, _ := ret[0].(error)
@@ -79,7 +79,7 @@ func (mr *MockUserMenuRepositoryMockRecorder) CreateDataUserAuth(ctx, request, t
 }
 
 // DeleteData mocks base method.
-func (m *MockUserMenuRepository) DeleteData(ctx context.Context, id string, tx *sqlx.Tx) error {
+func (m *MockUserMenuRepository) DeleteData(ctx context.Context, id string, tx *sql.Tx) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteData", ctx, id, tx)
 	ret0, _ := ret[0].(error)
@@ -93,7 +93,7 @@ func (mr *MockUserMenuRepositoryMockRecorder) DeleteData(ctx, id, tx interface{}
 }
 
 // DeleteDataUserAuth mocks base method.
-func (m *MockUserMenuRepository) DeleteDataUserAuth(ctx context.Context, userId string, tx *sqlx.Tx) error {
+func (m *MockUserMenuRepository) DeleteDataUserAuth(ctx context.Context, userId string, tx *sql.Tx) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteDataUserAuth", ctx, userId, tx)
 	ret0, _ := ret[0].(error)
@@ -182,10 +182,10 @@ func (mr *MockUserMenuRepositoryMockRecorder) GetListDataMenu() *gomock.Call {
 }
 
 // OpenTransaction mocks base method.
-func (m *MockUserMenuRepository) OpenTransaction() *sqlx.Tx {
+func (m *MockUserMenuRepository) OpenTransaction() *sql.Tx {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OpenTransaction")
-	ret0, _ := ret[0].(*sqlx.Tx)
+	ret0, _ := ret[0].(*sql.Tx)
 	return ret0
 }
 
@@ -196,7 +196,7 @@ func (mr *MockUserMenuRepositoryMockRecorder) OpenTransaction() *gomock.Call {
 }
 
 // RollbackTransaction mocks base method.
-func (m *MockUserMenuRepository) RollbackTransaction(tx *sqlx.Tx) error {
+func (m *MockUserMenuRepository) RollbackTransaction(tx *sql.Tx) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RollbackTransaction", tx)
 	ret0, _ := ret[0].(error)
@@ -210,7 +210,7 @@ func (mr *MockUserMenuRepositoryMockRecorder) RollbackTransaction(tx interface{}
 }
 
 // UpdateData mocks base method.
-func (m *MockUserMenuRepository) UpdateData(ctx context.Context, request model.User, tx *sqlx.Tx) error {
+func (m *MockUserMenuRepository) UpdateData(ctx context.Context, request model.User, tx *sql.Tx) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateData", ctx, request, tx)
 	ret0, _ := ret[0].(error)
