@@ -1,7 +1,14 @@
 package response
 
 import (
+	"encoding/json"
 	"github.com/gofiber/fiber/v2"
+	"log"
+	"net/http"
+	"strings"
+	"zayyid-go/domain/shared/helper/constant"
+	"zayyid-go/domain/shared/model"
+	"zayyid-go/infrastructure/logger"
 )
 
 type Response struct {
@@ -10,6 +17,12 @@ type Response struct {
 	Message string      `json:"message,omitempty"`
 	Url     string      `json:"url"`
 	Data    interface{} `json:"data,omitempty"`
+}
+
+type NewResponse struct {
+	Status  string      `json:"status"`
+	Message string      `json:"message,omitempty"`
+	Data    interface{} `json:"data"`
 }
 
 func NetworkConnectionError(c *fiber.Ctx, message string, url string) error {
@@ -67,4 +80,58 @@ func RequestTimeoutError(c *fiber.Ctx, message string, url string) error {
 		Message: message,
 		Url:     url,
 	})
+}
+
+func ResponseCreatedOK(c *fiber.Ctx, msg, customMessage string, data interface{}) error {
+	body := c.Body()
+	method := c.Method()
+	var jsonBody map[string]interface{}
+	if strings.ToLower(method) != "get" {
+		if err := json.Unmarshal(body, &jsonBody); err != nil {
+			log.Printf("Error unmarshaling body request to JSON: %v", err)
+			jsonBody = map[string]interface{}{"body": string(body)}
+		}
+	}
+
+	logger.LogInfoWithData(data, constant.RESPONSE, msg)
+	response := Response{
+		Status:  constant.SUCCESS,
+		Message: msg,
+		Data:    data,
+	}
+
+	return c.Status(http.StatusCreated).JSON(response)
+}
+
+func ResponseOkWithPagination(c *fiber.Ctx, msg string, data interface{}, pagination interface{}) error {
+	logger.LogInfoWithData(data, constant.RESPONSE, msg)
+	response := model.ResponseWithPagination{
+		Status:     constant.SUCCESS,
+		Message:    msg,
+		Data:       data,
+		Pagination: pagination,
+	}
+
+	return c.Status(http.StatusOK).JSON(response)
+}
+
+func ResponseOK(c *fiber.Ctx, msg string, data interface{}) error {
+	body := c.Body()
+	method := c.Method()
+	var jsonBody map[string]interface{}
+	if strings.ToLower(method) != "get" {
+		if err := json.Unmarshal(body, &jsonBody); err != nil {
+			log.Printf("Error unmarshaling body request to JSON: %v", err)
+			jsonBody = map[string]interface{}{"body": string(body)}
+		}
+	}
+
+	logger.LogInfoWithData(data, constant.RESPONSE, msg)
+	response := NewResponse{
+		Status:  constant.SUCCESS,
+		Message: msg,
+		Data:    data,
+	}
+
+	return c.Status(http.StatusOK).JSON(response)
 }
