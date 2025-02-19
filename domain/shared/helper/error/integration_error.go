@@ -1,6 +1,8 @@
 package error
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type ErrIntegration int
 

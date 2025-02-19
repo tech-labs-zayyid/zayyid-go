@@ -32,5 +32,12 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		api.Get("/ping", handler.userMenuHandler.Ping)
 	}
 
+	master := app.Group("/master")
+	{
+		master.Get("/ping", handler.masterHandler.PingMaster)
+		master.Get("/province", handler.masterHandler.MasterListProvince)
+		master.Get("/city", handler.masterHandler.MasterListCity)
+	}
+
 	// app.All("/:base_path/*", middleware.SignatureMiddleware(), handler.applicationMenuHandler.Handle)
 }
