@@ -51,7 +51,22 @@ func (f MasterFeature) MasterProvince(ctx context.Context, paramSearch sharedMod
 	return
 }
 
-func (f MasterFeature) MasterCity(ctx context.Context) (err error) {
+func (f MasterFeature) MasterCity(ctx context.Context, paramSearch sharedModel.QueryRequest) (resp []response.RespCity, pagination *sharedModel.Pagination, err error) {
+	resp, err = f.repo.GetMasterCity(ctx, paramSearch)
+	if err != nil {
+		return
+	}
 
+	count, err := f.repo.CountMasterCity(ctx, paramSearch)
+	if err != nil {
+		return
+	}
+
+	pagination, err = paginate.CalculatePagination(ctx, paramSearch.Limit, count)
+	if err != nil {
+		return
+	}
+
+	pagination.Page = paramSearch.Page
 	return
 }

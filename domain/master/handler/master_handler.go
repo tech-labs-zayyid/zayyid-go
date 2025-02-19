@@ -66,11 +66,28 @@ func (h masterHandler) MasterListCity(c *fiber.Ctx) (err error) {
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
 
-	err = h.feature.MasterCity(ctx)
-	//err = ERR.New(http.StatusOK, "ada", errors.New("ada"))
+	search := strings.TrimSpace(c.Query(constant.SEARCH))
+	isActive := strings.TrimSpace(c.Query(constant.STATUS))
+	provinceId := strings.TrimSpace(c.Query(constant.PROVINCE_ID))
+	sortBy := strings.TrimSpace(c.Query(constant.SORT_BY))
+	sortOrder := strings.TrimSpace(c.Query(constant.SORT_ORDER))
+	page := sharedPaginate.GetPageOrDefault(c.Query(constant.PAGE), 1)
+	limit := sharedPaginate.GetLimitOrDefault(c.Query(constant.LIMIT), 20)
+
+	queryRequest := sharedModel.QueryRequest{
+		Search:     search,
+		ProvinceId: provinceId,
+		Status:     isActive,
+		Page:       page,
+		Limit:      limit,
+		SortBy:     sortBy,
+		SortOrder:  sortOrder,
+	}
+
+	resp, pagination, err := h.feature.MasterCity(ctx, queryRequest)
 	if err != nil {
 		return ERR.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
-	return response.ResponseOK(c, constant.SUCCESS, "")
+	return response.ResponseOkWithPagination(c, constant.SUCCESS, resp, pagination)
 }

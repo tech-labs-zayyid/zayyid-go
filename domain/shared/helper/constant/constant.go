@@ -36,10 +36,11 @@ const (
 )
 
 const (
-	PAGE       = "page"
-	LIMIT      = "limit"
-	SORT_BY    = "sort_by"
-	SORT_ORDER = "sort_order"
-	SEARCH     = "search"
-	STATUS     = "status"
+	PAGE        = "page"
+	LIMIT       = "limit"
+	SORT_BY     = "sort_by"
+	SORT_ORDER  = "sort_order"
+	SEARCH      = "search"
+	STATUS      = "status"
+	PROVINCE_ID = "province_id"
 )
