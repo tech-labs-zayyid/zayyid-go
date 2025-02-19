@@ -5,6 +5,8 @@ import (
 
 	"zayyid-go/config"
 	"zayyid-go/delivery/cron"
+	Master "zayyid-go/domain/master/feature"
+	MasterRepo "zayyid-go/domain/master/repository"
 	atomicRepo "zayyid-go/domain/shared/repository"
 	UserMenu "zayyid-go/domain/user_menu/feature"
 	UserRepo "zayyid-go/domain/user_menu/repository"
@@ -20,6 +22,7 @@ type Container struct {
 	QueueServices     queue.QueueService
 	EnvironmentConfig config.EnvironmentConfig
 	UserMenuFeature   *UserMenu.UserMenuFeature
+	MasterFeature     *Master.MasterFeature
 	Slack             *slack.ConfigSlack
 }
 
@@ -57,6 +60,12 @@ func SetupContainer() Container {
 		UserMenuFeature: UserMenu.NewUserMenuFeature(
 			config,
 			UserRepo.NewUserMenuRepository(db),
+			atomicRepo.NewUOWRepository(db),
+			notifBug,
+		),
+		MasterFeature: Master.NewMasterFeature(
+			config,
+			MasterRepo.NewMasterRepository(db),
 			atomicRepo.NewUOWRepository(db),
 			notifBug,
 		),

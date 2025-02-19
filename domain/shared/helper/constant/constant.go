@@ -17,3 +17,29 @@ const (
 	ERROR            = "error"
 	ERRJWTVALIDATION = "no Keyfunc was provided."
 )
+
+type ContextKey string
+
+const (
+	FiberContext  ContextKey = "fiberCtx"
+	HeaderContext ContextKey = "headerCtx"
+)
+
+const (
+	RESPONSE = "response"
+	QUERY    = "query"
+	AUTH     = "auth"
+)
+
+const (
+	DefaultTimeout = 5 // detik
+)
+
+const (
+	PAGE       = "page"
+	LIMIT      = "limit"
+	SORT_BY    = "sort_by"
+	SORT_ORDER = "sort_order"
+	SEARCH     = "search"
+	STATUS     = "status"
+)
