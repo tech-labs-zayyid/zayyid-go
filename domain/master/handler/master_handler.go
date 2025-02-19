@@ -6,7 +6,7 @@ import (
 	"zayyid-go/domain/master/feature"
 	"zayyid-go/domain/shared/context"
 	"zayyid-go/domain/shared/helper/constant"
-	ERR "zayyid-go/domain/shared/helper/error"
+	sharedError "zayyid-go/domain/shared/helper/error"
 	sharedPaginate "zayyid-go/domain/shared/helper/pagination"
 	sharedModel "zayyid-go/domain/shared/model"
 	"zayyid-go/domain/shared/response"
@@ -55,7 +55,7 @@ func (h masterHandler) MasterListProvince(c *fiber.Ctx) (err error) {
 
 	resp, pagination, err := h.feature.MasterProvince(ctx, queryRequest)
 	if err != nil {
-		return ERR.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
 	return response.ResponseOkWithPagination(c, constant.SUCCESS, resp, pagination)
@@ -86,7 +86,7 @@ func (h masterHandler) MasterListCity(c *fiber.Ctx) (err error) {
 
 	resp, pagination, err := h.feature.MasterCity(ctx, queryRequest)
 	if err != nil {
-		return ERR.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
 	return response.ResponseOkWithPagination(c, constant.SUCCESS, resp, pagination)
