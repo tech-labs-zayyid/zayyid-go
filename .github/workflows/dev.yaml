@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v2 
+      uses: actions/checkout@v4
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -83,6 +83,9 @@ jobs:
           CHANNEL_ID=${{ secrets.CHANNEL_ID }}
           EOF
 
+          echo "Verifying .env file..."
+          ls -lah .env || { echo ".env file not found!"; exit 1; }
+
           echo "Logging into AWS..."
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
           
@@ -98,11 +101,12 @@ jobs:
           docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:latest
           
           echo "Running new container..."
-          docker run -d --name be-iniaga -p 9003:9003 --restart always --env-file .env ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:latest
+          docker run -d --name be-iniaga -p 9003:9003 --restart always -v $(pwd)/.env:/app/.env --env-file .env ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:latest
 
           echo "Checking running containers..."
           docker ps -a
 
           echo "Cleanup old Docker images..."
           docker system prune -f
+
 
