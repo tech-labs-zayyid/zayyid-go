@@ -62,26 +62,24 @@ jobs:
         key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         script: |
           echo "Creating .env file on EC2..."
-          cat <<EOF > .env
-          ENV=${{ secrets.ENV }}
-          APP_NAME=${{ secrets.APP_NAME }}
-          APP_VERSION=${{ secrets.APP_VERSION }}
-          APP_PORT=${{ secrets.APP_PORT }}
-          ENVIRONMENT=${{ secrets.ENVIRONMENT }}
-          DB_DIALECT=${{ secrets.DB_DIALECT }}
-          DB_PORT=${{ secrets.DB_PORT }}
-          DB_HOST=${{ secrets.DB_HOST }}
-          DB_NAME=${{ secrets.DB_NAME }}
-          DB_USERNAME=${{ secrets.DB_USERNAME }}
-          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          ENABLE_APP_PREFORK=${{ secrets.ENABLE_APP_PREFORK }}
-          LOG_PATH=${{ secrets.LOG_PATH }}
-          LOG_PREFIX=${{ secrets.LOG_PREFIX }}
-          LOG_EXT=${{ secrets.LOG_EXT }}
-          ENABLE_REQUEST_LOG=${{ secrets.ENABLE_REQUEST_LOG }}
-          API_TOKEN=${{ secrets.API_TOKEN }}
-          CHANNEL_ID=${{ secrets.CHANNEL_ID }}
-          EOF
+          echo "ENV=${{ secrets.ENV }}" > .env
+          echo "APP_NAME=${{ secrets.APP_NAME }}" >> .env
+          echo "APP_VERSION=${{ secrets.APP_VERSION }}" >> .env
+          echo "APP_PORT=${{ secrets.APP_PORT }}" >> .env
+          echo "ENVIRONMENT=${{ secrets.ENVIRONMENT }}" >> .env
+          echo "DB_DIALECT=${{ secrets.DB_DIALECT }}" >> .env
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "ENABLE_APP_PREFORK=${{ secrets.ENABLE_APP_PREFORK }}" >> .env
+          echo "LOG_PATH=${{ secrets.LOG_PATH }}" >> .env
+          echo "LOG_PREFIX=${{ secrets.LOG_PREFIX }}" >> .env
+          echo "LOG_EXT=${{ secrets.LOG_EXT }}" >> .env
+          echo "ENABLE_REQUEST_LOG=${{ secrets.ENABLE_REQUEST_LOG }}" >> .env
+          echo "API_TOKEN=${{ secrets.API_TOKEN }}" >> .env
+          echo "CHANNEL_ID=${{ secrets.CHANNEL_ID }}" >> .env
 
           echo "Verifying .env file..."
           ls -lah .env || { echo ".env file not found!"; exit 1; }
