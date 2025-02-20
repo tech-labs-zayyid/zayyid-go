@@ -12,7 +12,6 @@ import (
 	UserRepo "zayyid-go/domain/user_menu/repository"
 	"zayyid-go/infrastructure/database"
 	"zayyid-go/infrastructure/logger"
-	"zayyid-go/infrastructure/minio"
 	"zayyid-go/infrastructure/service/queue"
 	"zayyid-go/infrastructure/service/slack"
 )
@@ -41,19 +40,9 @@ func SetupContainer() Container {
 
 	cron.Run()
 
-	_, err = minio.MinioConnection(config)
-	if err != nil {
-		log.Panic(err)
-	}
-
 	notifBug := slack.InitConnectionSlack(config.Slack)
 
-	// rmq := rabbitmq.NewConnection(config.RabbitMq)
-	// // Connect RabbitMQ
-	// err = rmq.Connect()
-	// if err != nil {
-	// 	log.Panic(err)
-	// }
+	
 
 	return Container{
 		EnvironmentConfig: config,

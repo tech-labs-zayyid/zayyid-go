@@ -5,26 +5,16 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/joho/godotenv"
-	"zayyid-go/infrastructure/broker/rabbitmq"
 	"zayyid-go/infrastructure/database"
 	"zayyid-go/infrastructure/service/slack"
+
+	"github.com/joho/godotenv"
 )
 
 type EnvironmentConfig struct {
 	Env      string
 	App      App
 	Database database.DatabaseConfig
-
-	StorageMinioServer     string
-	StorageMinioAccessKey  string
-	StorageMinioSecreatKey string
-	StorageMinioBucket     string
-	StorageMinioUseSSL     string
-	StorageMinioPMAServer  string
-	StorageMinioPMAGateway string
-
-	RabbitMq rabbitmq.RabbitmqConfig
 	Slack    slack.ConfigSlack
 }
 
@@ -47,15 +37,6 @@ func LoadENVConfig() (config EnvironmentConfig, err error) {
 		return
 	}
 
-	rmqPort := 0
-	if os.Getenv("RABBITMQ_PORT") != "" {
-		rmqPort, err = strconv.Atoi(os.Getenv("RABBITMQ_PORT"))
-		if err != nil {
-			err = fmt.Errorf("error convert string to int", err)
-			return
-		}
-	}
-
 	config = EnvironmentConfig{
 		Env: os.Getenv("ENV"),
 		App: App{
@@ -69,21 +50,6 @@ func LoadENVConfig() (config EnvironmentConfig, err error) {
 			Name:     os.Getenv("DB_NAME"),
 			Username: os.Getenv("DB_USERNAME"),
 			Password: os.Getenv("DB_PASSWORD"),
-		},
-		StorageMinioServer:     os.Getenv("STORAGE_MINIO_SERVER"),
-		StorageMinioAccessKey:  os.Getenv("STORAGE_MINIO_ACCESS_KEY"),
-		StorageMinioSecreatKey: os.Getenv("STORAGE_MINIO_SECRET_KEY"),
-		StorageMinioBucket:     os.Getenv("STORAGE_MINIO_BUCKET"),
-		StorageMinioUseSSL:     os.Getenv("STORAGE_MINIO_USE_SSL"),
-		StorageMinioPMAServer:  os.Getenv("STORAGE_MINIO_PMA_SERVER"),
-		StorageMinioPMAGateway: os.Getenv("STORAGE_MINIO_PMA_GATEWAY"),
-		RabbitMq: rabbitmq.RabbitmqConfig{
-			Host:         os.Getenv("RABBITMQ_HOST"),
-			Username:     os.Getenv("RABBITMQ_USERNAME"),
-			Password:     os.Getenv("RABBITMQ_PASSWORD"),
-			Port:         rmqPort,
-			ProducerName: os.Getenv("RABBITMQ_PRODUCER_NAME"),
-			ConsumerName: os.Getenv("RABBITMQ_CONSUMER_NAME"),
 		},
 		Slack: slack.ConfigSlack{
 			ApiToken:  os.Getenv("API_TOKEN"),
