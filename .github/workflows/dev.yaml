@@ -98,7 +98,7 @@ jobs:
           docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:latest
           
           echo "Running new container..."
-          docker run -d --name be-iniaga -p 80:9003 --env-file .env ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:latest
+          docker run -d --name be-iniaga -p 9003:9003 --env-file .env ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:latest
 
           echo "Cleanup old Docker images..."
           docker system prune -af
