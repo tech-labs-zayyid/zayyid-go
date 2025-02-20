@@ -10,7 +10,7 @@ import (
 func Run() {
 	s := gocron.NewScheduler(time.Local)
 
-	s.Every(1).Day().Do(func() {
+	s.Every(1).Second().Do(func() {
 		fmt.Println("cron is start...")
 	})
 

@@ -54,7 +54,7 @@ func ResponseErrorWithContext(ctx context.Context, err error, slackNotif slack.S
 
 	err = slackNotif.Send(fmt.Sprintf("ERROR CODE: %d, ERROR MESSAGE: %s, BODY REQUEST: %s", statusCode, originalError, jsonBody))
 	if err != nil {
-		originalError = originalError + "" + err.Error()
+		originalError = originalError + ", ERROR SEND NOTIFICATION SLACK: " + err.Error()
 	}
 
 	logger.LogError(constant.RESPONSE, customError, originalError)
