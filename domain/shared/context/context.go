@@ -19,14 +19,14 @@ func SetValueToContext(ctx context.Context, c *fiber.Ctx) context.Context {
 		UserId = "0"
 	}
 
-	salesId, ok := c.Locals("x-key-country-id").(string)
+	salesId, ok := c.Locals("x-key-sales-id").(string)
 	if !ok {
-		salesId = ""
+		salesId = "0"
 	}
 
-	agentId, ok := c.Locals("x-key-legal-entity").(string)
+	agentId, ok := c.Locals("x-key-agent_id").(string)
 	if !ok {
-		agentId = ""
+		agentId = "0"
 	}
 
 	ctx = context.WithValue(ctx, constant.HeaderContext, model.ValueContext{
@@ -53,4 +53,9 @@ func SetContext(ctx context.Context, c *fiber.Ctx) context.Context {
 
 func GetValueFiberFromContext(ctx context.Context) *fiber.Ctx {
 	return ctx.Value(constant.FiberContext).(*fiber.Ctx)
+}
+
+func GetValueContext(ctx context.Context) (valueCtx model.ValueContext) {
+	valueCtx = ctx.Value(constant.HeaderContext).(model.ValueContext)
+	return
 }

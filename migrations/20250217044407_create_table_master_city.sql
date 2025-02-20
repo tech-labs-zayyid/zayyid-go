@@ -1,6 +1,6 @@
 -- migrate:up
 CREATE TABLE
-    IF NOT EXISTS sales.master_city (
+    IF NOT EXISTS product_marketing.master_city (
     id VARCHAR(50) NOT NULL,
     province_id VARCHAR(50) NOT NULL,
     name VARCHAR(50) NOT NULL,

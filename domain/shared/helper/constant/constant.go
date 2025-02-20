@@ -32,7 +32,7 @@ const (
 )
 
 const (
-	DefaultTimeout = 5 // detik
+	DefaultTimeout = 10 // detik
 )
 
 const (
@@ -43,4 +43,9 @@ const (
 	SEARCH      = "search"
 	STATUS      = "status"
 	PROVINCE_ID = "province_id"
+)
+
+const (
+	ErrInvalidRequest       = "error invalid request"
+	ErrMaximumUploadGallery = "you have reached the maximum limit for uploading gallery"
 )

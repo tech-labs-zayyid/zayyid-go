@@ -4,9 +4,10 @@ import (
 	"log"
 
 	"zayyid-go/config"
-	"zayyid-go/delivery/cron"
 	Master "zayyid-go/domain/master/feature"
 	MasterRepo "zayyid-go/domain/master/repository"
+	Sales "zayyid-go/domain/sales/feature"
+	SalesRepo "zayyid-go/domain/sales/repository"
 	atomicRepo "zayyid-go/domain/shared/repository"
 	UserMenu "zayyid-go/domain/user_menu/feature"
 	UserRepo "zayyid-go/domain/user_menu/repository"
@@ -23,6 +24,7 @@ type Container struct {
 	EnvironmentConfig config.EnvironmentConfig
 	UserMenuFeature   *UserMenu.UserMenuFeature
 	MasterFeature     *Master.MasterFeature
+	SalesFeature      *Sales.SalesFeature
 	Slack             *slack.ConfigSlack
 }
 
@@ -39,7 +41,7 @@ func SetupContainer() Container {
 		log.Panic(err)
 	}
 
-	cron.Run()
+	//cron.Run()
 
 	_, err = minio.MinioConnection(config)
 	if err != nil {
@@ -67,6 +69,11 @@ func SetupContainer() Container {
 			config,
 			MasterRepo.NewMasterRepository(db),
 			atomicRepo.NewUOWRepository(db),
+			notifBug,
+		),
+		SalesFeature: Sales.NewSalesFeature(
+			config,
+			SalesRepo.NewSalesRepository(db),
 			notifBug,
 		),
 	}

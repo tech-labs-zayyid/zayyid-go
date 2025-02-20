@@ -9,13 +9,15 @@ import (
 )
 
 type MasterRepository interface {
-	OpenTransaction() (tx *sql.Tx)
-	RollbackTransaction(tx *sql.Tx) (rollBack error)
-	CommitTransaction(tx *sql.Tx) (commit error)
 	GetMasterProvince(ctx context.Context, filter sharedModel.QueryRequest) (resp []response.RespProvince, err error)
 	CountMasterProvince(ctx context.Context, filter sharedModel.QueryRequest) (count int, err error)
 	GetMasterCity(ctx context.Context, filter sharedModel.QueryRequest) (resp []response.RespCity, err error)
 	CountMasterCity(ctx context.Context, filter sharedModel.QueryRequest) (count int, err error)
+
+	//transaction schema DB
+	OpenTransaction(ctx context.Context) (tx *sql.Tx)
+	RollbackTransaction(tx *sql.Tx) (rollBack error)
+	CommitTransaction(tx *sql.Tx) (commit error)
 }
 
 type masterRepository struct {

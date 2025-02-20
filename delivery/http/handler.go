@@ -5,12 +5,14 @@ import (
 	"strconv"
 	"zayyid-go/delivery/container"
 	MasterHandler "zayyid-go/domain/master/handler"
+	SalesHandler "zayyid-go/domain/sales/handler"
 	UserMenuHandler "zayyid-go/domain/user_menu/handler"
 )
 
 type Handler struct {
 	userMenuHandler UserMenuHandler.UserHandlerInterface
 	masterHandler   MasterHandler.MasterHandlerInterface
+	salesHandler    SalesHandler.SalesHandlerInterface
 }
 
 func SetupHandler(container container.Container) Handler {
@@ -25,6 +27,9 @@ func SetupHandler(container container.Container) Handler {
 		),
 		masterHandler: MasterHandler.NewMasterHandler(
 			container.MasterFeature, isRequestLogged,
+		),
+		salesHandler: SalesHandler.NewSalesHandler(
+			container.SalesFeature, isRequestLogged,
 		),
 	}
 }

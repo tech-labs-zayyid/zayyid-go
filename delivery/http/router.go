@@ -39,5 +39,16 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		master.Get("/city", handler.masterHandler.MasterListCity)
 	}
 
+	sales := app.Group("/sales")
+	{
+		sales.Post("/gallery", handler.salesHandler.AddGallerySales)
+		sales.Get("/gallery", handler.salesHandler.GetGallerySales)
+	}
+
+	_ = app.Group("/agent")
+	{
+		//list API for Agent
+	}
+
 	// app.All("/:base_path/*", middleware.SignatureMiddleware(), handler.applicationMenuHandler.Handle)
 }

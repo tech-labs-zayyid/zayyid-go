@@ -1,9 +1,9 @@
 -- migrate:up
 CREATE TABLE
-    IF NOT EXISTS product_marketing.master_province (
+    IF NOT EXISTS product_marketing.sales_gallery (
     id VARCHAR(50) NOT NULL,
-    name VARCHAR(50) NOT NULL,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    sales_id VARCHAR(50) NOT NULL,
+    image_url text NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (id)
