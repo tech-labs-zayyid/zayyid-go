@@ -99,7 +99,7 @@ jobs:
           docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:latest
           
           echo "Running new container..."
-          docker run -d --name be-iniaga -p 9003:9003 --restart always -v $(pwd)/.env:/app/.env --env-file .env ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:latest
+          docker run -d --name be-iniaga -p 9003:9003 -v $(pwd)/.env:/app/.env --env-file .env ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:latest
 
           echo "Checking running containers..."
           docker ps -a
