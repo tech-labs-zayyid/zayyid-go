@@ -74,7 +74,7 @@ func HandleError(err error) error {
 	case err == context.DeadlineExceeded:
 		return New(http.StatusInternalServerError, "timeout", err)
 	case err == sql.ErrNoRows:
-		return New(http.StatusBadRequest, "data not found", err)
+		return New(http.StatusNotFound, "data not found", err)
 	default:
 		return New(http.StatusInternalServerError, "something when wrong", err)
 	}
