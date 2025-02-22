@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"fmt"
 
-	"database/sql"
-	_ "github.com/lib/pq"
 	"log"
+
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 type DatabaseConfig struct {
@@ -19,7 +20,7 @@ type DatabaseConfig struct {
 }
 
 type Database struct {
-	*sql.DB
+	*sqlx.DB
 }
 
 func LoadDatabase(config DatabaseConfig) (database *Database, err error) {
@@ -32,7 +33,7 @@ func LoadDatabase(config DatabaseConfig) (database *Database, err error) {
 	buffer.WriteString("?sslmode=require")
 	connectionString := buffer.String()
 
-	db, err := sql.Open(config.Dialect, connectionString)
+	db, err := sqlx.Open(config.Dialect, connectionString)
 	if err != nil {
 		err = fmt.Errorf("failed to connect to database. %s", err.Error())
 		return
@@ -43,7 +44,7 @@ func LoadDatabase(config DatabaseConfig) (database *Database, err error) {
 	if err != nil {
 		log.Print(err.Error())
 		panic(err.Error())
-		return
+		// return
 	}
 
 	database = &Database{
