@@ -35,7 +35,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 	public := app.Group("public")
 	{
 		public.Get("/gallery/:subdomain", handler.salesHandler.GetGallerySalesPublic)
-		public.Get("/testimony/list", handler.testimoniHandler.GetListTestimoniHandler)
+		public.Get("/testimony/list", handler.salesHandler.GetListTestimoniHandler)
 	}
 
 	master := app.Group("/master")
@@ -58,10 +58,10 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 
 	testimoni := app.Group("/testimony")
 	{
-		testimoni.Get("/", handler.testimoniHandler.GetTestimoniHandler)
-		testimoni.Get("/list", handler.testimoniHandler.GetListTestimoniHandler)
-		testimoni.Post("/", handler.testimoniHandler.AddTestimoniHandler)
-		testimoni.Put("/", handler.testimoniHandler.UpdateTestimoniHandler)
+		testimoni.Get("/", handler.salesHandler.GetTestimoniHandler)
+		testimoni.Get("/list", handler.salesHandler.GetListTestimoniHandler)
+		testimoni.Post("/", handler.salesHandler.AddTestimoniHandler)
+		testimoni.Put("/", handler.salesHandler.UpdateTestimoniHandler)
 	}
 
 	// app.All("/:base_path/*", middleware.SignatureMiddleware(), handler.applicationMenuHandler.Handle)
