@@ -22,7 +22,7 @@ func (t salesRepository) AddTestimoniRepository(ctx context.Context, request mod
 	}
 
 	query := `
-		INSERT INTO testimoni (id, user_name, position, deskripsi, photo_url, is_active, created_at)
+		INSERT INTO product_marketing.sales_testimony (id, user_name, position, deskripsi, photo_url, is_active, created_at)
 		VALUES
 			($1,$2,$3,$4,$5,$6,NOW())`
 
@@ -67,7 +67,7 @@ func (t salesRepository) UpdateTestimoniRepository(ctx context.Context, request 
 	updateQuery := strings.Join(buildQuery, ",")
 	args = append(args, request.Id)
 	args = append(args, request.UserName)
-	query := fmt.Sprintf(`UPDATE testimoni SET %s  WHERE id = ? AND user_name = ? `, updateQuery)
+	query := fmt.Sprintf(`UPDATE product_marketing.sales_testimony SET %s  WHERE id = ? AND user_name = ? `, updateQuery)
 
 	stmt, err := t.database.Preparex(query)
 	if err != nil {
@@ -98,7 +98,7 @@ func (t salesRepository) GetTestimoniRepository(ctx context.Context, request mod
 			created_at,
 			modified_at
 		FROM
-			testimoni
+			product_marketing.sales_testimony
 		WHERE
 			id = $1`
 	logger.LogInfo(constant.QUERY, query)
@@ -158,7 +158,7 @@ func (t salesRepository) GetListTestimoniRepository(ctx context.Context, request
 			created_at,
 			modified_at
 		FROM
-			testimoni
+			product_marketing.sales_testimony
 		WHERE
 			1 = 1
 			%s %s`, queryCond, queryLimit)

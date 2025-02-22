@@ -1,5 +1,5 @@
 -- migrate:up
-CREATE TABLE IF NOT EXISTS "testimoni" (
+CREATE TABLE IF NOT EXISTS "product_marketing.sales_testimony" (
 	"id" VARCHAR(50) NOT NULL,
 	"user_name" VARCHAR(150) NOT NULL DEFAULT '',
 	"position" VARCHAR(250) NOT NULL DEFAULT '',
@@ -11,7 +11,4 @@ CREATE TABLE IF NOT EXISTS "testimoni" (
 	PRIMARY KEY ("id")
 );
 
-CREATE INDEX index_testimoni ON testimoni (user_name);
-
 -- migrate:down
-DROP TABLE IF EXISTS testimoni CASCADE;
