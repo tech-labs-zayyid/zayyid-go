@@ -55,5 +55,13 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		//list API for Agent
 	}
 
+	testimoni := app.Group("/testimoni")
+	{
+		testimoni.Get("/", handler.testimoniHandler.GetTestimoniHandler)
+		testimoni.Get("/list", handler.testimoniHandler.GetListTestimoniHandler)
+		testimoni.Post("/", handler.testimoniHandler.AddTestimoniHandler)
+		testimoni.Put("/", handler.testimoniHandler.UpdateTestimoniHandler)
+	}
+
 	// app.All("/:base_path/*", middleware.SignatureMiddleware(), handler.applicationMenuHandler.Handle)
 }

@@ -12,9 +12,11 @@ type Testimoni struct {
 
 	IsUpdate   int    `json:"is_update"`
 	StatusCode int    `json:"status_code"`
-	Limit      int64  `json:"limit"`
-	Page       int64  `json:"page"`
+	Limit      int    `json:"limit"`
+	Page       int    `json:"page"`
 	Search     string `json:"search"`
+	SortBy     string `json:"sort_by"`
+	SortOrder  string `json:"sort_order"`
 }
 
 type UserAuth struct {

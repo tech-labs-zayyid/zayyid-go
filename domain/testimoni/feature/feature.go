@@ -6,27 +6,24 @@ import (
 	"zayyid-go/infrastructure/service/slack"
 
 	"zayyid-go/config"
-	atomicRepo "zayyid-go/domain/shared/repository"
 	"zayyid-go/domain/testimoni/repository"
 )
 
 type TestimoniFeature struct {
-	config     config.EnvironmentConfig
-	repo       repository.TestimoniRepository
-	atomicRepo atomicRepo.UOWrepository
-	slackConf  slack.SlackNotificationBug
+	config    config.EnvironmentConfig
+	repo      repository.TestimoniRepository
+	SlackConf slack.SlackNotificationBug
 }
 
-func NewTestimoniFeature(config config.EnvironmentConfig, repo repository.TestimoniRepository, atomicRepo atomicRepo.UOWrepository, slackConfig slack.SlackNotificationBug) *TestimoniFeature {
+func NewTestimoniFeature(config config.EnvironmentConfig, repo repository.TestimoniRepository, slackConfig slack.SlackNotificationBug) *TestimoniFeature {
 	return &TestimoniFeature{
-		config:     config,
-		repo:       repo,
-		atomicRepo: atomicRepo,
-		slackConf:  slackConfig,
+		config:    config,
+		repo:      repo,
+		SlackConf: slackConfig,
 	}
 }
 
 func (f TestimoniFeature) Ping(ctx context.Context) {
-	err := f.slackConf.Send("Bug from Golang :fire:")
+	err := f.SlackConf.Send("Bug from Golang :fire:")
 	fmt.Println(err)
 }

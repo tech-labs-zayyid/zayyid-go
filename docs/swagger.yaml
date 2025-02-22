@@ -1,0 +1,92 @@
+definitions:
+  model.Testimoni:
+    properties:
+      created_at:
+        type: string
+      deskripsi:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: integer
+      is_update:
+        type: integer
+      limit:
+        type: integer
+      modified_at:
+        type: string
+      page:
+        type: integer
+      photo_url:
+        type: string
+      position:
+        type: string
+      search:
+        type: string
+      sort_by:
+        type: string
+      sort_order:
+        type: string
+      status_code:
+        type: integer
+      user_name:
+        type: string
+    type: object
+  response.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+      status:
+        type: string
+      url:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /shipment/customer:
+    get:
+      description: show list of Customer
+      parameters:
+      - description: id
+        in: query
+        name: id
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get List Customer
+      tags:
+      - Data Testimoni
+  /shipment/visit-store:
+    post:
+      description: Update Data of Testimoni
+      parameters:
+      - description: body payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.Testimoni'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Update Data Testimoni
+      tags:
+      - Data Testimoni
+swagger: "2.0"

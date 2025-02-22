@@ -11,6 +11,7 @@ type TestimoniRepository interface {
 	UpdateTestimoniRepository(ctx context.Context, request model.Testimoni) (err error)
 	GetTestimoniRepository(ctx context.Context, request model.Testimoni) (response model.Testimoni, err error)
 	GetListTestimoniRepository(ctx context.Context, request model.Testimoni) (response []model.Testimoni, err error)
+	CountListTestimoniRepository(ctx context.Context, request model.Testimoni) (response int, err error)
 }
 
 type testimoniRepository struct {
