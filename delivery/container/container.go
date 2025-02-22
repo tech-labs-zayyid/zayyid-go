@@ -44,8 +44,6 @@ func SetupContainer() Container {
 
 	notifBug := slack.InitConnectionSlack(config.Slack)
 
-	
-
 	return Container{
 		EnvironmentConfig: config,
 		UserMenuFeature: UserMenu.NewUserMenuFeature(

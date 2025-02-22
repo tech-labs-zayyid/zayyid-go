@@ -12,9 +12,12 @@ import (
 	sharedResponse "zayyid-go/domain/shared/response"
 	"zayyid-go/infrastructure/logger"
 
+	_ "zayyid-go/docs"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/gofiber/swagger"
 )
 
 func ServeHttp(container container.Container) *fiber.App {
@@ -36,6 +39,7 @@ func ServeHttp(container container.Container) *fiber.App {
 	}
 
 	app.Use(recover.New(config), cors.New(), middleware.Timer())
+	app.Get("/swagger/*", swagger.HandlerDefault)
 	RegisterRoute(app, handler)
 
 	return app
