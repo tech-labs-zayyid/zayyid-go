@@ -128,13 +128,19 @@ func (h testimoniHandler) GetTestimoniHandler(c *fiber.Ctx) error {
 func (h testimoniHandler) GetListTestimoniHandler(c *fiber.Ctx) error {
 	ctx := c.UserContext()
 
-	filter := new(model.Testimoni)
+	param := new(model.Testimoni)
+
+	if err := c.QueryParser(param); err != nil {
+		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+	}
+
+	filter := new(model.TestimoniSearch)
 
 	if err := c.QueryParser(filter); err != nil {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
-	data, pagination, err := h.feature.GetListTestimoniFeature(ctx, *filter)
+	data, pagination, err := h.feature.GetListTestimoniFeature(ctx, *param, *filter)
 	if err != nil {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}

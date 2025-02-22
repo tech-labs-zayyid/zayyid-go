@@ -9,7 +9,9 @@ type Testimoni struct {
 	IsActive   int    `json:"is_active" query:"is_active" db:"is_active"`
 	CreatedAt  string `json:"created_at" query:"created_at" db:"created_at"`
 	ModifiedAt string `json:"modified_at" query:"modified_at" db:"modified_at"`
+}
 
+type TestimoniSearch struct {
 	IsUpdate   int    `json:"is_update"`
 	StatusCode int    `json:"status_code"`
 	Limit      int    `json:"limit"`

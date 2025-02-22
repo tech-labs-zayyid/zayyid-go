@@ -9,14 +9,14 @@ import (
 	"zayyid-go/infrastructure/logger"
 )
 
-func (t testimoniRepository) GetListTestimoniRepository(ctx context.Context, request model.Testimoni) (response []model.Testimoni, err error) {
+func (t testimoniRepository) GetListTestimoniRepository(ctx context.Context, request model.Testimoni, filter model.TestimoniSearch) (response []model.Testimoni, err error) {
 
 	var (
 		args     []interface{}
 		argIndex = 1
 	)
 
-	offset := (request.Page - 1) * request.Limit
+	offset := (filter.Page - 1) * filter.Limit
 
 	queryCond := ""
 	if request.UserName != "" {
@@ -26,15 +26,15 @@ func (t testimoniRepository) GetListTestimoniRepository(ctx context.Context, req
 	}
 
 	querySort := ""
-	if request.SortBy != "" {
-		querySort += " ORDER BY " + request.SortBy
+	if filter.SortBy != "" {
+		querySort += " ORDER BY " + filter.SortBy
 
-		if request.SortOrder != "" {
-			querySort += " " + request.SortOrder
+		if filter.SortOrder != "" {
+			querySort += " " + filter.SortOrder
 		}
 	}
 
-	args = append(args, request.Limit, offset)
+	args = append(args, filter.Limit, offset)
 	queryLimit := fmt.Sprintf(" LIMIT $%d OFFSET $%d", argIndex, argIndex+1)
 
 	query := fmt.Sprintf(`

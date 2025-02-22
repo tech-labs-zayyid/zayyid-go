@@ -7,9 +7,9 @@ import (
 	"zayyid-go/domain/testimoni/model"
 )
 
-func (f TestimoniFeature) GetListTestimoniFeature(ctx context.Context, request model.Testimoni) (response []model.Testimoni, pagination *sharedModel.Pagination, err error) {
+func (f TestimoniFeature) GetListTestimoniFeature(ctx context.Context, request model.Testimoni, filter model.TestimoniSearch) (response []model.Testimoni, pagination *sharedModel.Pagination, err error) {
 
-	response, err = f.repo.GetListTestimoniRepository(ctx, request)
+	response, err = f.repo.GetListTestimoniRepository(ctx, request, filter)
 	if err != nil {
 		return
 	}
@@ -19,12 +19,12 @@ func (f TestimoniFeature) GetListTestimoniFeature(ctx context.Context, request m
 		return
 	}
 
-	pagination, err = paginate.CalculatePagination(ctx, request.Limit, count)
+	pagination, err = paginate.CalculatePagination(ctx, filter.Limit, count)
 	if err != nil {
 		return
 	}
 
-	pagination.Page = request.Page
+	pagination.Page = filter.Page
 
 	return
 }

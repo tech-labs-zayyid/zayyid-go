@@ -10,7 +10,7 @@ type TestimoniRepository interface {
 	AddTestimoniRepository(ctx context.Context, request model.Testimoni) (err error)
 	UpdateTestimoniRepository(ctx context.Context, request model.Testimoni) (err error)
 	GetTestimoniRepository(ctx context.Context, request model.Testimoni) (response model.Testimoni, err error)
-	GetListTestimoniRepository(ctx context.Context, request model.Testimoni) (response []model.Testimoni, err error)
+	GetListTestimoniRepository(ctx context.Context, request model.Testimoni, filter model.TestimoniSearch) (response []model.Testimoni, err error)
 	CountListTestimoniRepository(ctx context.Context, request model.Testimoni) (response int, err error)
 }
 
