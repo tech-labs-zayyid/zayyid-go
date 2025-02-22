@@ -2,11 +2,11 @@ package repository
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 	modelRequest "zayyid-go/domain/sales/model/request"
 	"zayyid-go/domain/shared/helper/constant"
+	sharedError "zayyid-go/domain/shared/helper/error"
 	"zayyid-go/infrastructure/logger"
 )
 
@@ -28,14 +28,14 @@ func (t salesRepository) AddTestimoniRepository(ctx context.Context, request mod
 
 	stmt, err := t.database.Preparex(query)
 	if err != nil {
-		err = errors.New("🔥 [testimoni-prepare-create] | " + err.Error())
+		err = sharedError.HandleError(err)
 		return
 	}
 	defer stmt.Close()
 
 	_, err = stmt.ExecContext(ctx, args...)
 	if err != nil {
-		err = errors.New("🔥 [testimoni-create] | " + err.Error())
+		err = sharedError.HandleError(err)
 		return
 	}
 
@@ -71,14 +71,14 @@ func (t salesRepository) UpdateTestimoniRepository(ctx context.Context, request 
 
 	stmt, err := t.database.Preparex(query)
 	if err != nil {
-		err = errors.New("🔥 [testimoni-prepare-update] | " + err.Error())
+		err = sharedError.HandleError(err)
 		return
 	}
 	defer stmt.Close()
 
 	_, err = stmt.ExecContext(ctx, args...)
 	if err != nil {
-		err = errors.New("🔥 [testimoni-update] | " + err.Error())
+		err = sharedError.HandleError(err)
 		return
 	}
 
@@ -105,14 +105,14 @@ func (t salesRepository) GetTestimoniRepository(ctx context.Context, request mod
 
 	stmt, err := t.database.Preparex(query)
 	if err != nil {
-		err = errors.New("🔥 [testimoni-prepare-get] | " + err.Error())
+		err = sharedError.HandleError(err)
 		return
 	}
 	defer stmt.Close()
 
 	err = stmt.GetContext(ctx, response)
 	if err != nil {
-		err = errors.New("🔥 [testimoni-get] | " + err.Error())
+		err = sharedError.HandleError(err)
 		return
 	}
 
@@ -166,14 +166,14 @@ func (t salesRepository) GetListTestimoniRepository(ctx context.Context, request
 
 	stmt, err := t.database.Preparex(query)
 	if err != nil {
-		err = errors.New("🔥 [testimoni-prepare-get] | " + err.Error())
+		err = sharedError.HandleError(err)
 		return
 	}
 	defer stmt.Close()
 
 	err = stmt.SelectContext(ctx, response, args...)
 	if err != nil {
-		err = errors.New("🔥 [testimoni-get] | " + err.Error())
+		err = sharedError.HandleError(err)
 		return
 	}
 
@@ -206,14 +206,14 @@ func (t salesRepository) CountListTestimoniRepository(ctx context.Context, reque
 
 	stmt, err := t.database.Preparex(query)
 	if err != nil {
-		err = errors.New("🔥 [testimoni-prepare-count] | " + err.Error())
+		err = sharedError.HandleError(err)
 		return
 	}
 	defer stmt.Close()
 
 	err = stmt.GetContext(ctx, response, args...)
 	if err != nil {
-		err = errors.New("🔥 [testimoni-count] | " + err.Error())
+		err = sharedError.HandleError(err)
 		return
 	}
 
