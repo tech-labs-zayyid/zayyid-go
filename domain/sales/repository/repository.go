@@ -15,6 +15,8 @@ type SalesRepository interface {
 	AddGallerySales(ctx context.Context, tx *sql.Tx, param request.AddGalleryParam) (err error)
 	GetListDataGallerySales(ctx context.Context, salesId string) (resp response.GalleryResp, err error)
 	GetListDataGalleryPublic(ctx context.Context, subdomain string) (resp response.GalleryPublicResp, err error)
+	CountBannerSales(ctx context.Context, salesId string) (count int, err error)
+	AddBannerSales(ctx context.Context, tx *sql.Tx, param request.BannerReq) (err error)
 
 	//transaction schema DB
 	OpenTransaction(ctx context.Context) (tx *sql.Tx)

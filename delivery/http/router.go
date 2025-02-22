@@ -48,6 +48,10 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 	{
 		sales.Post("/gallery", handler.salesHandler.AddGallerySales)
 		sales.Get("/gallery", handler.salesHandler.GetGallerySales)
+		sales.Post("/banner", handler.salesHandler.AddGallerySales)
+		sales.Get("/banner", handler.salesHandler.GetGallerySales)
+		sales.Post("/template", handler.salesHandler.AddGallerySales)
+		sales.Get("/template", handler.salesHandler.GetGallerySales)
 	}
 
 	_ = app.Group("/agent")

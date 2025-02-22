@@ -51,7 +51,6 @@ func (f SalesFeature) AddGallerySales(ctx context.Context, param request.AddGall
 
 	//mocking sales id
 	valueCtx.SalesId = "01951f6b-db3f-7d07-8b2c-80d2e2d1be30"
-	param.SalesId = valueCtx.SalesId
 
 	//validation exists or not sales id in t_gallery
 
@@ -64,6 +63,7 @@ func (f SalesFeature) AddGallerySales(ctx context.Context, param request.AddGall
 		return sharedError.New(http.StatusBadRequest, sharedConstant.ErrMaximumUploadGallery, errors.New(sharedConstant.ErrMaximumUploadGallery))
 	}
 
+	param.SalesId = valueCtx.SalesId
 	if err = f.repo.AddGallerySales(ctx, tx, param); err != nil {
 		return
 	}

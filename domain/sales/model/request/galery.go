@@ -1,6 +1,7 @@
 package request
 
 type AddGalleryParam struct {
-	SalesId  string   `json:"-"`
-	ImageUrl []string `json:"image_url"`
+	SalesId      string   `json:"-"`
+	PublicAccess string   `json:"public_access"`
+	ImageUrl     []string `json:"image_url" validate:"required"`
 }

@@ -48,4 +48,5 @@ const (
 const (
 	ErrInvalidRequest       = "error invalid request"
 	ErrMaximumUploadGallery = "you have reached the maximum limit for uploading gallery"
+	ErrMaximumUploadBanner  = "you have reached the maximum limit for uploading banner"
 )

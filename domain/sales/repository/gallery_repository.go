@@ -28,7 +28,7 @@ func (r salesRepository) GetCountDataGalleryBySalesId(ctx context.Context, sales
 }
 
 func (r salesRepository) AddGallerySales(ctx context.Context, tx *sql.Tx, param request.AddGalleryParam) (err error) {
-	query := `INSERT INTO product_marketing.sales_gallery(id, sales_id, image_url) VALUES($1, $2, $3)`
+	query := `INSERT INTO product_marketing.sales_gallery(id, sales_id, public_access, image_url) VALUES($1, $2, $3, $4)`
 
 	stmt, err := tx.PrepareContext(ctx, query)
 	if err != nil {
@@ -38,7 +38,7 @@ func (r salesRepository) AddGallerySales(ctx context.Context, tx *sql.Tx, param 
 
 	logger.LogInfo(constant.QUERY, query)
 	for _, v := range param.ImageUrl {
-		_, err = stmt.ExecContext(ctx, sharedRepo.GenerateUuidAsIdTable().String(), param.SalesId, v)
+		_, err = stmt.ExecContext(ctx, sharedRepo.GenerateUuidAsIdTable().String(), param.SalesId, param.PublicAccess, v)
 		if err != nil {
 			return sharedError.HandleError(err)
 		}
