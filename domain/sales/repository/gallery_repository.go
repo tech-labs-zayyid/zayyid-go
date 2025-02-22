@@ -72,6 +72,46 @@ func (r salesRepository) GetListDataGallerySales(ctx context.Context, salesId st
 		resp.DataList = append(resp.DataList, data)
 	}
 
+	if len(resp.DataList) == 0 {
+		err = sharedError.HandleError(sql.ErrNoRows)
+		return
+	}
+
+	resp.SalesId = salesId
+	return
+}
+
+func (r salesRepository) GetListDataGalleryPublic(ctx context.Context, subdomain string) (resp response.GalleryPublicResp, err error) {
+	var (
+		salesId string
+		data    response.DataList
+	)
+
+	query := `SELECT id, sales_id, image_url FROM product_marketing.sales_gallery WHERE public_access = $1`
+
+	logger.LogInfo(constant.QUERY, query)
+	rows, err := r.database.QueryContext(ctx, query, subdomain)
+	if err != nil {
+		err = sharedError.HandleError(err)
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err = rows.Scan(&data.IdGallery, &salesId, &data.ImageUrl)
+		if err != nil {
+			err = sharedError.HandleError(err)
+			return
+		}
+
+		resp.DataList = append(resp.DataList, data)
+	}
+
+	if len(resp.DataList) == 0 {
+		err = sharedError.HandleError(sql.ErrNoRows)
+		return
+	}
+
 	resp.SalesId = salesId
 	return
 }

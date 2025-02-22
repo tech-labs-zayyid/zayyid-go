@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
 	"zayyid-go/domain/sales/feature"
@@ -47,6 +48,26 @@ func (h salesHandler) GetGallerySales(c *fiber.Ctx) (err error) {
 	ctx = context.SetValueToContext(ctx, c)
 
 	resp, err := h.feature.GetDataListGallery(ctx)
+	if err != nil {
+		err = sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return
+	}
+
+	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), resp)
+}
+
+func (h salesHandler) GetGallerySalesPublic(c *fiber.Ctx) (err error) {
+	ctx, cancel := context.CreateContextWithTimeout()
+	defer cancel()
+	ctx = context.SetValueToContext(ctx, c)
+
+	subdomain := c.Params("subdomain")
+	if subdomain == "" {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
+		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+	}
+
+	resp, err := h.feature.GetDataListGalleryPublic(ctx, subdomain)
 	if err != nil {
 		err = sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 		return

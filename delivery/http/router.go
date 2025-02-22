@@ -32,6 +32,11 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		api.Get("/ping", handler.userMenuHandler.Ping)
 	}
 
+	public := app.Group("public")
+	{
+		public.Get("/gallery/:subdomain", handler.salesHandler.GetGallerySalesPublic)
+	}
+
 	master := app.Group("/master")
 	{
 		master.Get("/ping", handler.masterHandler.PingMaster)
