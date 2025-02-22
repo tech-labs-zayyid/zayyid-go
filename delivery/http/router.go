@@ -35,6 +35,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 	public := app.Group("public")
 	{
 		public.Get("/gallery/:subdomain", handler.salesHandler.GetGallerySalesPublic)
+		public.Get("/testimony/list", handler.testimoniHandler.GetListTestimoniHandler)
 	}
 
 	master := app.Group("/master")
@@ -55,7 +56,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		//list API for Agent
 	}
 
-	testimoni := app.Group("/testimoni")
+	testimoni := app.Group("/testimony")
 	{
 		testimoni.Get("/", handler.testimoniHandler.GetTestimoniHandler)
 		testimoni.Get("/list", handler.testimoniHandler.GetListTestimoniHandler)

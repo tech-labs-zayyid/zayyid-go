@@ -39,7 +39,7 @@ func (h testimoniHandler) Ping(c *fiber.Ctx) error {
 // @Param        payload    body   model.Testimoni  true  "body payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /testimoni [post]
+// @Router       /testimony [post]
 func (h testimoniHandler) AddTestimoniHandler(c *fiber.Ctx) error {
 	ctx := c.UserContext()
 
@@ -54,7 +54,7 @@ func (h testimoniHandler) AddTestimoniHandler(c *fiber.Ctx) error {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
-	err = h.feature.UpsertTestimoniFeature(ctx, bodyReq)
+	err = h.feature.AddTestimoniFeature(ctx, bodyReq)
 	if err != nil {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
@@ -69,7 +69,7 @@ func (h testimoniHandler) AddTestimoniHandler(c *fiber.Ctx) error {
 // @Param        payload    body   model.Testimoni  true  "body payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /testimoni [put]
+// @Router       /testimony [put]
 func (h testimoniHandler) UpdateTestimoniHandler(c *fiber.Ctx) error {
 	ctx := c.UserContext()
 
@@ -84,8 +84,7 @@ func (h testimoniHandler) UpdateTestimoniHandler(c *fiber.Ctx) error {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
-	bodyReq.IsUpdate = 1
-	err = h.feature.UpsertTestimoniFeature(ctx, bodyReq)
+	err = h.feature.UpdateTestimoniFeature(ctx, bodyReq)
 	if err != nil {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
@@ -100,7 +99,7 @@ func (h testimoniHandler) UpdateTestimoniHandler(c *fiber.Ctx) error {
 // @Param        id   query      string  false  "id"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /testimoni [get]
+// @Router       /testimony [get]
 func (h testimoniHandler) GetTestimoniHandler(c *fiber.Ctx) error {
 	ctx := c.UserContext()
 
@@ -125,7 +124,7 @@ func (h testimoniHandler) GetTestimoniHandler(c *fiber.Ctx) error {
 // @Param        id   query      string  false  "id"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /testimoni/list [get]
+// @Router       /testimony/list [get]
 func (h testimoniHandler) GetListTestimoniHandler(c *fiber.Ctx) error {
 	ctx := c.UserContext()
 

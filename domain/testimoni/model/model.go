@@ -18,10 +18,3 @@ type Testimoni struct {
 	SortBy     string `json:"sort_by"`
 	SortOrder  string `json:"sort_order"`
 }
-
-type UserAuth struct {
-	Id        int64  `db:"id" json:"id"`
-	UserId    string `db:"user_id" json:"email"`
-	MenuId    int    `db:"menu_id" json:"menu_id"`
-	Permision []byte `db:"permission" json:"permission"`
-}
