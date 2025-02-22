@@ -84,3 +84,10 @@ func (f SalesFeature) GetDataListGallery(ctx context.Context) (resp response.Gal
 	resp, err = f.repo.GetListDataGallerySales(ctx, valueCtx.SalesId)
 	return
 }
+
+func (f SalesFeature) GetDataListGalleryPublic(ctx context.Context, subdomain string) (resp response.GalleryPublicResp, err error) {
+	//validation subdomain
+
+	resp, err = f.repo.GetListDataGalleryPublic(ctx, subdomain)
+	return
+}

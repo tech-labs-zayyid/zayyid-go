@@ -7,4 +7,5 @@ import (
 type SalesHandlerInterface interface {
 	AddGallerySales(c *fiber.Ctx) (err error)
 	GetGallerySales(c *fiber.Ctx) (err error)
+	GetGallerySalesPublic(c *fiber.Ctx) (err error)
 }
