@@ -109,7 +109,7 @@ func (r masterRepository) CountMasterProvince(ctx context.Context, filter shared
 	if filter.Status != "" {
 		isActive, errParse := strconv.ParseBool(filter.Status)
 		if errParse != nil {
-			err = sharedError.New(http.StatusBadRequest, err.Error(), err)
+			err = sharedError.New(http.StatusBadRequest, errParse.Error(), errParse)
 			return
 		}
 
