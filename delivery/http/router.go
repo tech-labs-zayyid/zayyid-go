@@ -6,7 +6,6 @@ import (
 	"zayyid-go/infrastructure/helper"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/swagger"
 )
 
 // ===============================================================================
@@ -28,13 +27,6 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 	// app.Get("/signature", handler.generateSignatureHandler.Handle)
 	// app.Post("/signature", handler.generateSignatureHandler.Handle)
 
-	// Endpoint Swagger UI
-	app.Get("/swagger/*", swagger.HandlerDefault) // Swagger UI akan tersedia di /swagger/index.html
-
-	app.Get("/healthz", func(c *fiber.Ctx) error {
-		hwHealth := helper.NewHwStats()
-		return c.Status(200).JSON(fiber.Map{"cpu_cores": hwHealth.NumCpu, "cpu_usage": fmt.Sprintf("%.2f%%", hwHealth.CpuUsage), "mem_total": hwHealth.TotalMem, "mem_avail": hwHealth.AvailMem, "db_status": "health", "tgt_status": "health"})
-	})
 
 	api := app.Group("/api")
 	{
