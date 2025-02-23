@@ -1,5 +1,6 @@
 -- migrate:up
-CREATE TABLE IF NOT EXISTS "product_marketing.sales_testimony" (
+CREATE TABLE
+    IF NOT EXISTS product_marketing.sales_testimony (
 	"id" VARCHAR(50) NOT NULL,
 	"user_name" VARCHAR(150) NOT NULL DEFAULT '',
 	"position" VARCHAR(250) NOT NULL DEFAULT '',

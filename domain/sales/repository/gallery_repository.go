@@ -3,6 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"strings"
 	"zayyid-go/domain/sales/model/request"
 	"zayyid-go/domain/sales/model/response"
 	"zayyid-go/domain/shared/helper/constant"
@@ -113,5 +115,48 @@ func (r salesRepository) GetListDataGalleryPublic(ctx context.Context, subdomain
 	}
 
 	resp.SalesId = salesId
+	return
+}
+
+func (r salesRepository) GetDataGallerySales(ctx context.Context, id, salesId string) (resp response.GalleryDataResp, err error) {
+	query := `SELECT id, image_url FROM product_marketing.sales_gallery WHERE id = $1 AND sales_id = $2`
+
+	logger.LogInfo(constant.QUERY, query)
+	if err = r.database.QueryRowContext(ctx, query, id, salesId).Scan(&resp.IdGallery, &resp.ImageUrl); err != nil {
+		err = sharedError.HandleError(err)
+	}
+
+	return
+}
+
+func (r salesRepository) UpdateGallerySales(ctx context.Context, req request.UpdateGalleryParam) (err error) {
+	args := []interface{}{}
+	buildQuery := []string{}
+
+	if req.ImageUrl != "" {
+		args = append(args, req.ImageUrl)
+		buildQuery = append(buildQuery, " image_url = $1")
+	}
+
+	buildQuery = append(buildQuery, " updated_at = NOW()")
+
+	updateQuery := strings.Join(buildQuery, ",")
+	args = append(args, req.Id)
+	args = append(args, req.SalesId)
+	query := fmt.Sprintf(`UPDATE product_marketing.sales_gallery SET %s WHERE id = $%d AND sales_id = $%d `, updateQuery, len(args)-1, len(args))
+
+	logger.LogInfo(constant.QUERY, query)
+	stmt, err := r.database.Preparex(query)
+	if err != nil {
+		err = sharedError.HandleError(err)
+		return
+	}
+	defer stmt.Close()
+
+	_, err = stmt.ExecContext(ctx, args...)
+	if err != nil {
+		err = sharedError.HandleError(err)
+	}
+
 	return
 }

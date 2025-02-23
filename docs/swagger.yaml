@@ -1,5 +1,58 @@
 definitions:
-  model.Testimoni:
+  request.AddGalleryParam:
+    properties:
+      image_url:
+        items:
+          type: string
+        type: array
+    type: object
+  request.AddSocialMediaReq:
+    properties:
+      data_social_media:
+        items:
+          $ref: '#/definitions/request.SocialMediaListReq'
+        type: array
+    type: object
+  request.AddTemplateReq:
+    properties:
+      color_plate:
+        type: string
+    type: object
+  request.BannerReq:
+    properties:
+      data_banner:
+        items:
+          $ref: '#/definitions/request.DataBanner'
+        type: array
+    type: object
+  request.BannerUpdateReq:
+    properties:
+      description:
+        type: string
+      image_url:
+        type: string
+    required:
+    - image_url
+    type: object
+  request.DataBanner:
+    properties:
+      description:
+        type: string
+      image_url:
+        type: string
+    required:
+    - image_url
+    type: object
+  request.SocialMediaListReq:
+    properties:
+      link_embed:
+        type: string
+      social_media_name:
+        type: string
+      user_account:
+        type: string
+    type: object
+  request.Testimoni:
     properties:
       created_at:
         type: string
@@ -9,28 +62,28 @@ definitions:
         type: string
       is_active:
         type: integer
-      is_update:
-        type: integer
-      limit:
-        type: integer
       modified_at:
         type: string
-      page:
-        type: integer
       photo_url:
         type: string
       position:
         type: string
-      search:
-        type: string
-      sort_by:
-        type: string
-      sort_order:
-        type: string
-      status_code:
-        type: integer
       user_name:
         type: string
+    type: object
+  request.UpdateGalleryParam:
+    properties:
+      image_url:
+        type: string
+    required:
+    - image_url
+    type: object
+  request.UpdateTemplateReq:
+    properties:
+      color_plate:
+        type: string
+    required:
+    - color_plate
     type: object
   response.Response:
     properties:
@@ -47,7 +100,432 @@ definitions:
 info:
   contact: {}
 paths:
-  /shipment/customer:
+  /public/banner/{subdomain}/{refferal}:
+    get:
+      description: show public of Banner
+      parameters:
+      - description: subdomain
+        in: path
+        name: subdomain
+        required: true
+        type: string
+      - description: referral
+        in: path
+        name: referral
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Public Banner
+      tags:
+      - Data Banner
+  /public/gallery/{subdomain}/{referral}:
+    get:
+      description: show detail of Gallery
+      parameters:
+      - description: subdomain
+        in: path
+        name: subdomain
+        required: true
+        type: string
+      - description: referral
+        in: path
+        name: referral
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Detail Gallery
+      tags:
+      - Data Gallery
+  /public/social-media/{subdomain}/{referral}:
+    get:
+      description: show list of Public Social Media
+      parameters:
+      - description: subdomain
+        in: path
+        name: subdomain
+        required: true
+        type: string
+      - description: referral
+        in: path
+        name: referral
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get List Public Social Media
+      tags:
+      - Data Social Media
+  /public/temlate/{subdomain}/{referral}:
+    get:
+      description: show list of Public Template
+      parameters:
+      - description: subdomain
+        in: path
+        name: subdomain
+        required: true
+        type: string
+      - description: referral
+        in: path
+        name: referral
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get List Public Template
+      tags:
+      - Data Template
+  /sales/banner:
+    get:
+      description: show list of Banner
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get List Banner
+      tags:
+      - Data Banner
+    post:
+      description: add data of Banner
+      parameters:
+      - description: body payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/request.BannerReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add Data Banner
+      tags:
+      - Data Banner
+  /sales/banner/{id}:
+    get:
+      description: show detail of Banner
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Detail Banner
+      tags:
+      - Data Banner
+    put:
+      description: Update Data of Banner
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: body payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/request.BannerUpdateReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Update Data Banner
+      tags:
+      - Data Banner
+  /sales/gallery:
+    get:
+      description: show List of Gallery
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get List Gallery
+      tags:
+      - Data Gallery
+    post:
+      description: add data of Template
+      parameters:
+      - description: body payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/request.AddTemplateReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add Data Template
+      tags:
+      - Data Template
+  /sales/gallery/{id}:
+    get:
+      description: show detail of Gallery
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Detail Gallery
+      tags:
+      - Data Gallery
+    put:
+      description: Update Data of Gallery
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: string
+      - description: body payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateGalleryParam'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Update Data Gallery
+      tags:
+      - Data Gallery
+  /sales/social-media:
+    get:
+      description: show list of Social Media
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get List Social Media
+      tags:
+      - Data Social Media
+    post:
+      description: add data of Social Media
+      parameters:
+      - description: body payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/request.AddSocialMediaReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add Data Social Media
+      tags:
+      - Data Social Media
+  /sales/temlate:
+    get:
+      description: show list of Template
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get List Template
+      tags:
+      - Data Template
+  /sales/template/{id}:
+    get:
+      description: show detail of Template
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Detail Template
+      tags:
+      - Data Template
+    put:
+      description: Update Data of Template
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: string
+      - description: body payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateTemplateReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Update Data Template
+      tags:
+      - Data Template
+  /testimony:
+    get:
+      description: show detail of Customer
+      parameters:
+      - description: id
+        in: query
+        name: id
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Detail Customer
+      tags:
+      - Data Testimoni
+    post:
+      description: create data of Testimoni
+      parameters:
+      - description: body payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/request.Testimoni'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Create Data Testimoni
+      tags:
+      - Data Testimoni
+    put:
+      description: Update Data of Testimoni
+      parameters:
+      - description: body payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/request.Testimoni'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Update Data Testimoni
+      tags:
+      - Data Testimoni
+  /testimony/list:
     get:
       description: show list of Customer
       parameters:
@@ -65,28 +543,6 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get List Customer
-      tags:
-      - Data Testimoni
-  /shipment/visit-store:
-    post:
-      description: Update Data of Testimoni
-      parameters:
-      - description: body payload
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/model.Testimoni'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Update Data Testimoni
       tags:
       - Data Testimoni
 swagger: "2.0"
