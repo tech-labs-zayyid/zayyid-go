@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
-	"zayyid-go/domain/sales/feature"
 	"zayyid-go/domain/sales/model/request"
 	"zayyid-go/domain/shared/context"
 	sharedConstant "zayyid-go/domain/shared/helper/constant"
@@ -12,80 +11,62 @@ import (
 	sharedResponse "zayyid-go/domain/shared/response"
 )
 
-type salesHandler struct {
-	feature         *feature.SalesFeature
-	isRequestLogged bool
-}
-
-func NewSalesHandler(feature *feature.SalesFeature, isRequestLogged bool) SalesHandlerInterface {
-	return &salesHandler{
-		feature:         feature,
-		isRequestLogged: isRequestLogged,
-	}
-}
-
-// Add Data Gallery godoc
-// @Summary      Add Data Gallery
-// @Description  add data of Gallery
-// @Tags         Data Gallery
-// @Param        payload    body   request.AddGalleryParam  true  "body payload"
+// Add Data Template godoc
+// @Summary      Add Data Template
+// @Description  add data of Template
+// @Tags         Data Template
+// @Param        payload    body   request.AddTemplateReq  true  "body payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
 // @Router       /sales/gallery [post]
-func (h salesHandler) AddGallerySales(c *fiber.Ctx) (err error) {
+func (h salesHandler) AddTemplateSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
 
-	var req request.AddGalleryParam
+	var req request.AddTemplateReq
 	if err = c.BodyParser(&req); err != nil {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, err)
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
-	if len(req.ImageUrl) == 0 {
-		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrRequestGallery, err)
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
-	}
-
-	if err = h.feature.AddGallerySales(ctx, req); err != nil {
+	if err = h.feature.AddTemplateSales(ctx, req); err != nil {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), "")
 }
 
-// Get List Gallery godoc
-// @Summary      Get List Gallery
-// @Description  show List of Gallery
-// @Tags         Data Gallery
+// Get List Tamplate godoc
+// @Summary      Get List Template
+// @Description  show list of Template
+// @Tags         Data Template
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /sales/gallery [get]
-func (h salesHandler) GetGallerySales(c *fiber.Ctx) (err error) {
+// @Router       /sales/temlate [get]
+func (h salesHandler) GetListTemplateSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
 
-	resp, err := h.feature.GetDataListGallery(ctx)
+	resp, err := h.feature.GetListTemplateSales(ctx)
 	if err != nil {
-		err = sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
-		return
+		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), resp)
 }
 
-// Get Detail Gallery godoc
-// @Summary      Get Detail Gallery
-// @Description  show detail of Gallery
-// @Tags         Data Gallery
+// Get List Public Tamplate godoc
+// @Summary      Get List Public Template
+// @Description  show list of Public Template
+// @Tags         Data Template
 // @param        subdomain path string true "subdomain"
 // @param        referral path string true "referral"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /public/gallery/{subdomain}/{referral} [get]
-func (h salesHandler) GetGallerySalesPublic(c *fiber.Ctx) (err error) {
+// @Router       /public/temlate/{subdomain}/{referral} [get]
+func (h salesHandler) GetListPublicTemplateSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
@@ -97,24 +78,23 @@ func (h salesHandler) GetGallerySalesPublic(c *fiber.Ctx) (err error) {
 	}
 
 	referral := c.Params("*")
-	resp, err := h.feature.GetDataListGalleryPublic(ctx, subdomain, referral)
+	resp, err := h.feature.GetListPublicTemplateSales(ctx, subdomain, referral)
 	if err != nil {
-		err = sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
-		return
+		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), resp)
 }
 
-// Get Detail Gallery godoc
-// @Summary      Get Detail Gallery
-// @Description  show detail of Gallery
-// @Tags         Data Gallery
+// Get Detail Template godoc
+// @Summary      Get Detail Template
+// @Description  show detail of Template
+// @Tags         Data Template
 // @Param        id path string false "id"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /sales/gallery/{id} [get]
-func (h salesHandler) GetDataGallerySales(c *fiber.Ctx) (err error) {
+// @Router       /sales/template/{id} [get]
+func (h salesHandler) GetTemplateSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
@@ -125,7 +105,7 @@ func (h salesHandler) GetDataGallerySales(c *fiber.Ctx) (err error) {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
-	resp, err := h.feature.GetDataGallerySales(ctx, id)
+	resp, err := h.feature.GetDetailTemplateSales(ctx, id)
 	if err != nil {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
@@ -133,21 +113,21 @@ func (h salesHandler) GetDataGallerySales(c *fiber.Ctx) (err error) {
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), resp)
 }
 
-// Update Data Gallery godoc
-// @Summary      Update Data Gallery
-// @Description  Update Data of Gallery
-// @Tags         Data Gallery
+// Update Data Template godoc
+// @Summary      Update Data Template
+// @Description  Update Data of Template
+// @Tags         Data Template
 // @Param        id path string false "id"
-// @Param        payload    body   request.UpdateGalleryParam  true  "body payload"
+// @Param        payload    body   request.UpdateTemplateReq  true  "body payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /sales/gallery/{id} [put]
-func (h salesHandler) UpdateGallerySales(c *fiber.Ctx) (err error) {
+// @Router       /sales/template/{id} [put]
+func (h salesHandler) UpdateTemplateSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
 
-	var req request.UpdateGalleryParam
+	var req request.UpdateTemplateReq
 	if err = c.BodyParser(&req); err != nil {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, err)
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
@@ -159,7 +139,7 @@ func (h salesHandler) UpdateGallerySales(c *fiber.Ctx) (err error) {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
-	if err = h.feature.UpdateGallery(ctx, req); err != nil {
+	if err = h.feature.UpdateTemplateSales(ctx, req); err != nil {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 

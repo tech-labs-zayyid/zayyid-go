@@ -20,3 +20,5 @@ migration-up:
 	dbmate -d "./migrations" -e "DATABASE_URL" up
 npx-migration-up:
 	npx dbmate -d "./migrations" -e "DATABASE_URL" up
+swagger:
+	swag init

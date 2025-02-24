@@ -2,6 +2,7 @@ package helper
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 	"unicode"
 	sharedError "zayyid-go/domain/shared/helper/error"
@@ -21,7 +22,7 @@ func Validate(request interface{}) error {
 			errReq = fmt.Sprintf("Field '%s' is required\n", camelCaseToSpaces(err.Field()))
 			break
 		}
-		err = sharedError.New(402, errReq, err)
+		err = sharedError.New(http.StatusBadRequest, errReq, err)
 		return err
 	}
 	return nil
