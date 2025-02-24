@@ -35,7 +35,10 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t myapp .
+        docker build --cache-from=type=local,src=/tmp/.buildx-cache \
+                    --cache-to=type=local,dest=/tmp/.buildx-cache \
+                    -t myapp .
+
 
     - name: Log in to Amazon ECR
       run: |
@@ -43,7 +46,10 @@ jobs:
 
     - name: Tag Docker image
       run: |
-        docker tag myapp:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales
+        IMAGE_TAG=${{ github.sha }}
+        docker tag myapp:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:$IMAGE_TAG
+        docker tag myapp:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:latest
+
 
     - name: Push Docker image to ECR
       run: |
