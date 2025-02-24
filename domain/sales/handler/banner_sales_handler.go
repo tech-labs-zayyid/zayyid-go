@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
-	"zayyid-go/domain/sales/feature"
 	"zayyid-go/domain/sales/model/request"
 	"zayyid-go/domain/shared/context"
 	sharedConstant "zayyid-go/domain/shared/helper/constant"
@@ -12,80 +11,67 @@ import (
 	sharedResponse "zayyid-go/domain/shared/response"
 )
 
-type salesHandler struct {
-	feature         *feature.SalesFeature
-	isRequestLogged bool
-}
-
-func NewSalesHandler(feature *feature.SalesFeature, isRequestLogged bool) SalesHandlerInterface {
-	return &salesHandler{
-		feature:         feature,
-		isRequestLogged: isRequestLogged,
-	}
-}
-
-// Add Data Gallery godoc
-// @Summary      Add Data Gallery
-// @Description  add data of Gallery
-// @Tags         Data Gallery
-// @Param        payload    body   request.AddGalleryParam  true  "body payload"
+// Add Data Banner godoc
+// @Summary      Add Data Banner
+// @Description  add data of Banner
+// @Tags         Data Banner
+// @Param        payload    body   request.BannerReq  true  "body payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /sales/gallery [post]
-func (h salesHandler) AddGallerySales(c *fiber.Ctx) (err error) {
+// @Router       /sales/banner [post]
+func (h salesHandler) AddBannerSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
 
-	var req request.AddGalleryParam
+	var req request.BannerReq
 	if err = c.BodyParser(&req); err != nil {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, err)
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
-	if len(req.ImageUrl) == 0 {
-		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrRequestGallery, err)
+	if len(req.DataBanner) == 0 {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrRequestBanner, err)
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
-	if err = h.feature.AddGallerySales(ctx, req); err != nil {
+	if err = h.feature.AddBannerSales(ctx, req); err != nil {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), "")
 }
 
-// Get List Gallery godoc
-// @Summary      Get List Gallery
-// @Description  show List of Gallery
-// @Tags         Data Gallery
+// Get List Banner godoc
+// @Summary      Get List Banner
+// @Description  show list of Banner
+// @Tags         Data Banner
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /sales/gallery [get]
-func (h salesHandler) GetGallerySales(c *fiber.Ctx) (err error) {
+// @Router       /sales/banner [get]
+func (h salesHandler) GetListBannerSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
 
-	resp, err := h.feature.GetDataListGallery(ctx)
+	resp, err := h.feature.GetListBannerSales(ctx)
 	if err != nil {
-		err = sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
-		return
+		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), resp)
 }
 
-// Get Detail Gallery godoc
-// @Summary      Get Detail Gallery
-// @Description  show detail of Gallery
-// @Tags         Data Gallery
+// Get Public Banner godoc
+// @Summary      Get Public Banner
+// @Description  show public of Banner
+// @Tags         Data Banner
 // @param        subdomain path string true "subdomain"
 // @param        referral path string true "referral"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /public/gallery/{subdomain}/{referral} [get]
-func (h salesHandler) GetGallerySalesPublic(c *fiber.Ctx) (err error) {
+// @Router       /public/banner/{subdomain}/{refferal} [get]
+func (h salesHandler) GetBannerPublicSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
@@ -97,7 +83,7 @@ func (h salesHandler) GetGallerySalesPublic(c *fiber.Ctx) (err error) {
 	}
 
 	referral := c.Params("*")
-	resp, err := h.feature.GetDataListGalleryPublic(ctx, subdomain, referral)
+	resp, err := h.feature.GetListBannerPublic(ctx, subdomain, referral)
 	if err != nil {
 		err = sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 		return
@@ -106,15 +92,15 @@ func (h salesHandler) GetGallerySalesPublic(c *fiber.Ctx) (err error) {
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), resp)
 }
 
-// Get Detail Gallery godoc
-// @Summary      Get Detail Gallery
-// @Description  show detail of Gallery
-// @Tags         Data Gallery
+// Get Detail Banner godoc
+// @Summary      Get Detail Banner
+// @Description  show detail of Banner
+// @Tags         Data Banner
 // @Param        id path string false "id"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /sales/gallery/{id} [get]
-func (h salesHandler) GetDataGallerySales(c *fiber.Ctx) (err error) {
+// @Router       /sales/banner/{id} [get]
+func (h salesHandler) GetBannerSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
@@ -125,7 +111,7 @@ func (h salesHandler) GetDataGallerySales(c *fiber.Ctx) (err error) {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
-	resp, err := h.feature.GetDataGallerySales(ctx, id)
+	resp, err := h.feature.GetBannerSales(ctx, id)
 	if err != nil {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
@@ -133,21 +119,21 @@ func (h salesHandler) GetDataGallerySales(c *fiber.Ctx) (err error) {
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), resp)
 }
 
-// Update Data Gallery godoc
-// @Summary      Update Data Gallery
-// @Description  Update Data of Gallery
-// @Tags         Data Gallery
-// @Param        id path string false "id"
-// @Param        payload    body   request.UpdateGalleryParam  true  "body payload"
+// Update Data Banner godoc
+// @Summary      Update Data Banner
+// @Description  Update Data of Banner
+// @Tags         Data Banner
+// @param        id path string true "id"
+// @Param        payload    body   request.BannerUpdateReq  true  "body payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /sales/gallery/{id} [put]
-func (h salesHandler) UpdateGallerySales(c *fiber.Ctx) (err error) {
+// @Router       /sales/banner/{id} [put]
+func (h salesHandler) UpdateBannerSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
 
-	var req request.UpdateGalleryParam
+	var req request.BannerUpdateReq
 	if err = c.BodyParser(&req); err != nil {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, err)
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
@@ -159,7 +145,7 @@ func (h salesHandler) UpdateGallerySales(c *fiber.Ctx) (err error) {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
-	if err = h.feature.UpdateGallery(ctx, req); err != nil {
+	if err = h.feature.UpdateBanner(ctx, req); err != nil {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 

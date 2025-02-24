@@ -13,12 +13,12 @@ import (
 	"zayyid-go/infrastructure/logger"
 )
 
-func (r salesRepository) GetCountDataGalleryBySalesId(ctx context.Context, salesId string) (count int, err error) {
+func (r salesRepository) CountBannerSales(ctx context.Context, salesId string) (count int, err error) {
 	query := `
 	SELECT
 		COUNT(id)
 	FROM 
-		product_marketing.sales_gallery 
+		product_marketing.sales_banner
 	WHERE sales_id = $1`
 
 	logger.LogInfo(constant.QUERY, query)
@@ -29,8 +29,8 @@ func (r salesRepository) GetCountDataGalleryBySalesId(ctx context.Context, sales
 	return
 }
 
-func (r salesRepository) AddGallerySales(ctx context.Context, tx *sql.Tx, param request.AddGalleryParam) (err error) {
-	query := `INSERT INTO product_marketing.sales_gallery(id, sales_id, public_access, image_url) VALUES($1, $2, $3, $4)`
+func (r salesRepository) AddBannerSales(ctx context.Context, tx *sql.Tx, param request.BannerReq) (err error) {
+	query := `INSERT INTO product_marketing.sales_banner(id, sales_id, public_access, image_url, description) VALUES($1, $2, $3, $4, $5)`
 
 	stmt, err := tx.PrepareContext(ctx, query)
 	if err != nil {
@@ -39,8 +39,8 @@ func (r salesRepository) AddGallerySales(ctx context.Context, tx *sql.Tx, param 
 	defer stmt.Close()
 
 	logger.LogInfo(constant.QUERY, query)
-	for _, v := range param.ImageUrl {
-		_, err = stmt.ExecContext(ctx, sharedRepo.GenerateUuidAsIdTable().String(), param.SalesId, param.PublicAccess, v)
+	for _, v := range param.DataBanner {
+		_, err = stmt.ExecContext(ctx, sharedRepo.GenerateUuidAsIdTable().String(), param.SalesId, param.PublicAccess, v.ImageUrl, v.Description)
 		if err != nil {
 			return sharedError.HandleError(err)
 		}
@@ -49,12 +49,12 @@ func (r salesRepository) AddGallerySales(ctx context.Context, tx *sql.Tx, param 
 	return
 }
 
-func (r salesRepository) GetListDataGallerySales(ctx context.Context, salesId string) (resp response.GalleryResp, err error) {
+func (r salesRepository) GetListBannerSales(ctx context.Context, salesId string) (resp response.BannerListSalesResp, err error) {
 	var (
-		data response.DataList
+		data response.DataListBanner
 	)
 
-	query := `SELECT id, image_url FROM product_marketing.sales_gallery WHERE sales_id = $1`
+	query := `SELECT id, image_url, description FROM product_marketing.sales_banner WHERE sales_id = $1`
 
 	logger.LogInfo(constant.QUERY, query)
 	rows, err := r.database.QueryContext(ctx, query, salesId)
@@ -65,7 +65,7 @@ func (r salesRepository) GetListDataGallerySales(ctx context.Context, salesId st
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&data.IdGallery, &data.ImageUrl)
+		err = rows.Scan(&data.IdBanner, &data.ImageUrl, &data.Description)
 		if err != nil {
 			err = sharedError.HandleError(err)
 			return
@@ -83,13 +83,13 @@ func (r salesRepository) GetListDataGallerySales(ctx context.Context, salesId st
 	return
 }
 
-func (r salesRepository) GetListDataGalleryPublic(ctx context.Context, subdomain string) (resp response.GalleryPublicResp, err error) {
+func (r salesRepository) GetListBannerPublicSales(ctx context.Context, subdomain string) (resp response.BannerListPublicSalesResp, err error) {
 	var (
 		salesId string
-		data    response.DataList
+		data    response.DataListBanner
 	)
 
-	query := `SELECT id, sales_id, image_url FROM product_marketing.sales_gallery WHERE public_access = $1`
+	query := `SELECT id, sales_id, image_url, description FROM product_marketing.sales_banner WHERE public_access = $1`
 
 	logger.LogInfo(constant.QUERY, query)
 	rows, err := r.database.QueryContext(ctx, query, subdomain)
@@ -100,7 +100,7 @@ func (r salesRepository) GetListDataGalleryPublic(ctx context.Context, subdomain
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&data.IdGallery, &salesId, &data.ImageUrl)
+		err = rows.Scan(&data.IdBanner, &salesId, &data.ImageUrl, &data.Description)
 		if err != nil {
 			err = sharedError.HandleError(err)
 			return
@@ -118,18 +118,18 @@ func (r salesRepository) GetListDataGalleryPublic(ctx context.Context, subdomain
 	return
 }
 
-func (r salesRepository) GetDataGallerySales(ctx context.Context, id, salesId string) (resp response.GalleryDataResp, err error) {
-	query := `SELECT id, image_url FROM product_marketing.sales_gallery WHERE id = $1 AND sales_id = $2`
+func (r salesRepository) GetBannerSales(ctx context.Context, id, salesId string) (resp response.BannerResp, err error) {
+	query := `SELECT id, image_url, description FROM product_marketing.sales_banner WHERE id = $1 AND sales_id = $2`
 
 	logger.LogInfo(constant.QUERY, query)
-	if err = r.database.QueryRowContext(ctx, query, id, salesId).Scan(&resp.IdGallery, &resp.ImageUrl); err != nil {
+	if err = r.database.QueryRowContext(ctx, query, id, salesId).Scan(&resp.IdBanner, &resp.ImageUrl, &resp.Description); err != nil {
 		err = sharedError.HandleError(err)
 	}
 
 	return
 }
 
-func (r salesRepository) UpdateGallerySales(ctx context.Context, req request.UpdateGalleryParam) (err error) {
+func (r salesRepository) UpdateBannerSales(ctx context.Context, req request.BannerUpdateReq) (err error) {
 	args := []interface{}{}
 	buildQuery := []string{}
 
@@ -137,13 +137,17 @@ func (r salesRepository) UpdateGallerySales(ctx context.Context, req request.Upd
 		args = append(args, req.ImageUrl)
 		buildQuery = append(buildQuery, " image_url = $1")
 	}
+	if req.Description != "" {
+		args = append(args, req.Description)
+		buildQuery = append(buildQuery, " deskripsi = $2")
+	}
 
 	buildQuery = append(buildQuery, " updated_at = NOW()")
 
 	updateQuery := strings.Join(buildQuery, ",")
 	args = append(args, req.Id)
 	args = append(args, req.SalesId)
-	query := fmt.Sprintf(`UPDATE product_marketing.sales_gallery SET %s WHERE id = $%d AND sales_id = $%d `, updateQuery, len(args)-1, len(args))
+	query := fmt.Sprintf(`UPDATE product_marketing.sales_banner SET %s WHERE id = $%d AND sales_id = $%d `, updateQuery, len(args)-1, len(args))
 
 	logger.LogInfo(constant.QUERY, query)
 	stmt, err := r.database.Preparex(query)
