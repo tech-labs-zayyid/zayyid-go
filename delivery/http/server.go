@@ -38,6 +38,13 @@ func ServeHttp(container container.Container) *fiber.App {
 		EnableStackTrace: true,
 	}
 
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     "*",
+		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH",
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowCredentials: true,
+	}))
+
 	app.Use(recover.New(config), cors.New(), middleware.Timer())
 	app.Get("/swagger/*", swagger.HandlerDefault)
 	RegisterRoute(app, handler)
