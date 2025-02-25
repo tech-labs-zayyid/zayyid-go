@@ -38,19 +38,15 @@ jobs:
       with:
         driver: docker
 
-    - name: Remove Docker Buildx Cache
-      run: |
-        rm -rf /tmp/.buildx-cache
+    - name: Remove old build cache
+      run: rm -rf /tmp/.buildx-cache || true
 
-    - name: Build Docker Image
+    - name: Build Docker image
       run: |
         docker buildx build --no-cache \
-          --cache-from=type=local,src=/tmp/.buildx-cache \
-          --cache-to=type=local,dest=/tmp/.buildx-cache \
-          -t myapp \
-          --load \
-          --progress=plain \
-          .
+                            --cache-to=type=local,dest=/tmp/.buildx-cache,mode=max \
+                            --platform linux/amd64 \
+                            -t myapp .
       
 
       #    - name: Build Docker image
