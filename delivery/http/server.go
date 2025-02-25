@@ -42,7 +42,7 @@ func ServeHttp(container container.Container) *fiber.App {
 		AllowOrigins:     "*",
 		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH",
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
-		AllowCredentials: true,
+		AllowCredentials: false,
 	}))
 
 	app.Use(recover.New(config), cors.New(), middleware.Timer())
