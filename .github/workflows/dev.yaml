@@ -38,15 +38,15 @@ jobs:
       with:
         driver: docker
 
-    - name: Remove old build cache
-      run: rm -rf /tmp/.buildx-cache || true
-
-    - name: Build Docker image
+    - name: Build Docker Image
       run: |
         docker buildx build --no-cache \
-                            --cache-to=type=local,dest=/tmp/.buildx-cache,mode=max \
-                            --platform linux/amd64 \
-                            -t myapp .
+          --cache-from=type=local,src=/tmp/.buildx-cache \
+          --cache-to=type=local,dest=/tmp/.buildx-cache \
+          -t myapp \
+          --load \
+          --progress=plain \
+          .
       
 
       #    - name: Build Docker image
@@ -64,13 +64,13 @@ jobs:
         aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
     - name: Verify Docker Image
-      run: docker images | grep myapp || true
+      run: docker images | grep myapp
 
     - name: Tag Docker image
       run: |
         IMAGE_TAG=${{ github.sha }}
-        docker tag myapp ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:$IMAGE_TAG
-        docker tag myapp ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:latest
+        docker tag myapp:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:$IMAGE_TAG
+        docker tag myapp:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:latest
 
 
     - name: Push Docker image to ECR
