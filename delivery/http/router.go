@@ -27,14 +27,18 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 	// app.Get("/signature", handler.generateSignatureHandler.Handle)
 	// app.Post("/signature", handler.generateSignatureHandler.Handle)
 
+
 	api := app.Group("/api")
 	{
 		api.Get("/ping", handler.userMenuHandler.Ping)
 	}
 
-	public := app.Group("public")
+	public := app.Group("/public")
 	{
-		public.Get("/gallery/:subdomain", handler.salesHandler.GetGallerySalesPublic)
+		public.Get("/gallery/:subdomain/*", handler.salesHandler.GetGallerySalesPublic)
+		public.Get("/banner/:subdomain/*", handler.salesHandler.GetBannerPublicSales)
+		public.Get("/template/:subdomain/*", handler.salesHandler.GetListPublicTemplateSales)
+		public.Get("/social-media/:subdomain/*", handler.salesHandler.GetListPublicSocialMediaSales)
 	}
 
 	master := app.Group("/master")
@@ -48,10 +52,30 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 	{
 		sales.Post("/gallery", handler.salesHandler.AddGallerySales)
 		sales.Get("/gallery", handler.salesHandler.GetGallerySales)
+		sales.Get("/gallery/:id", handler.salesHandler.GetDataGallerySales)
+		sales.Put("/gallery/:id", handler.salesHandler.UpdateGallerySales)
+
+		//testimony
 		sales.Get("/testimony", handler.salesHandler.GetTestimoniHandler)
 		sales.Get("/testimony/list", handler.salesHandler.GetListTestimoniHandler)
 		sales.Post("/testimony", handler.salesHandler.AddTestimoniHandler)
 		sales.Put("/testimony", handler.salesHandler.UpdateTestimoniHandler)
+
+		//banner
+		sales.Post("/banner", handler.salesHandler.AddBannerSales)
+		sales.Get("/banner", handler.salesHandler.GetListBannerSales)
+		sales.Get("/banner/:id", handler.salesHandler.GetBannerSales)
+		sales.Put("/banner/:id", handler.salesHandler.UpdateBannerSales)
+
+		//template
+		sales.Post("/template", handler.salesHandler.AddTemplateSales)
+		sales.Get("/template", handler.salesHandler.GetListTemplateSales)
+		sales.Get("/template/:id", handler.salesHandler.GetTemplateSales)
+		sales.Put("/template/:id", handler.salesHandler.UpdateTemplateSales)
+
+		//social media
+		sales.Post("/social-media", handler.salesHandler.AddSocialMediaSales)
+		sales.Get("/social-media", handler.salesHandler.GetListSocialMediaSales)
 	}
 
 	_ = app.Group("/agent")

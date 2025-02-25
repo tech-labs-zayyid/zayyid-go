@@ -10,7 +10,7 @@ import (
 	"zayyid-go/infrastructure/logger"
 )
 
-func (t salesRepository) AddTestimoniRepository(ctx context.Context, request modelRequest.Testimoni) (err error) {
+func (r salesRepository) AddTestimoniRepository(ctx context.Context, request modelRequest.Testimoni) (err error) {
 
 	args := []interface{}{
 		request.Id,
@@ -26,7 +26,7 @@ func (t salesRepository) AddTestimoniRepository(ctx context.Context, request mod
 		VALUES
 			($1,$2,$3,$4,$5,$6,NOW())`
 
-	stmt, err := t.database.Preparex(query)
+	stmt, err := r.database.Preparex(query)
 	if err != nil {
 		err = sharedError.HandleError(err)
 		return
@@ -42,7 +42,7 @@ func (t salesRepository) AddTestimoniRepository(ctx context.Context, request mod
 	return
 }
 
-func (t salesRepository) UpdateTestimoniRepository(ctx context.Context, request modelRequest.Testimoni) (err error) {
+func (r salesRepository) UpdateTestimoniRepository(ctx context.Context, request modelRequest.Testimoni) (err error) {
 
 	args := []interface{}{}
 	buildQuery := []string{}
@@ -69,7 +69,8 @@ func (t salesRepository) UpdateTestimoniRepository(ctx context.Context, request 
 	args = append(args, request.UserName)
 	query := fmt.Sprintf(`UPDATE product_marketing.sales_testimony SET %s  WHERE id = ? AND user_name = ? `, updateQuery)
 
-	stmt, err := t.database.Preparex(query)
+	logger.LogInfo(constant.QUERY, query)
+	stmt, err := r.database.Preparex(query)
 	if err != nil {
 		err = sharedError.HandleError(err)
 		return
@@ -85,7 +86,7 @@ func (t salesRepository) UpdateTestimoniRepository(ctx context.Context, request 
 	return
 }
 
-func (t salesRepository) GetTestimoniRepository(ctx context.Context, request modelRequest.Testimoni) (response modelRequest.Testimoni, err error) {
+func (r salesRepository) GetTestimoniRepository(ctx context.Context, request modelRequest.Testimoni) (response modelRequest.Testimoni, err error) {
 
 	query := `
 		SELECT
@@ -103,14 +104,14 @@ func (t salesRepository) GetTestimoniRepository(ctx context.Context, request mod
 			id = $1`
 	logger.LogInfo(constant.QUERY, query)
 
-	stmt, err := t.database.Preparex(query)
+	stmt, err := r.database.Preparex(query)
 	if err != nil {
 		err = sharedError.HandleError(err)
 		return
 	}
 	defer stmt.Close()
 
-	err = stmt.GetContext(ctx, response)
+	err = stmt.GetContext(ctx, response, request.Id)
 	if err != nil {
 		err = sharedError.HandleError(err)
 		return
@@ -119,7 +120,7 @@ func (t salesRepository) GetTestimoniRepository(ctx context.Context, request mod
 	return
 }
 
-func (t salesRepository) GetListTestimoniRepository(ctx context.Context, request modelRequest.Testimoni, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, err error) {
+func (r salesRepository) GetListTestimoniRepository(ctx context.Context, request modelRequest.Testimoni, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, err error) {
 
 	var (
 		args     []interface{}
@@ -164,7 +165,7 @@ func (t salesRepository) GetListTestimoniRepository(ctx context.Context, request
 			%s %s`, queryCond, queryLimit)
 	logger.LogInfo(constant.QUERY, query)
 
-	stmt, err := t.database.Preparex(query)
+	stmt, err := r.database.Preparex(query)
 	if err != nil {
 		err = sharedError.HandleError(err)
 		return
@@ -180,7 +181,7 @@ func (t salesRepository) GetListTestimoniRepository(ctx context.Context, request
 	return
 }
 
-func (t salesRepository) CountListTestimoniRepository(ctx context.Context, request modelRequest.Testimoni) (response int, err error) {
+func (r salesRepository) CountListTestimoniRepository(ctx context.Context, request modelRequest.Testimoni) (response int, err error) {
 
 	var (
 		args     []interface{}
@@ -204,7 +205,7 @@ func (t salesRepository) CountListTestimoniRepository(ctx context.Context, reque
 			%s`, queryCond)
 	logger.LogInfo(constant.QUERY, query)
 
-	stmt, err := t.database.Preparex(query)
+	stmt, err := r.database.Preparex(query)
 	if err != nil {
 		err = sharedError.HandleError(err)
 		return
