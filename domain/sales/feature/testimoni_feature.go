@@ -13,9 +13,6 @@ func (f SalesFeature) AddTestimoniFeature(ctx context.Context, request modelRequ
 
 	request.Id = sharedRepo.GenerateUuidAsIdTable().String()
 	err = f.repo.AddTestimoniRepository(ctx, request)
-	if err != nil {
-		return
-	}
 
 	return
 }
@@ -23,9 +20,6 @@ func (f SalesFeature) AddTestimoniFeature(ctx context.Context, request modelRequ
 func (f SalesFeature) UpdateTestimoniFeature(ctx context.Context, request modelRequest.Testimoni) (err error) {
 
 	err = f.repo.UpdateTestimoniRepository(ctx, request)
-	if err != nil {
-		return
-	}
 
 	return
 }
@@ -33,9 +27,6 @@ func (f SalesFeature) UpdateTestimoniFeature(ctx context.Context, request modelR
 func (f SalesFeature) GetTestimoniFeature(ctx context.Context, request modelRequest.Testimoni) (response modelRequest.Testimoni, err error) {
 
 	response, err = f.repo.GetTestimoniRepository(ctx, request)
-	if err != nil {
-		return
-	}
 
 	return
 }

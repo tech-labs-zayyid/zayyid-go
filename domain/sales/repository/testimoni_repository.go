@@ -198,7 +198,7 @@ func (t salesRepository) CountListTestimoniRepository(ctx context.Context, reque
 		SELECT
 			COUNT(id)
 		FROM
-			testimoni
+			product_marketing.sales_testimony
 		WHERE
 			1 = 1
 			%s`, queryCond)
