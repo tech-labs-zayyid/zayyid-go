@@ -29,6 +29,7 @@ type SalesRepository interface {
 	AddTestimoniRepository(ctx context.Context, request request.Testimoni) (err error)
 	UpdateTestimoniRepository(ctx context.Context, request request.Testimoni) (err error)
 	GetTestimoniRepository(ctx context.Context, request request.Testimoni) (response request.Testimoni, err error)
+	GetPublicListTestimoniRepository(ctx context.Context, request string, filter request.TestimoniSearch) (response []request.Testimoni, err error)
 	GetListTestimoniRepository(ctx context.Context, request request.Testimoni, filter request.TestimoniSearch) (response []request.Testimoni, err error)
 	CountListTestimoniRepository(ctx context.Context, request request.Testimoni) (response int, err error)
 

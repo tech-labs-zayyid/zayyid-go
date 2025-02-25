@@ -120,6 +120,62 @@ func (r salesRepository) GetTestimoniRepository(ctx context.Context, request mod
 	return
 }
 
+func (r salesRepository) GetPublicListTestimoniRepository(ctx context.Context, request string, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, err error) {
+
+	var (
+		args     []interface{}
+		argIndex = 1
+	)
+
+	offset := (filter.Page - 1) * filter.Limit
+
+	querySort := ""
+	if filter.SortBy != "" {
+		querySort += " ORDER BY " + filter.SortBy
+
+		if filter.SortOrder != "" {
+			querySort += " " + filter.SortOrder
+		}
+	}
+
+	args = append(args, filter.Limit, offset)
+	queryLimit := fmt.Sprintf(" LIMIT $%d OFFSET $%d", argIndex, argIndex+1)
+
+	query := fmt.Sprintf(`
+		SELECT
+			id, 
+			user_name, 
+			position, 
+			deskripsi, 
+			photo_url, 
+			is_active, 
+			created_at,
+			modified_at
+		FROM
+			product_marketing.sales_testimony
+		WHERE
+			1 = 1
+			AND is_active = 1
+			AND user_name = $1
+			%s`, queryLimit)
+	logger.LogInfo(constant.QUERY, query)
+
+	stmt, err := r.database.Preparex(query)
+	if err != nil {
+		err = sharedError.HandleError(err)
+		return
+	}
+	defer stmt.Close()
+
+	err = stmt.SelectContext(ctx, response, args...)
+	if err != nil {
+		err = sharedError.HandleError(err)
+		return
+	}
+
+	return
+}
+
 func (r salesRepository) GetListTestimoniRepository(ctx context.Context, request modelRequest.Testimoni, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, err error) {
 
 	var (

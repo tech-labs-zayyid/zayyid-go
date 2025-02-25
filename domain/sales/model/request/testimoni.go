@@ -12,7 +12,6 @@ type Testimoni struct {
 }
 
 type TestimoniSearch struct {
-	IsUpdate   int    `json:"is_update"`
 	StatusCode int    `json:"status_code"`
 	Limit      int    `json:"limit"`
 	Page       int    `json:"page"`

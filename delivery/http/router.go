@@ -27,7 +27,6 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 	// app.Get("/signature", handler.generateSignatureHandler.Handle)
 	// app.Post("/signature", handler.generateSignatureHandler.Handle)
 
-
 	api := app.Group("/api")
 	{
 		api.Get("/ping", handler.userMenuHandler.Ping)
@@ -39,6 +38,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		public.Get("/banner/:subdomain/*", handler.salesHandler.GetBannerPublicSales)
 		public.Get("/template/:subdomain/*", handler.salesHandler.GetListPublicTemplateSales)
 		public.Get("/social-media/:subdomain/*", handler.salesHandler.GetListPublicSocialMediaSales)
+		public.Get("/testimony/:subdomain/*", handler.salesHandler.GetListPublicSocialMediaSales)
 	}
 
 	master := app.Group("/master")
