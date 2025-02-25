@@ -35,12 +35,21 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Build Docker image
+    - name: Build Docker image with Buildx
       run: |
-        docker build --cache-from=type=local,src=/tmp/.buildx-cache \
-                    --cache-to=type=local,dest=/tmp/.buildx-cache \
-                    --platform linux/amd64 \
-                    -t myapp .
+        docker buildx build \
+          --builder default \
+          --cache-from=type=local,src=/tmp/.buildx-cache \
+          --cache-to=type=local,dest=/tmp/.buildx-cache,mode=max \
+          --platform linux/amd64 \
+          -t myapp \
+          --load
+#    - name: Build Docker image
+#      run: |
+#        docker build --cache-from=type=local,src=/tmp/.buildx-cache \
+#                    --cache-to=type=local,dest=/tmp/.buildx-cache \
+#                    --platform linux/amd64 \
+#                    -t myapp .
 
 
     - name: Log in to Amazon ECR
