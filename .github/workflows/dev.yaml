@@ -38,6 +38,10 @@ jobs:
       with:
         driver: docker
 
+    - name: Remove Docker Buildx Cache
+      run: |
+        rm -rf /tmp/.buildx-cache
+
     - name: Build Docker Image
       run: |
         docker buildx build \
