@@ -44,6 +44,7 @@ jobs:
           --platform linux/amd64 \
           -t myapp \
           --load
+          .
 #    - name: Build Docker image
 #      run: |
 #        docker build --cache-from=type=local,src=/tmp/.buildx-cache \
