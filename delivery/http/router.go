@@ -33,7 +33,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		api.Get("/ping", handler.userMenuHandler.Ping)
 	}
 
-	public := app.Group("/public")
+	public := api.Group("/public")
 	{
 		public.Get("/gallery/:subdomain/*", handler.salesHandler.GetGallerySalesPublic)
 		public.Get("/banner/:subdomain/*", handler.salesHandler.GetBannerPublicSales)
@@ -41,14 +41,14 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		public.Get("/social-media/:subdomain/*", handler.salesHandler.GetListPublicSocialMediaSales)
 	}
 
-	master := app.Group("/master")
+	master := api.Group("/master")
 	{
 		master.Get("/ping", handler.masterHandler.PingMaster)
 		master.Get("/province", handler.masterHandler.MasterListProvince)
 		master.Get("/city", handler.masterHandler.MasterListCity)
 	}
 
-	sales := app.Group("/sales")
+	sales := api.Group("/sales")
 	{
 		sales.Post("/gallery", handler.salesHandler.AddGallerySales)
 		sales.Get("/gallery", handler.salesHandler.GetGallerySales)
@@ -78,9 +78,15 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		sales.Get("/social-media", handler.salesHandler.GetListSocialMediaSales)
 	}
 
-	_ = app.Group("/agent")
+	_ = api.Group("/agent")
 	{
 		//list API for Agent
+	}
+
+	// user endpoint 
+	user := api.Group("/user")
+	{
+		user.Post("/register", handler.userHandler.RegisterUserHandler)
 	}
 
 	// app.All("/:base_path/*", middleware.SignatureMiddleware(), handler.applicationMenuHandler.Handle)
