@@ -64,9 +64,9 @@ jobs:
         echo "image=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
 
-    - name: Push Docker image to ECR
-      run: |
-        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales
+#    - name: Push Docker image to ECR
+#      run: |
+#        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/zayyid/backend-sales
 
   # deploy:
   #   needs: build
