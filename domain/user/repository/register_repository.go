@@ -10,7 +10,7 @@ import (
 
 func (r UserRepository) RegisterRepository(ctx context.Context, payload model.RegisterRequest) (userId string, err error) {
 
-	// define query for insert 
+	// define query for insert
 	query := `
 		INSERT INTO 
 			sales.users (
@@ -43,15 +43,15 @@ func (r UserRepository) RegisterRepository(ctx context.Context, payload model.Re
 		return
 	}
 
-	// Preparex 
+	// Preparex
 	stmt, err := r.database.PreparexContext(ctx, query)
 	if err != nil {
-		return 
+		return
 	}
-	defer stmt.Close() 
+	defer stmt.Close()
 
-	// Exec context 
-	_, err = stmt.ExecContext(ctx, 
+	// Exec context
+	_, err = stmt.ExecContext(ctx,
 		uuid,
 		payload.UserName,
 		payload.Name,
@@ -62,15 +62,17 @@ func (r UserRepository) RegisterRepository(ctx context.Context, payload model.Re
 		payload.Email,
 	)
 	if err != nil {
-		return 
+		return
 	}
-	
+
 	userId = uuid.String()
 
-	return 
+	return
+
 }
 
 func (r UserRepository) GetUserById(ctx context.Context, userId string) (resp model.UserRes, err error) {
+
 	// Define query
 	query := `
 		SELECT 
@@ -90,16 +92,17 @@ func (r UserRepository) GetUserById(ctx context.Context, userId string) (resp mo
 	stmt, err := r.database.PreparexContext(ctx, query)
 	if err != nil {
 		err = fmt.Errorf("failed to prepare statement: %w", err)
-		return 
+		return
 	}
-	defer stmt.Close() 
+	defer stmt.Close()
 
 	// Execute query
 	err = stmt.GetContext(ctx, &resp, userId)
 	if err != nil {
 		fmt.Errorf("failed to get user: %w", err)
-		return 
+		return
 	}
 
-	return 
+	return
+
 }
