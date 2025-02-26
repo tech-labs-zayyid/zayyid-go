@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 	"unicode"
@@ -46,7 +47,7 @@ func camelCaseToSpaces(s string) string {
 }
 
 // Secret key (harus disimpan dengan aman, misalnya di env)
-var secretKey = []byte("your-secret-key")
+var secretKey = []byte(os.Getenv("JWT_SECRET"))
 
 // Claim struct untuk JWT
 type Claim struct {
