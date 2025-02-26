@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"fmt"
+	sharedError "zayyid-go/domain/shared/helper/error"
 	"zayyid-go/domain/user/model"
 )
 
@@ -81,16 +81,14 @@ func (r UserRepository) GetUserById(ctx context.Context, userId string) (resp mo
 	// Prepare statement
 	stmt, err := r.database.PreparexContext(ctx, query)
 	if err != nil {
-		err = fmt.Errorf("failed to prepare statement: %w", err)
-		return
+		return model.UserRes{}, sharedError.HandleError(err)
 	}
 	defer stmt.Close()
 
 	// Execute query
 	err = stmt.GetContext(ctx, &resp, userId)
 	if err != nil {
-		err = fmt.Errorf("failed to get user: %w", err)
-		return
+		return model.UserRes{}, sharedError.HandleError(err)
 	}
 
 	return
