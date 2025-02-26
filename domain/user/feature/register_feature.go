@@ -4,6 +4,8 @@ import (
 	"context"
 	sharedHelper "zayyid-go/domain/shared/helper"
 	"zayyid-go/domain/user/model"
+
+	"github.com/google/uuid"
 )
 
 func (f UserFeature) RegisterFeature(ctx context.Context, payload model.RegisterRequest) (resp model.UserRes, err error) {
@@ -11,44 +13,49 @@ func (f UserFeature) RegisterFeature(ctx context.Context, payload model.Register
 	// Encrypt password using hash
 	encryptedPassword, err := sharedHelper.HashPassword(payload.Password)
 	if err != nil {
-		return 
+		return
 	}
 
-	// override actual password 
+	// override actual password
 	payload.Password = encryptedPassword
 
-	// call repo 
-	userId, err := f.repo.RegisterRepository(ctx, payload)
+	userId, err := uuid.NewV7()
 	if err != nil {
-		return 
+		return
 	}
 
-	// get one user by userid 
-	user, err := f.repo.GetUserById(ctx, userId)
+	// call repo
+	err = f.repo.RegisterRepository(ctx, payload, userId.String())
 	if err != nil {
-		return 
+		return
 	}
 
-	// Generate token 
-	token, err := sharedHelper.GenerateToken(userId, payload.Role)
+	// get one user by userid
+	user, err := f.repo.GetUserById(ctx, userId.String())
 	if err != nil {
-		return 
+		return
+	}
+
+	// Generate token
+	token, err := sharedHelper.GenerateToken(userId.String(), payload.Role)
+	if err != nil {
+		return
 	}
 
 	resp = model.UserRes{
-		Id: userId,
-		Name: user.Name,
-		UserName: user.UserName,
-		Email: user.Email,
-		Role: user.Role,
+		Id:             userId.String(),
+		Name:           user.Name,
+		UserName:       user.UserName,
+		Email:          user.Email,
+		Role:           user.Role,
 		WhatsAppNumber: user.WhatsAppNumber,
-		CreatedAt: user.CreatedAt,
-		CreatedBy: user.CreatedBy,
+		CreatedAt:      user.CreatedAt,
+		CreatedBy:      user.CreatedBy,
 		TokenData: model.TokenRes{
 			Token: token,
 		},
 	}
 
-	return 
+	return
 
 }

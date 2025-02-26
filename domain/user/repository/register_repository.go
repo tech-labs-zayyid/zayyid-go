@@ -4,11 +4,9 @@ import (
 	"context"
 	"fmt"
 	"zayyid-go/domain/user/model"
-
-	"github.com/google/uuid"
 )
 
-func (r UserRepository) RegisterRepository(ctx context.Context, payload model.RegisterRequest) (userId string, err error) {
+func (r UserRepository) RegisterRepository(ctx context.Context, payload model.RegisterRequest, userId string) (err error) {
 
 	// define query for insert
 	query := `
@@ -37,12 +35,6 @@ func (r UserRepository) RegisterRepository(ctx context.Context, payload model.Re
 		)
 	`
 
-	// Generate id with uuid v7
-	uuid, err := uuid.NewV7()
-	if err != nil {
-		return
-	}
-
 	// Preparex
 	stmt, err := r.database.PreparexContext(ctx, query)
 	if err != nil {
@@ -52,7 +44,7 @@ func (r UserRepository) RegisterRepository(ctx context.Context, payload model.Re
 
 	// Exec context
 	_, err = stmt.ExecContext(ctx,
-		uuid,
+		userId,
 		payload.UserName,
 		payload.Name,
 		payload.WhatsappNumber,
@@ -64,8 +56,6 @@ func (r UserRepository) RegisterRepository(ctx context.Context, payload model.Re
 	if err != nil {
 		return
 	}
-
-	userId = uuid.String()
 
 	return
 
@@ -99,7 +89,7 @@ func (r UserRepository) GetUserById(ctx context.Context, userId string) (resp mo
 	// Execute query
 	err = stmt.GetContext(ctx, &resp, userId)
 	if err != nil {
-		fmt.Errorf("failed to get user: %w", err)
+		err = fmt.Errorf("failed to get user: %w", err)
 		return
 	}
 

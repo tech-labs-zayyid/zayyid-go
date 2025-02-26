@@ -1,8 +1,8 @@
 -- migrate:up
-CREATE TYPE sales.user_role AS ENUM ('sales', 'agent'); -- Buat ENUM dulu
+CREATE TYPE product_marketing.user_role AS ENUM ('sales', 'agent'); -- Buat ENUM dulu
 
 CREATE TABLE 
-    IF NOT EXISTS sales.users (
+    IF NOT EXISTS product_marketing.users (
     id VARCHAR(36) PRIMARY KEY,
     username VARCHAR(50) UNIQUE,
     name VARCHAR(255),
@@ -15,7 +15,7 @@ CREATE TABLE
 );
 
 CREATE TABLE 
-    IF NOT EXISTS sales.sales_agent (
+    IF NOT EXISTS product_marketing.sales_agent (
     sales_id VARCHAR(36),
     agent_id VARCHAR(36),
     PRIMARY KEY (sales_id, agent_id),
@@ -24,6 +24,6 @@ CREATE TABLE
 );
 
 -- migrate:down
-DROP TABLE sales.sales_agent;
-DROP TABLE sales.users;
-DROP TYPE sales.user_role; -- Hapus ENUM saat rollback
+DROP TABLE product_marketing.sales_agent;
+DROP TABLE product_marketing.users;
+DROP TYPE product_marketing.user_role; -- Hapus ENUM saat rollback

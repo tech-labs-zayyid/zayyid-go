@@ -17,6 +17,6 @@ func NewUserRepository(db *database.Database) UserRepository {
 }
 
 type IUserRepository interface {
-	RegisterRepository(ctx context.Context, payload model.RegisterRequest) (userId string, err error)
-	GetUserById(ctx context.Context, userId string) (resp model.UserRes, err  error)
+	RegisterRepository(ctx context.Context, payload model.RegisterRequest, userId string) (err error)
+	GetUserById(ctx context.Context, userId string) (resp model.UserRes, err error)
 }
