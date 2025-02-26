@@ -19,9 +19,9 @@ import (
 // @Success 200 {object} sharedResponse.Response{data=model.UserRes}
 // @Failure 400 {object} sharedResponse.Response
 // @Failure 500 {object} sharedResponse.Response
-// @Router /api/user/register [post]
+// @Router /user/register [post]
 func (h UserHandler) RegisterUserHandler(c *fiber.Ctx) (err error) {
-	
+
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
@@ -29,18 +29,18 @@ func (h UserHandler) RegisterUserHandler(c *fiber.Ctx) (err error) {
 	// Define user model
 	payload := model.RegisterRequest{}
 
-	// Parse payload 
+	// Parse payload
 	if err = c.BodyParser(&payload); err != nil {
 		return sharedResponse.BadRequestError(c, "Bad request", c.OriginalURL(), err.Error())
-	} 
+	}
 
-	// Validate payload 
+	// Validate payload
 	err = sharedHelper.Validate(payload)
 	if err != nil {
 		return sharedResponse.BadRequestError(c, "Bad request", c.OriginalURL(), err.Error())
 	}
 
-	// Call register feature 
+	// Call register feature
 	resp, err := h.feature.RegisterFeature(ctx, payload)
 	if err != nil {
 		// Handle for any error
