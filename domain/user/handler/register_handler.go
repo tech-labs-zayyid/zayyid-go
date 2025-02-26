@@ -3,6 +3,7 @@ package handler
 import (
 	"zayyid-go/domain/shared/context"
 	sharedHelper "zayyid-go/domain/shared/helper"
+	sharedError "zayyid-go/domain/shared/helper/error"
 	sharedResponse "zayyid-go/domain/shared/response"
 	"zayyid-go/domain/user/model"
 
@@ -31,20 +32,20 @@ func (h UserHandler) RegisterUserHandler(c *fiber.Ctx) (err error) {
 
 	// Parse payload
 	if err = c.BodyParser(&payload); err != nil {
-		return sharedResponse.BadRequestError(c, "Bad request", c.OriginalURL(), err.Error())
+		return sharedError.ResponseErrorWithContext(ctx, err, h.SlackConf)
 	}
 
 	// Validate payload
 	err = sharedHelper.Validate(payload)
 	if err != nil {
-		return sharedResponse.BadRequestError(c, "Bad request", c.OriginalURL(), err.Error())
+		return sharedError.ResponseErrorWithContext(ctx, err, h.SlackConf)
 	}
 
 	// Call register feature
 	resp, err := h.feature.RegisterFeature(ctx, payload)
 	if err != nil {
 		// Handle for any error
-		return sharedResponse.InternalServerError(c, "Internal server error", c.OriginalURL(), err.Error())
+		return sharedError.ResponseErrorWithContext(ctx, err, h.SlackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, "Register user success!", resp)
