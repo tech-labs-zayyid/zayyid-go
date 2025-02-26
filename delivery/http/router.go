@@ -27,7 +27,6 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 	// app.Get("/signature", handler.generateSignatureHandler.Handle)
 	// app.Post("/signature", handler.generateSignatureHandler.Handle)
 
-
 	api := app.Group("/api")
 	{
 		api.Get("/ping", handler.userMenuHandler.Ping)
@@ -81,6 +80,12 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 	_ = app.Group("/agent")
 	{
 		//list API for Agent
+	}
+
+	// user endpoint
+	user := app.Group("/user")
+	{
+		user.Post("/register", handler.userHandler.RegisterUserHandler)
 	}
 
 	// app.All("/:base_path/*", middleware.SignatureMiddleware(), handler.applicationMenuHandler.Handle)

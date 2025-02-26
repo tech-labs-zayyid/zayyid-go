@@ -4,8 +4,11 @@ go 1.22.6
 
 require (
 	github.com/go-co-op/gocron v1.37.0
+	github.com/go-playground/validator/v10 v10.25.0
 	github.com/gofiber/fiber/v2 v2.52.6
+	github.com/gofiber/swagger v1.1.1
 	github.com/golang-jwt/jwt/v4 v4.5.1
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/golang/mock v1.6.0
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/joho/godotenv v1.5.1
@@ -13,6 +16,7 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/slack-go/slack v0.16.0
 	github.com/streadway/amqp v1.1.0
+	github.com/swaggo/swag v1.16.4
 	github.com/thanhpk/randstr v1.0.6
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.33.0
@@ -29,14 +33,11 @@ require (
 	github.com/go-openapi/swag v0.19.15 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.25.0 // indirect
-	github.com/gofiber/swagger v1.1.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/swaggo/files/v2 v2.0.2 // indirect
-	github.com/swaggo/swag v1.16.4 // indirect
 	golang.org/x/net v0.34.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
 	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
