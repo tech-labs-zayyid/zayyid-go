@@ -3,9 +3,8 @@ package feature
 import (
 	"context"
 	sharedHelper "zayyid-go/domain/shared/helper"
+	sharedHelperRepo "zayyid-go/domain/shared/repository"
 	"zayyid-go/domain/user/model"
-
-	"github.com/google/uuid"
 )
 
 func (f UserFeature) RegisterFeature(ctx context.Context, payload model.RegisterRequest) (resp model.UserRes, err error) {
@@ -19,10 +18,7 @@ func (f UserFeature) RegisterFeature(ctx context.Context, payload model.Register
 	// override actual password
 	payload.Password = encryptedPassword
 
-	userId, err := uuid.NewV7()
-	if err != nil {
-		return
-	}
+	userId := sharedHelperRepo.GenerateUuidAsIdTable()
 
 	// call repo
 	err = f.repo.RegisterRepository(ctx, payload, userId.String())
