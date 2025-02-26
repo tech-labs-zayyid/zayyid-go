@@ -7,6 +7,7 @@ CREATE TABLE
     social_media_name VARCHAR(30) NOT NULL,
     user_account VARCHAR(30) NOT NULL,
     link_embed text,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (id)

@@ -9,6 +9,8 @@ import (
 )
 
 type SalesRepository interface {
+	HomeData(ctx context.Context, subdomain string) (resp response.DataHome, err error)
+
 	// galery
 	GetCountDataGalleryBySalesId(ctx context.Context, salesId string) (count int, err error)
 	AddGallerySales(ctx context.Context, tx *sql.Tx, param request.AddGalleryParam) (err error)

@@ -6,6 +6,7 @@ CREATE TABLE
     public_access VARCHAR(20) NOT NULL,
     image_url text NOT NULL,
     description text,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (id)
