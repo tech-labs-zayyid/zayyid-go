@@ -10,6 +10,16 @@ import (
 	sharedResponse "zayyid-go/domain/shared/response"
 )
 
+// Get Data Home godoc
+// @Summary      Get Data Home
+// @Description  show list data of Home
+// @Tags         Home
+// @param        subdomain path string true "subdomain"
+// @param        referral path string true "referral"
+// @Success      200  {object}  response.Response
+// @Failure      500  {object}  response.Response
+// @Failure      404  {object}  response.Response
+// @Router       /public/home/{subdomain}/{referral} [get]
 func (h salesHandler) GetDataHome(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
