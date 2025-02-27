@@ -32,20 +32,20 @@ func (h UserHandler) RegisterUserHandler(c *fiber.Ctx) (err error) {
 
 	// Parse payload
 	if err = c.BodyParser(&payload); err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
 	// Validate payload
 	err = sharedHelper.Validate(payload)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
 	// Call register feature
 	resp, err := h.feature.RegisterFeature(ctx, payload)
 	if err != nil {
 		// Handle for any error
-		return sharedError.ResponseErrorWithContext(ctx, err, h.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, "Register user success!", resp)

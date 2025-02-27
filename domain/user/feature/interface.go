@@ -4,15 +4,18 @@ import (
 	"context"
 	"zayyid-go/domain/user/model"
 	"zayyid-go/domain/user/repository"
+	"zayyid-go/infrastructure/service/slack"
 )
 
 type UserFeature struct {
-	repo repository.UserRepository
+	repo      repository.UserRepository
+	SlackConf slack.SlackNotificationBug
 }
 
-func NewUserFeature(repo repository.UserRepository) UserFeature {
+func NewUserFeature(repo repository.UserRepository, SlackConf slack.SlackNotificationBug) UserFeature {
 	return UserFeature{
-		repo: repo,
+		repo:      repo,
+		SlackConf: SlackConf,
 	}
 }
 

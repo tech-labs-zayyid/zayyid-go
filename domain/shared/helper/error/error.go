@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/gofiber/fiber/v2"
 	"log"
 	"net/http"
 	"strconv"
@@ -14,6 +13,8 @@ import (
 	"zayyid-go/domain/shared/helper/constant"
 	"zayyid-go/infrastructure/logger"
 	"zayyid-go/infrastructure/service/slack"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type Response struct {
@@ -71,12 +72,18 @@ func ResponseErrorWithContext(ctx context.Context, err error, slackNotif slack.S
 	return c.Status(statusCode).JSON(response)
 }
 
+var (
+	InvalidEmailPassword error
+)
+
 func HandleError(err error) error {
 	switch {
 	case err == context.DeadlineExceeded:
 		return New(http.StatusInternalServerError, "timeout", err)
 	case err == sql.ErrNoRows:
 		return New(http.StatusNotFound, "data not found", err)
+	case err == InvalidEmailPassword:
+		return New(http.StatusUnauthorized, "invalid email or password", err)
 	default:
 		return New(http.StatusInternalServerError, "something when wrong", err)
 	}

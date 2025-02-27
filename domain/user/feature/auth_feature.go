@@ -2,8 +2,8 @@ package feature
 
 import (
 	"context"
-	"errors"
 	sharedHelper "zayyid-go/domain/shared/helper"
+	sharedHelperErr "zayyid-go/domain/shared/helper/error"
 	"zayyid-go/domain/user/model"
 )
 
@@ -19,7 +19,7 @@ func (f UserFeature) AuthUserFeature(ctx context.Context, payload model.AuthUser
 
 	// compare for the password
 	if !sharedHelper.VerifyPassword(user.Password, payload.Password) {
-		err = errors.New("invalid password")
+		err = sharedHelperErr.HandleError(sharedHelperErr.InvalidEmailPassword)
 		return
 	}
 
