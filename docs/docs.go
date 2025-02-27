@@ -93,6 +93,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/public/home/{subdomain}/{referral}": {
+            "get": {
+                "description": "show list data of Home",
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Get Data Home",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "subdomain",
+                        "name": "subdomain",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "referral",
+                        "name": "referral",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/public/social-media/{subdomain}/{referral}": {
             "get": {
                 "description": "show list of Public Social Media",

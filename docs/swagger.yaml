@@ -213,6 +213,36 @@ paths:
       summary: Get Detail Gallery
       tags:
       - Data Gallery
+  /public/home/{subdomain}/{referral}:
+    get:
+      description: show list data of Home
+      parameters:
+      - description: subdomain
+        in: path
+        name: subdomain
+        required: true
+        type: string
+      - description: referral
+        in: path
+        name: referral
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Data Home
+      tags:
+      - Home
   /public/social-media/{subdomain}/{referral}:
     get:
       description: show list of Public Social Media
