@@ -88,6 +88,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 	{
 		user.Post("/register", handler.userHandler.RegisterUserHandler)
 		user.Post("/login", handler.userHandler.AuthUserHandler)
+		user.Post("/refresh-token", handler.userHandler.RefreshTokenHandler)
 	}
 
 	// app.All("/:base_path/*", middleware.SignatureMiddleware(), handler.applicationMenuHandler.Handle)

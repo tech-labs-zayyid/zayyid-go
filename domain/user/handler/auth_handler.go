@@ -51,3 +51,45 @@ func (h UserHandler) AuthUserHandler(c *fiber.Ctx) (err error) {
 	return sharedResponse.ResponseOK(c, "Login user success!", resp)
 
 }
+
+// RefreshTokenHandler godoc
+// @Summary Refresh user token
+// @Description Refresh user token with the provided refresh token
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param payload body model.RefreshTokenRequest true "Refresh Token Request"
+// @Success 200 {object} sharedResponse.Response{data=model.TokenRes}
+// @Failure 400 {object} sharedResponse.Response
+// @Failure 500 {object} sharedResponse.Response
+// @Router /user/refresh-token [post]
+func (h UserHandler) RefreshTokenHandler(c *fiber.Ctx) error {
+
+	ctx, cancel := context.CreateContextWithTimeout()
+	defer cancel()
+	ctx = context.SetValueToContext(ctx, c)
+
+	// Define refresh token model
+	payload := model.RefreshToken{}
+
+	// Parse payload
+	if err := c.BodyParser(&payload); err != nil {
+		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+	}
+
+	// Validate payload
+	err := sharedHelper.Validate(payload)
+	if err != nil {
+		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+	}
+
+	// Call refresh token feature
+	resp, err := h.feature.RefreshTokenFeature(ctx, payload.RefreshToken)
+	if err != nil {
+		// Handle for any error
+		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+	}
+
+	return sharedResponse.ResponseOK(c, "Refresh token success!", resp)
+
+}

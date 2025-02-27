@@ -29,6 +29,12 @@ func (f UserFeature) AuthUserFeature(ctx context.Context, payload model.AuthUser
 		return
 	}
 
+	// generate refresh token
+	refreshToken, err := sharedHelper.GenerateRefreshToken(user.Id, user.Role)
+	if err != nil {
+		return
+	}
+
 	resp = model.UserRes{
 		Id:             user.Id,
 		UserName:       user.UserName,
@@ -39,8 +45,39 @@ func (f UserFeature) AuthUserFeature(ctx context.Context, payload model.AuthUser
 		CreatedAt:      user.CreatedAt,
 		CreatedBy:      user.CreatedBy,
 		TokenData: model.TokenRes{
-			Token: token,
+			Token:        token,
+			RefreshToken: refreshToken,
 		},
+	}
+
+	return
+
+}
+
+func (f UserFeature) RefreshTokenFeature(ctx context.Context, refreshToken string) (resp model.TokenRes, err error) {
+
+	// validate the refresh token
+	claims, err := sharedHelper.ValidateToken(refreshToken)
+	if err != nil {
+		err = sharedHelperErr.HandleError(sharedHelperErr.InvalidToken)
+		return
+	}
+
+	// get user by id from token claims
+	user, err := f.repo.GetUserById(ctx, claims.UserId)
+	if err != nil {
+		return
+	}
+
+	// generate new token
+	newToken, err := sharedHelper.GenerateToken(user.Id, user.Role)
+	if err != nil {
+		return
+	}
+
+	resp = model.TokenRes{
+		Token:        newToken,
+		RefreshToken: refreshToken,
 	}
 
 	return

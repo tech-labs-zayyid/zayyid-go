@@ -19,4 +19,5 @@ func NewUserHandler(feature *feature.UserFeature) UserHandler {
 type IUserHandler interface {
 	RegisterUserHandler(c *fiber.Ctx) (err error)
 	AuthUserHandler(c *fiber.Ctx) (err error)
+	RefreshTokenHandler(c *fiber.Ctx) (err error)
 }

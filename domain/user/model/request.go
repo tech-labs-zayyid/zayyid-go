@@ -18,3 +18,7 @@ type QueryUser struct {
 	Id    string
 	Email string
 }
+
+type RefreshToken struct {
+	RefreshToken string `json:"refresh_token" validate:"required"`
+}

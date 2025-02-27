@@ -68,6 +68,24 @@ func GenerateToken(userID string, role string) (string, error) {
 	return token.SignedString(secretKey)
 }
 
+// GenerateToken creates a JWT token with user_id and role claims
+func GenerateRefreshToken(userID string, role string) (string, error) {
+	// Set token claims
+	claims := model.Claim{
+		Role:   role,
+		UserId: userID,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(5 * 24 * time.Hour)), // Token expires in 24 hours
+		},
+	}
+
+	// Create token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// Sign the token
+	return token.SignedString(secretKey)
+}
+
 // ValidateToken parses and validates a JWT token
 func ValidateToken(tokenString string) (model.Claim, error) {
 	// Parse token with claims

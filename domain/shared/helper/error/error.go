@@ -74,6 +74,7 @@ func ResponseErrorWithContext(ctx context.Context, err error, slackNotif slack.S
 
 var (
 	InvalidEmailPassword error
+	InvalidToken         error
 )
 
 func HandleError(err error) error {
