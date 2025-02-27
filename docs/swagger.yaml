@@ -1,4 +1,21 @@
 definitions:
+  model.AuthUserRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  model.RefreshToken:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
   model.RegisterRequest:
     properties:
       email:
@@ -626,6 +643,76 @@ paths:
       summary: Get List Customer
       tags:
       - Data Testimoni
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Login user with the provided details
+      parameters:
+      - description: Login Request
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.AuthUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UserRes'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Login user
+      tags:
+      - User
+  /user/refresh-token:
+    post:
+      consumes:
+      - application/json
+      description: Refresh user token with the provided refresh token
+      parameters:
+      - description: Refresh Token Request
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.RefreshToken'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.TokenRes'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Refresh user token
+      tags:
+      - User
   /user/register:
     post:
       consumes:

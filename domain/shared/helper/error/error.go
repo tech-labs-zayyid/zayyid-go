@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/gofiber/fiber/v2"
 	"log"
 	"net/http"
 	"strconv"
@@ -14,6 +13,8 @@ import (
 	"zayyid-go/domain/shared/helper/constant"
 	"zayyid-go/infrastructure/logger"
 	"zayyid-go/infrastructure/service/slack"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type Response struct {
@@ -52,7 +53,7 @@ func ResponseErrorWithContext(ctx context.Context, err error, slackNotif slack.S
 		}
 	}
 
-	if statusCode != 404 {
+	if statusCode != 404 && slackNotif != nil {
 		err = slackNotif.Send(fmt.Sprintf("ERROR CODE: %d, ERROR MESSAGE: %s, BODY REQUEST: %s", statusCode, originalError, jsonBody))
 		if err != nil {
 			originalError = originalError + ", ERROR SEND NOTIFICATION SLACK: " + err.Error()

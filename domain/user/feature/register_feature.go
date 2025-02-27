@@ -38,6 +38,12 @@ func (f UserFeature) RegisterFeature(ctx context.Context, payload model.Register
 		return
 	}
 
+	// generate refresh token
+	refreshToken, err := sharedHelper.GenerateRefreshToken(user.Id, user.Role)
+	if err != nil {
+		return
+	}
+
 	resp = model.UserRes{
 		Id:             userId.String(),
 		Name:           user.Name,
@@ -48,7 +54,8 @@ func (f UserFeature) RegisterFeature(ctx context.Context, payload model.Register
 		CreatedAt:      user.CreatedAt,
 		CreatedBy:      user.CreatedBy,
 		TokenData: model.TokenRes{
-			Token: token,
+			Token:        token,
+			RefreshToken: refreshToken,
 		},
 	}
 
