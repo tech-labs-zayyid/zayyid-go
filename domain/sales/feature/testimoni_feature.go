@@ -55,18 +55,13 @@ func (f SalesFeature) GetListTestimoniFeature(ctx context.Context, request model
 
 func (f SalesFeature) GetPublicListTestimoniFeature(ctx context.Context, subDomain, referral string, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, pagination *sharedModel.Pagination, err error) {
 
-	//validation referral code
-	if referral != "" {
-
-	}
-
 	response, err = f.repo.GetPublicListTestimoniRepository(ctx, subDomain, filter)
 	if err != nil {
 		return
 	}
 
 	paramCount := modelRequest.Testimoni{
-		UserName: subDomain,
+		PublicAccess: subDomain,
 	}
 	count, err := f.repo.CountListTestimoniRepository(ctx, paramCount)
 	if err != nil {

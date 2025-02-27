@@ -1,14 +1,14 @@
 package request
 
 type Testimoni struct {
-	Id         string `json:"id" query:"id" db:"id"`
-	UserName   string `json:"user_name" query:"user_name" db:"user_name"`
-	Position   string `json:"position" query:"position" db:"position"`
-	Deskripsi  string `json:"deskripsi" query:"deskripsi" db:"deskripsi"`
-	PhotoUrl   string `json:"photo_url" query:"photo_url" db:"photo_url"`
-	IsActive   int    `json:"is_active" query:"is_active" db:"is_active"`
-	CreatedAt  string `json:"created_at" query:"created_at" db:"created_at"`
-	ModifiedAt string `json:"modified_at" query:"modified_at" db:"modified_at"`
+	Id           string `json:"id" query:"id" db:"id"`
+	PublicAccess string `json:"public_access" query:"public_access" db:"public_access"`
+	FullName     string `json:"full_name" query:"full_name" db:"full_name"`
+	Description  string `json:"description" query:"description" db:"description"`
+	PhotoUrl     string `json:"photo_url" query:"photo_url" db:"photo_url"`
+	IsActive     int    `json:"is_active" query:"is_active" db:"is_active"`
+	CreatedAt    string `json:"created_at" query:"created_at" db:"created_at"`
+	ModifiedAt   string `json:"modified_at" query:"modified_at" db:"modified_at"`
 }
 
 type TestimoniSearch struct {
