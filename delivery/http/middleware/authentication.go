@@ -1,51 +1,64 @@
 package middleware
 
 import (
+	"context"
 	"errors"
-	"fmt"
 	"os"
-
+	"strings"
+	"zayyid-go/domain/shared/helper/constant"
+	sharedError "zayyid-go/domain/shared/helper/error"
 	sharedModel "zayyid-go/domain/shared/model"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func MiddlewareAuth(tokenString string) error {
-	if tokenString == "" {
-		return fmt.Errorf("missing token")
+// MiddlewareAuth untuk memvalidasi JWT sebelum request masuk ke handler
+func Auth(c *fiber.Ctx) error {
+	ctx := context.WithValue(context.Background(), constant.FiberContext, c)
+
+	authHeader := c.Get("Authorization")
+	if authHeader == "" {
+		return sharedError.ResponseErrorWithContext(ctx, sharedError.HandleError(sharedError.ErrInvalidToken), nil)
 	}
 
-	// Ambil secret key dari environment
+	tokenParts := strings.Split(authHeader, " ")
+	if len(tokenParts) != 2 || tokenParts[0] != "Bearer" {
+		return sharedError.ResponseErrorWithContext(ctx, sharedError.ErrInvalidHeaderFormat, nil)
+	}
+	tokenString := tokenParts[1]
+
 	secretKey := os.Getenv("JWT_SECRET")
 	if secretKey == "" {
-		return fmt.Errorf("missing JWT_SECRET environment variable")
+		return sharedError.ResponseErrorWithContext(ctx, sharedError.ErrMissingJWTSecret, nil)
 	}
 
-	// Parse token dengan kunci
 	token, err := jwt.ParseWithClaims(tokenString, &sharedModel.Claim{}, func(token *jwt.Token) (interface{}, error) {
-		// Pastikan metode signing sesuai
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			return nil, sharedError.HandleError(sharedError.ErrFailedToParseToken)
 		}
 		return []byte(secretKey), nil
 	})
+
 	if err != nil {
 		if errors.Is(err, jwt.ErrSignatureInvalid) {
-			return fmt.Errorf("invalid token signature")
+			return sharedError.ResponseErrorWithContext(ctx, sharedError.ErrInvalidToken, nil)
 		}
-		return fmt.Errorf("failed to parse token: %w", err)
+		return sharedError.ResponseErrorWithContext(ctx, sharedError.ErrFailedToParseToken, nil)
 	}
 
-	// Ambil data claims
 	claims, ok := token.Claims.(*sharedModel.Claim)
 	if !ok || !token.Valid {
-		return fmt.Errorf("invalid claim token")
+		return sharedError.ResponseErrorWithContext(ctx, sharedError.ErrInvalidToken, nil)
 	}
 
-	// Validasi UserId untuk SSO V3
 	if claims.UserId == "" {
-		return fmt.Errorf("invalid Authorization header format")
+		return sharedError.ResponseErrorWithContext(ctx, sharedError.ErrInvalidHeaderFormat, nil)
 	}
 
-	return nil
+	c.Locals("user_id", claims.UserId)
+	c.Locals("role", claims.Role)
+
+	return c.Next()
+
 }

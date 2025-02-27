@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -23,15 +24,11 @@ type Response struct {
 	Data    interface{} `json:"data"`
 }
 
-func New(statusCode int, msg string, err error) error {
-	return fmt.Errorf("%d | %s | %w", statusCode, msg, err)
-}
-
-func TrimMessage(err error) (statusCode int, customError, originalError string) {
-	errs := strings.Split(err.Error(), "|")
+func TrimMessage(err error) (statusCode int, customError string) {
+	errs := strings.Split(err.Error(), ":")
 	statusCode, _ = strconv.Atoi(strings.TrimSpace(errs[0]))
 	customError = strings.TrimSpace(errs[1])
-	originalError = strings.TrimSpace(errs[2])
+
 	return
 }
 
@@ -42,10 +39,11 @@ func ResponseErrorWithContext(ctx context.Context, err error, slackNotif slack.S
 		originalError string
 	)
 
-	statusCode, customError, originalError = TrimMessage(err)
+	statusCode, customError = TrimMessage(err)
 	body := ctx.Value(constant.FiberContext).(*fiber.Ctx).Body()
 	method := ctx.Value(constant.FiberContext).(*fiber.Ctx).Method()
 	var jsonBody map[string]interface{}
+
 	if strings.ToLower(method) != "get" {
 		if err := json.Unmarshal(body, &jsonBody); err != nil {
 			log.Printf("Error unmarshaling body request to JSON: %v", err)
@@ -53,10 +51,11 @@ func ResponseErrorWithContext(ctx context.Context, err error, slackNotif slack.S
 		}
 	}
 
-	if statusCode != 404 {
-		err = slackNotif.Send(fmt.Sprintf("ERROR CODE: %d, ERROR MESSAGE: %s, BODY REQUEST: %s", statusCode, originalError, jsonBody))
-		if err != nil {
-			originalError = originalError + ", ERROR SEND NOTIFICATION SLACK: " + err.Error()
+	if statusCode != http.StatusNotFound {
+		if slackNotif != nil {
+			if err := slackNotif.Send(fmt.Sprintf("ERROR CODE: %d, ERROR MESSAGE: %s, BODY REQUEST: %v", statusCode, originalError, jsonBody)); err != nil {
+				originalError += ", ERROR SEND NOTIFICATION SLACK: " + err.Error()
+			}
 		}
 	}
 
@@ -72,20 +71,49 @@ func ResponseErrorWithContext(ctx context.Context, err error, slackNotif slack.S
 	return c.Status(statusCode).JSON(response)
 }
 
+type CustomError struct {
+	StatusCode int
+	Message    string
+	Err        error
+}
+
+func (e *CustomError) Error() string {
+	return fmt.Sprintf("%d: %s", e.StatusCode, e.Message)
+}
+
+func New(statusCode int, message string, err error) *CustomError {
+	return &CustomError{
+		StatusCode: statusCode,
+		Message:    message,
+		Err:        err,
+	}
+}
+
 var (
-	InvalidEmailPassword error
-	InvalidToken         error
+	ErrInvalidEmailPassword = New(http.StatusUnauthorized, "invalid email or password", nil)
+	ErrInvalidToken         = New(http.StatusBadRequest, "invalid token", nil)
+	ErrMissingJWTSecret     = New(http.StatusInternalServerError, "missing JWT secret", nil)
+	ErrFailedToParseToken   = New(http.StatusBadRequest, "failed to parse token", nil)
+	ErrInvalidHeaderFormat  = New(http.StatusBadRequest, "invalid header format", nil)
 )
 
-func HandleError(err error) error {
+func HandleError(err error) *CustomError {
 	switch {
-	case err == context.DeadlineExceeded:
+	case errors.Is(err, context.DeadlineExceeded):
 		return New(http.StatusInternalServerError, "timeout", err)
-	case err == sql.ErrNoRows:
+	case errors.Is(err, sql.ErrNoRows):
 		return New(http.StatusNotFound, "data not found", err)
-	case err == InvalidEmailPassword:
-		return New(http.StatusUnauthorized, "invalid email or password", err)
+	case errors.Is(err, ErrInvalidEmailPassword):
+		return ErrInvalidEmailPassword
+	case errors.Is(err, ErrInvalidToken):
+		return ErrInvalidToken
+	case errors.Is(err, ErrMissingJWTSecret):
+		return ErrMissingJWTSecret
+	case errors.Is(err, ErrFailedToParseToken):
+		return ErrFailedToParseToken
+	case errors.Is(err, ErrInvalidHeaderFormat):
+		return ErrInvalidHeaderFormat
 	default:
-		return New(http.StatusInternalServerError, "something when wrong", err)
+		return New(http.StatusInternalServerError, "something went wrong", err)
 	}
 }

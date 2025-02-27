@@ -19,7 +19,7 @@ func (f UserFeature) AuthUserFeature(ctx context.Context, payload model.AuthUser
 
 	// compare for the password
 	if !sharedHelper.VerifyPassword(user.Password, payload.Password) {
-		err = sharedHelperErr.HandleError(sharedHelperErr.InvalidEmailPassword)
+		err = sharedHelperErr.ErrInvalidEmailPassword
 		return
 	}
 
@@ -59,7 +59,7 @@ func (f UserFeature) RefreshTokenFeature(ctx context.Context, refreshToken strin
 	// validate the refresh token
 	claims, err := sharedHelper.ValidateToken(refreshToken)
 	if err != nil {
-		err = sharedHelperErr.HandleError(sharedHelperErr.InvalidToken)
+		err = sharedHelperErr.ErrInvalidToken
 		return
 	}
 
