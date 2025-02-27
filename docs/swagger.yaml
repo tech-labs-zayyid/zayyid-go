@@ -1,4 +1,14 @@
 definitions:
+  model.AuthUserRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
   model.RegisterRequest:
     properties:
       email:
@@ -151,41 +161,6 @@ definitions:
 info:
   contact: {}
 paths:
-  /api/user/register:
-    post:
-      consumes:
-      - application/json
-      description: Register a new user with the provided details
-      parameters:
-      - description: Register Request
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/model.RegisterRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/model.UserRes'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Register a new user
-      tags:
-      - User
   /public/banner/{subdomain}/{refferal}:
     get:
       description: show public of Banner
@@ -631,4 +606,74 @@ paths:
       summary: Get List Customer
       tags:
       - Data Testimoni
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Login user with the provided details
+      parameters:
+      - description: Login Request
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.AuthUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UserRes'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Login user
+      tags:
+      - User
+  /user/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with the provided details
+      parameters:
+      - description: Register Request
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UserRes'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Register a new user
+      tags:
+      - User
 swagger: "2.0"

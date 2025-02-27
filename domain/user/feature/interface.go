@@ -7,15 +7,16 @@ import (
 )
 
 type UserFeature struct {
-	repo      repository.UserRepository
+	repo repository.UserRepository
 }
 
-func NewUserFeature( repo repository.UserRepository) UserFeature {
+func NewUserFeature(repo repository.UserRepository) UserFeature {
 	return UserFeature{
-		repo:      repo,
+		repo: repo,
 	}
 }
 
 type IUserFeature interface {
 	RegisterFeature(ctx context.Context, payload model.RegisterRequest) (resp model.UserRes, err error)
+	AuthUserFeature(ctx context.Context, payload model.AuthUserRequest) (resp model.UserRes, err error)
 }
