@@ -27,7 +27,7 @@ type Container struct {
 	MasterFeature     *Master.MasterFeature
 	SalesFeature      *Sales.SalesFeature
 	Slack             *slack.ConfigSlack
-	UserFeature User.UserFeature
+	UserFeature       User.UserFeature
 }
 
 func SetupContainer() Container {
@@ -68,6 +68,7 @@ func SetupContainer() Container {
 		),
 		UserFeature: User.NewUserFeature(
 			UserRepo.NewUserRepository(db),
+			notifBug,
 		),
 	}
 }
