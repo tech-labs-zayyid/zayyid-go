@@ -9,6 +9,13 @@ definitions:
     - email
     - password
     type: object
+  model.RefreshToken:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
   model.RegisterRequest:
     properties:
       email:
@@ -669,6 +676,41 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: Login user
+      tags:
+      - User
+  /user/refresh-token:
+    post:
+      consumes:
+      - application/json
+      description: Refresh user token with the provided refresh token
+      parameters:
+      - description: Refresh Token Request
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.RefreshToken'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.TokenRes'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Refresh user token
       tags:
       - User
   /user/register:

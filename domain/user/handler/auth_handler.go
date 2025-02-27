@@ -58,7 +58,7 @@ func (h UserHandler) AuthUserHandler(c *fiber.Ctx) (err error) {
 // @Tags User
 // @Accept json
 // @Produce json
-// @Param payload body model.RefreshTokenRequest true "Refresh Token Request"
+// @Param payload body model.RefreshToken true "Refresh Token Request"
 // @Success 200 {object} sharedResponse.Response{data=model.TokenRes}
 // @Failure 400 {object} sharedResponse.Response
 // @Failure 500 {object} sharedResponse.Response
