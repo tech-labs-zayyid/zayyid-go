@@ -80,7 +80,7 @@ func (f SalesFeature) GetDataListGallery(ctx context.Context) (resp response.Gal
 	)
 
 	//mocking sales id
-	valueCtx.SalesId = "01951f6b-db3f-7d07-8b2c-80d2e2d1be30x"
+	valueCtx.SalesId = "01951f6b-db3f-7d07-8b2c-80d2e2d1be30"
 
 	//validation sales id
 
