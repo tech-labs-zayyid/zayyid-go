@@ -151,41 +151,6 @@ definitions:
 info:
   contact: {}
 paths:
-  /api/user/register:
-    post:
-      consumes:
-      - application/json
-      description: Register a new user with the provided details
-      parameters:
-      - description: Register Request
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/model.RegisterRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/model.UserRes'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Register a new user
-      tags:
-      - User
   /public/banner/{subdomain}/{refferal}:
     get:
       description: show public of Banner
@@ -238,6 +203,36 @@ paths:
       summary: Get Detail Gallery
       tags:
       - Data Gallery
+  /public/home/{subdomain}/{referral}:
+    get:
+      description: show list data of Home
+      parameters:
+      - description: subdomain
+        in: path
+        name: subdomain
+        required: true
+        type: string
+      - description: referral
+        in: path
+        name: referral
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Data Home
+      tags:
+      - Home
   /public/social-media/{subdomain}/{referral}:
     get:
       description: show list of Public Social Media
@@ -631,4 +626,39 @@ paths:
       summary: Get List Customer
       tags:
       - Data Testimoni
+  /user/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with the provided details
+      parameters:
+      - description: Register Request
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UserRes'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Register a new user
+      tags:
+      - User
 swagger: "2.0"
