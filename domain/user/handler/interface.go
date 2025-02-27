@@ -2,14 +2,12 @@ package handler
 
 import (
 	"zayyid-go/domain/user/feature"
-	"zayyid-go/infrastructure/service/slack"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type UserHandler struct {
-	feature   *feature.UserFeature
-	SlackConf slack.SlackNotificationBug
+	feature *feature.UserFeature
 }
 
 func NewUserHandler(feature *feature.UserFeature) UserHandler {
@@ -20,4 +18,6 @@ func NewUserHandler(feature *feature.UserFeature) UserHandler {
 
 type IUserHandler interface {
 	RegisterUserHandler(c *fiber.Ctx) (err error)
+	AuthUserHandler(c *fiber.Ctx) (err error)
+	RefreshTokenHandler(c *fiber.Ctx) (err error)
 }

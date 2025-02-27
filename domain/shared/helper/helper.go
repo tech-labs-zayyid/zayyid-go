@@ -9,6 +9,7 @@ import (
 	"time"
 	"unicode"
 	sharedError "zayyid-go/domain/shared/helper/error"
+	"zayyid-go/domain/shared/model"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v5"
@@ -49,17 +50,10 @@ func camelCaseToSpaces(s string) string {
 // Secret key (harus disimpan dengan aman, misalnya di env)
 var secretKey = []byte(os.Getenv("JWT_SECRET"))
 
-// Claim struct untuk JWT
-type Claim struct {
-	Role   string `json:"role"`
-	UserId string `json:"user_id"`
-	jwt.RegisteredClaims
-}
-
 // GenerateToken creates a JWT token with user_id and role claims
 func GenerateToken(userID string, role string) (string, error) {
 	// Set token claims
-	claims := Claim{
+	claims := model.Claim{
 		Role:   role,
 		UserId: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -74,10 +68,28 @@ func GenerateToken(userID string, role string) (string, error) {
 	return token.SignedString(secretKey)
 }
 
+// GenerateToken creates a JWT token with user_id and role claims
+func GenerateRefreshToken(userID string, role string) (string, error) {
+	// Set token claims
+	claims := model.Claim{
+		Role:   role,
+		UserId: userID,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(5 * 24 * time.Hour)), // Token expires in 24 hours
+		},
+	}
+
+	// Create token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// Sign the token
+	return token.SignedString(secretKey)
+}
+
 // ValidateToken parses and validates a JWT token
-func ValidateToken(tokenString string) (Claim, error) {
+func ValidateToken(tokenString string) (model.Claim, error) {
 	// Parse token with claims
-	token, err := jwt.ParseWithClaims(tokenString, &Claim{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &model.Claim{}, func(token *jwt.Token) (interface{}, error) {
 		// Ensure the signing method is HMAC
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
@@ -86,20 +98,20 @@ func ValidateToken(tokenString string) (Claim, error) {
 	})
 
 	if err != nil {
-		return Claim{}, fmt.Errorf("failed to parse token: %w", err)
+		return model.Claim{}, fmt.Errorf("failed to parse token: %w", err)
 	}
 
 	// Extract claims
-	if claims, ok := token.Claims.(*Claim); ok && token.Valid {
+	if claims, ok := token.Claims.(*model.Claim); ok && token.Valid {
 		// Check if the token has expired
 		if claims.ExpiresAt != nil && time.Now().After(claims.ExpiresAt.Time) {
-			return Claim{}, errors.New("token has expired")
+			return model.Claim{}, errors.New("token has expired")
 		}
 
 		return *claims, nil
 	}
 
-	return Claim{}, errors.New("invalid token")
+	return model.Claim{}, errors.New("invalid token")
 }
 
 // HashPassword hashes the given password using bcrypt

@@ -19,4 +19,5 @@ func NewUserRepository(db *database.Database) UserRepository {
 type IUserRepository interface {
 	RegisterRepository(ctx context.Context, payload model.RegisterRequest, userId string) (err error)
 	GetUserById(ctx context.Context, userId string) (resp model.UserRes, err error)
+	GetByQueryRepository(ctx context.Context, q model.QueryUser) (user model.UserRes, err error)
 }
