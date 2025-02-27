@@ -9,6 +9,8 @@ import (
 	Sales "zayyid-go/domain/sales/feature"
 	SalesRepo "zayyid-go/domain/sales/repository"
 	atomicRepo "zayyid-go/domain/shared/repository"
+	ThirdParty "zayyid-go/domain/third_party/feature"
+	ThirdPartyRepo "zayyid-go/domain/third_party/repository"
 	User "zayyid-go/domain/user/feature"
 	UserRepo "zayyid-go/domain/user/repository"
 	UserMenu "zayyid-go/domain/user_menu/feature"
@@ -28,6 +30,7 @@ type Container struct {
 	SalesFeature      *Sales.SalesFeature
 	Slack             *slack.ConfigSlack
 	UserFeature       User.UserFeature
+	ThirdPartyFeature ThirdParty.ThirdPartyFeature
 }
 
 func SetupContainer() Container {
@@ -69,6 +72,11 @@ func SetupContainer() Container {
 		UserFeature: User.NewUserFeature(
 			UserRepo.NewUserRepository(db),
 			notifBug,
+		),
+		ThirdPartyFeature: ThirdParty.NewThirdPartyFeature(
+			ThirdPartyRepo.NewThirdPartyRepository(db),
+			notifBug,
+			&config,
 		),
 	}
 }

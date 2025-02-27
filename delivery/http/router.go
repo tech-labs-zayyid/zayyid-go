@@ -33,10 +33,10 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		api.Get("/ping", handler.userMenuHandler.Ping)
 	}
 
-	// thirdParty := app.Group("/third-party")
-	// {
-	// 	thirdParty.Post("/callback-payment-receiving", handler.userMenuHandler.CallbackPaymentReceivingMidtrans)
-	// }
+	thirdParty := app.Group("/third-party")
+	{
+		thirdParty.Post("/callback-payment-receiving", handler.thirdPartyHandler.CallbackPaymentReceivingMidtrans)
+	}
 
 	public := app.Group("/public")
 	{
