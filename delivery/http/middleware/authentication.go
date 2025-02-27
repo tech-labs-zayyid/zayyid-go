@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	"errors"
+	"net/http"
 	"os"
 	"strings"
 	"zayyid-go/domain/shared/helper/constant"
@@ -15,45 +16,46 @@ import (
 
 // MiddlewareAuth untuk memvalidasi JWT sebelum request masuk ke handler
 func Auth(c *fiber.Ctx) error {
+
 	ctx := context.WithValue(context.Background(), constant.FiberContext, c)
 
 	authHeader := c.Get("Authorization")
 	if authHeader == "" {
-		return sharedError.ResponseErrorWithContext(ctx, sharedError.HandleError(sharedError.ErrInvalidToken), nil)
+		return sharedError.ResponseErrorWithContext(ctx, sharedError.New(http.StatusBadRequest, "Invalid token", errors.New("authorization header is missing")), nil)
 	}
 
 	tokenParts := strings.Split(authHeader, " ")
 	if len(tokenParts) != 2 || tokenParts[0] != "Bearer" {
-		return sharedError.ResponseErrorWithContext(ctx, sharedError.ErrInvalidHeaderFormat, nil)
+		return sharedError.ResponseErrorWithContext(ctx, sharedError.New(http.StatusBadRequest, "Invalid token", errors.New("invalid authorization format")), nil)
 	}
 	tokenString := tokenParts[1]
 
 	secretKey := os.Getenv("JWT_SECRET")
 	if secretKey == "" {
-		return sharedError.ResponseErrorWithContext(ctx, sharedError.ErrMissingJWTSecret, nil)
+		return sharedError.ResponseErrorWithContext(ctx, sharedError.New(http.StatusInternalServerError, "Missing JWT secret", errors.New("jwt secret key is not set in environment variables")), nil)
 	}
 
 	token, err := jwt.ParseWithClaims(tokenString, &sharedModel.Claim{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, sharedError.HandleError(sharedError.ErrFailedToParseToken)
+			return nil, sharedError.New(http.StatusBadRequest, "Failed to parse token", errors.New("unexpected signing method"))
 		}
 		return []byte(secretKey), nil
 	})
 
 	if err != nil {
 		if errors.Is(err, jwt.ErrSignatureInvalid) {
-			return sharedError.ResponseErrorWithContext(ctx, sharedError.ErrInvalidToken, nil)
+			return sharedError.ResponseErrorWithContext(ctx, sharedError.New(http.StatusUnauthorized, "Invalid token", errors.New("signature verification failed")), nil)
 		}
-		return sharedError.ResponseErrorWithContext(ctx, sharedError.ErrFailedToParseToken, nil)
+		return sharedError.ResponseErrorWithContext(ctx, sharedError.New(http.StatusBadRequest, "Failed to parse token", err), nil)
 	}
 
 	claims, ok := token.Claims.(*sharedModel.Claim)
 	if !ok || !token.Valid {
-		return sharedError.ResponseErrorWithContext(ctx, sharedError.ErrInvalidToken, nil)
+		return sharedError.ResponseErrorWithContext(ctx, sharedError.New(http.StatusUnauthorized, "Invalid token", errors.New("token is either invalid or expired")), nil)
 	}
 
 	if claims.UserId == "" {
-		return sharedError.ResponseErrorWithContext(ctx, sharedError.ErrInvalidHeaderFormat, nil)
+		return sharedError.ResponseErrorWithContext(ctx, sharedError.New(http.StatusBadRequest, "Invalid header format", errors.New("user ID is missing in token claims")), nil)
 	}
 
 	c.Locals("user_id", claims.UserId)

@@ -2,6 +2,7 @@ package feature
 
 import (
 	"context"
+	"net/http"
 	sharedHelper "zayyid-go/domain/shared/helper"
 	sharedHelperErr "zayyid-go/domain/shared/helper/error"
 	"zayyid-go/domain/user/model"
@@ -19,7 +20,7 @@ func (f UserFeature) AuthUserFeature(ctx context.Context, payload model.AuthUser
 
 	// compare for the password
 	if !sharedHelper.VerifyPassword(user.Password, payload.Password) {
-		err = sharedHelperErr.ErrInvalidEmailPassword
+		err = sharedHelperErr.New(http.StatusBadRequest, "Wrong email or password", err)
 		return
 	}
 
@@ -59,7 +60,7 @@ func (f UserFeature) RefreshTokenFeature(ctx context.Context, refreshToken strin
 	// validate the refresh token
 	claims, err := sharedHelper.ValidateToken(refreshToken)
 	if err != nil {
-		err = sharedHelperErr.ErrInvalidToken
+		err = sharedHelperErr.New(http.StatusBadRequest, "Bad request", err)
 		return
 	}
 
