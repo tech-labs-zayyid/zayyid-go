@@ -7,6 +7,9 @@ import (
 type SalesHandlerInterface interface {
 	GetDataHome(c *fiber.Ctx) (err error)
 
+	//product
+	AddProductSales(c *fiber.Ctx) (err error)
+
 	//gallery
 	AddGallerySales(c *fiber.Ctx) (err error)
 	GetGallerySales(c *fiber.Ctx) (err error)
