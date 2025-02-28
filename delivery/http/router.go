@@ -51,7 +51,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 
 	sales := app.Group("/sales")
 	{
-		sales.Post("/product", handler.salesHandler.AddProductSales)
+		sales.Post("/product", middleware.Auth, handler.salesHandler.AddProductSales)
 
 		//gallery
 		sales.Post("/gallery", handler.salesHandler.AddGallerySales)

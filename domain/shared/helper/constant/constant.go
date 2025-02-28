@@ -53,4 +53,5 @@ const (
 	ErrRequestBanner        = "error invalid request banner is empty"
 	ErrRequestProduct       = "error invalid request image product is empty"
 	ErrDataNotFound         = "data not found"
+	ErrDataUserIdNotFound   = "error not found user id"
 )

@@ -20,7 +20,7 @@ func (r UserRepository) GetByQueryRepository(ctx context.Context, q model.QueryU
 			created_at, 
 			created_by
 		FROM 
-			sales.users
+			product_marketing.users
 		WHERE 	
 			email = $1`
 

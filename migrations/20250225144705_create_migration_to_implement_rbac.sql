@@ -1,5 +1,5 @@
 -- migrate:up
-CREATE TYPE product_marketing.user_role AS ENUM ('sales', 'agent'); -- Buat ENUM dulu
+-- CREATE TYPE product_marketing.user_role AS ENUM ('sales', 'agent'); -- Buat ENUM dulu
 
 CREATE TABLE 
     IF NOT EXISTS product_marketing.users (

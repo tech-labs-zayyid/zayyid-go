@@ -13,11 +13,13 @@ import (
 // Add Data Banner godoc
 // @Summary      Add Data Banner
 // @Description  add data of Banner
-// @Tags         Data Banner
+// @Tags         Data Product
 // @Param        payload    body   request.AddProductReq  true  "body payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /sales/banner [post]
+// @Failure      401  {object}  response.Response
+// @Security ApiKeyAuth
+// @Router       /sales/product [post]
 func (h salesHandler) AddProductSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
