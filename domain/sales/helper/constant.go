@@ -4,13 +4,13 @@ type PageCategoryType int
 type StatusProduct int
 
 const (
-	CarsSalesProductCategoryPage PageCategoryType = iota
-	PropertiesSalesProductCategoryPage
-	BootcampSalesProductCategoryPage
+	CARS_SALES_PRODUCT_CATEGORY_PAGE PageCategoryType = iota
+	PROPERTIES_SALES_PRODUCT_CATEGORY_PAGE
+	BOOTCAMP_SALES_PRODUCT_CATEGORY_PAGE
 )
 
 const (
-	ProductListed StatusProduct = iota
-	ProductBooked
-	ProductSold
+	PRODUCT_LISTED StatusProduct = iota
+	PRODUCT_BOOKED
+	PRODUCT_SOLD
 )

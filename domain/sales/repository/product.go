@@ -28,8 +28,8 @@ func (r salesRepository) AddProductSales(ctx context.Context, tx *sql.Tx, param 
 	)
 
 	param.ProductId = sharedRepo.GenerateUuidAsIdTable().String()
-	stmtProduct, err := tx.PrepareContext(ctx, `INSERT INTO product_marketing.sales_product (id, page_category_id, page_category_name, sub_category_product, 
-            product_name, price, tdp, installment, best_product, city_id, sales_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`)
+	stmtProduct, err := tx.PrepareContext(ctx, `INSERT INTO product_marketing.sales_product (id, page_category_name, sub_category_product, 
+            product_name, price, tdp, installment, best_product, city_id, sales_id, public_access) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`)
 	if err != nil {
 		err = sharedError.HandleError(err)
 		return
@@ -41,7 +41,7 @@ func (r salesRepository) AddProductSales(ctx context.Context, tx *sql.Tx, param 
 		return
 	}
 
-	stmtProductStatus, err := tx.PrepareContext(ctx, `INSERT INTO product_marketing.sales_product_status (id, product_id, status_id, status_name) VALUES ($1, $2, $3, $4)`)
+	stmtProductStatus, err := tx.PrepareContext(ctx, `INSERT INTO product_marketing.sales_product_status (id, product_id, status) VALUES ($1, $2, $3)`)
 	if err != nil {
 		err = sharedError.HandleError(err)
 		return
@@ -53,8 +53,8 @@ func (r salesRepository) AddProductSales(ctx context.Context, tx *sql.Tx, param 
 		return
 	}
 
-	if _, err = stmtProduct.ExecContext(ctx, param.ProductId, param.ProductCategoryId, param.ProductCategoryName, param.ProductSubCategory,
-		param.ProductName, param.Price, param.TDP, param.Installment, param.BestProduct, param.CityId, param.SalesId); err != nil {
+	if _, err = stmtProduct.ExecContext(ctx, param.ProductId, param.ProductCategoryName, param.ProductSubCategory,
+		param.ProductName, param.Price, param.TDP, param.Installment, param.BestProduct, param.CityId, param.SalesId, param.PublicAccess); err != nil {
 		err = sharedError.HandleError(err)
 		return
 	}
@@ -64,12 +64,12 @@ func (r salesRepository) AddProductSales(ctx context.Context, tx *sql.Tx, param 
 		return
 	}
 
-	if _, err = stmtProductStatus.ExecContext(ctx, id, param.ProductId, param.StatusId, param.StatusName); err != nil {
+	if _, err = stmtProductStatus.ExecContext(ctx, id, param.ProductId, param.Status); err != nil {
 		err = sharedError.HandleError(err)
 		return
 	}
 
-	for _, v := range param.Image {
+	for _, v := range param.Images {
 		id = sharedRepo.GenerateUuidAsIdTable().String()
 		if _, err = stmtProductImg.ExecContext(ctx, id, param.ProductId, v.ImageUrl); err != nil {
 			err = sharedError.HandleError(err)

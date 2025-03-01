@@ -1,10 +1,9 @@
 -- migrate:up
--- migrate:up
 CREATE TABLE
     IF NOT EXISTS product_marketing.sales_product (
     id VARCHAR(50) NOT NULL,
     sales_id varchar(50) NOT NULL,
-    page_category_id VARCHAR(50) NOT NULL,
+    public_access VARCHAR(20) NOT NULL,
     page_category_name VARCHAR(50) NOT NULL,
     sub_category_product VARCHAR(50),
     product_name VARCHAR(50) NOT NULL,
@@ -21,9 +20,5 @@ CREATE TABLE
 
 
 -- migrate:down
-
-
-
-
--- migrate:down
+DROP TABLE product_marketing.sales_product
 

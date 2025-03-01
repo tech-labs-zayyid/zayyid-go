@@ -5,7 +5,7 @@ CREATE TABLE
     tier_id VARCHAR(50) NOT NULL,
     feature VARCHAR(50) NOT NULL,
     limitation VARCHAR(50) NOT NULL,
-    length_limitation VARCHAR(50) NOT NULL,
+    length_limitation INTEGER NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT NULL,
@@ -14,4 +14,4 @@ CREATE TABLE
 
 
 -- migrate:down
-
+DROP TABLE product_marketing.product_tier_detail

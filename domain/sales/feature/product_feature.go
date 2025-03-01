@@ -12,7 +12,7 @@ import (
 	sharedError "zayyid-go/domain/shared/helper/error"
 )
 
-func (f SalesFeature) AddProductSales(ctx context.Context, param request.AddProductReq) (err error) {
+func (f salesFeature) AddProductSales(ctx context.Context, param request.AddProductReq) (err error) {
 	tx := f.repo.OpenTransaction(ctx)
 
 	defer func() {
@@ -46,11 +46,9 @@ func (f SalesFeature) AddProductSales(ctx context.Context, param request.AddProd
 		return
 	}
 
-	param.ProductCategoryId = helper.CarsSalesProductCategoryPage
-	param.ProductCategoryName = helper.CarsSalesProductCategoryPage.PageCategory()
-	param.StatusId = helper.ProductListed
-	param.StatusName = helper.ProductListed.StatusProduct()
-	param.SalesId = "01951f6b-db3f-7d07-8b2c-80d2e2d1be30"
+	param.ProductCategoryName = helper.CARS_SALES_PRODUCT_CATEGORY_PAGE.PageCategory()
+	param.Status = helper.PRODUCT_LISTED.StatusProduct()
+	param.SalesId = valueCtx.UserId
 	err = f.repo.AddProductSales(ctx, tx, param)
 	return
 }

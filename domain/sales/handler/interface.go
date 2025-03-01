@@ -2,7 +2,23 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"zayyid-go/domain/sales/feature"
+	"zayyid-go/infrastructure/service/slack"
 )
+
+type salesHandler struct {
+	feature         feature.SalesFeature
+	isRequestLogged bool
+	slackConf       slack.SlackNotificationBug
+}
+
+func NewSalesHandler(feature feature.SalesFeature, isRequestLogged bool, slackConfig slack.SlackNotificationBug) SalesHandlerInterface {
+	return salesHandler{
+		feature:         feature,
+		isRequestLogged: isRequestLogged,
+		slackConf:       slackConfig,
+	}
+}
 
 type SalesHandlerInterface interface {
 	GetDataHome(c *fiber.Ctx) (err error)

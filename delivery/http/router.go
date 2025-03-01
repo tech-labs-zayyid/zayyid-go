@@ -91,7 +91,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 	user := app.Group("/user")
 	{
 		user.Post("/register", handler.userHandler.RegisterUserHandler)
-		user.Post("/login", middleware.Auth, handler.userHandler.AuthUserHandler)
+		user.Post("/login", handler.userHandler.AuthUserHandler)
 		user.Post("/refresh-token", handler.userHandler.RefreshTokenHandler)
 	}
 

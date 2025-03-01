@@ -27,11 +27,11 @@ func (h salesHandler) AddTemplateSales(c *fiber.Ctx) (err error) {
 	var req request.AddTemplateReq
 	if err = c.BodyParser(&req); err != nil {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, err)
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	if err = h.feature.AddTemplateSales(ctx, req); err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), "")
@@ -51,7 +51,7 @@ func (h salesHandler) GetListTemplateSales(c *fiber.Ctx) (err error) {
 
 	resp, err := h.feature.GetListTemplateSales(ctx)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), resp)
@@ -74,13 +74,13 @@ func (h salesHandler) GetListPublicTemplateSales(c *fiber.Ctx) (err error) {
 	subdomain := c.Params("subdomain")
 	if subdomain == "" {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	referral := c.Params("*")
 	resp, err := h.feature.GetListPublicTemplateSales(ctx, subdomain, referral)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), resp)
@@ -102,12 +102,12 @@ func (h salesHandler) GetTemplateSales(c *fiber.Ctx) (err error) {
 	id := c.Params("id")
 	if id == "" {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	resp, err := h.feature.GetDetailTemplateSales(ctx, id)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), resp)
@@ -130,17 +130,17 @@ func (h salesHandler) UpdateTemplateSales(c *fiber.Ctx) (err error) {
 	var req request.UpdateTemplateReq
 	if err = c.BodyParser(&req); err != nil {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, err)
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	req.Id = c.Params("id")
 	if req.Id == "" {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	if err = h.feature.UpdateTemplateSales(ctx, req); err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), "")

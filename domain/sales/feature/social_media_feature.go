@@ -9,7 +9,7 @@ import (
 	sharedError "zayyid-go/domain/shared/helper/error"
 )
 
-func (f SalesFeature) AddSocialMediaSales(ctx context.Context, req request.AddSocialMediaReq) (err error) {
+func (f salesFeature) AddSocialMediaSales(ctx context.Context, req request.AddSocialMediaReq) (err error) {
 	var (
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
@@ -42,7 +42,7 @@ func (f SalesFeature) AddSocialMediaSales(ctx context.Context, req request.AddSo
 	return
 }
 
-func (f SalesFeature) GetListSocialMediaSales(ctx context.Context) (resp response.SocialMediaListResp, err error) {
+func (f salesFeature) GetListSocialMediaSales(ctx context.Context) (resp response.SocialMediaListResp, err error) {
 	var (
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
@@ -56,7 +56,7 @@ func (f SalesFeature) GetListSocialMediaSales(ctx context.Context) (resp respons
 	return
 }
 
-func (f SalesFeature) GetListSocialMediaPublicSales(ctx context.Context, subdomain, referral string) (resp response.SocialMediaListResp, err error) {
+func (f salesFeature) GetListSocialMediaPublicSales(ctx context.Context, subdomain, referral string) (resp response.SocialMediaListResp, err error) {
 	//validation subdomain
 
 	//validation referral

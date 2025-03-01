@@ -12,4 +12,4 @@ CREATE TABLE
 
 
 -- migrate:down
-
+DROP TABLE product_marketing.product_tier;

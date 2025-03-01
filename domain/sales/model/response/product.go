@@ -5,5 +5,5 @@ type TierResp struct {
 	TierName         string `json:"tier_name"`
 	Feature          string `json:"feature"`
 	Limitation       string `json:"limitation"`
-	LengthLimitation string `json:"length_limitation"`
+	LengthLimitation int    `json:"length_limitation"`
 }

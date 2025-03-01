@@ -28,16 +28,16 @@ func (h salesHandler) AddProductSales(c *fiber.Ctx) (err error) {
 	var req request.AddProductReq
 	if err = c.BodyParser(&req); err != nil {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, err)
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
-	if len(req.Image) == 0 {
+	if len(req.Images) == 0 {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrRequestProduct, err)
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	if err = h.feature.AddProductSales(ctx, req); err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), "")

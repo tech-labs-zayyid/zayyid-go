@@ -28,13 +28,13 @@ func (h salesHandler) GetDataHome(c *fiber.Ctx) (err error) {
 	subdomain := c.Params("subdomain")
 	if subdomain == "" {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	referral := c.Params("*")
 	resp, err := h.feature.HomeSalesData(ctx, subdomain, referral)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), resp)

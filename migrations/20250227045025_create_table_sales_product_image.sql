@@ -11,4 +11,4 @@ CREATE TABLE
 
 
 -- migrate:down
-
+DROP TABLE product_marketing.sales_product_description
