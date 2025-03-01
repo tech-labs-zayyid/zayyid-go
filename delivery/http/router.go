@@ -51,6 +51,9 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 
 	sales := app.Group("/sales")
 	{
+		sales.Post("/product", middleware.Auth, handler.salesHandler.AddProductSales)
+
+		//gallery
 		sales.Post("/gallery", handler.salesHandler.AddGallerySales)
 		sales.Get("/gallery", handler.salesHandler.GetGallerySales)
 		sales.Get("/gallery/:id", handler.salesHandler.GetDataGallerySales)
@@ -88,7 +91,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 	user := app.Group("/user")
 	{
 		user.Post("/register", handler.userHandler.RegisterUserHandler)
-		user.Post("/login", middleware.Auth, handler.userHandler.AuthUserHandler)
+		user.Post("/login", handler.userHandler.AuthUserHandler)
 		user.Post("/refresh-token", handler.userHandler.RefreshTokenHandler)
 	}
 

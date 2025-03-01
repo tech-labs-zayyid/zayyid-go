@@ -74,6 +74,33 @@ definitions:
           type: string
         type: array
     type: object
+  request.AddProductReq:
+    properties:
+      best_product:
+        type: boolean
+      city_id:
+        type: string
+      description:
+        type: string
+      image:
+        items:
+          $ref: '#/definitions/request.ProductImage'
+        type: array
+      installment:
+        type: number
+      price:
+        type: number
+      product_category_id:
+        type: string
+      product_category_name:
+        type: string
+      product_name:
+        type: string
+      product_sub_category:
+        type: string
+      tdp:
+        type: number
+    type: object
   request.AddSocialMediaReq:
     properties:
       data_social_media:
@@ -110,6 +137,11 @@ definitions:
         type: string
     required:
     - image_url
+    type: object
+  request.ProductImage:
+    properties:
+      image_url:
+        type: string
     type: object
   request.SocialMediaListReq:
     properties:
@@ -465,6 +497,34 @@ paths:
       summary: Update Data Gallery
       tags:
       - Data Gallery
+  /sales/product:
+    post:
+      description: add data of Banner
+      parameters:
+      - description: body payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/request.AddProductReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Add Data Banner
+      tags:
+      - Data Product
   /sales/social-media:
     get:
       description: show list of Social Media

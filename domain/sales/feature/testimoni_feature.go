@@ -9,7 +9,7 @@ import (
 	modelRequest "zayyid-go/domain/sales/model/request"
 )
 
-func (f SalesFeature) AddTestimoniFeature(ctx context.Context, request modelRequest.Testimoni) (err error) {
+func (f salesFeature) AddTestimoniFeature(ctx context.Context, request modelRequest.Testimoni) (err error) {
 
 	request.Id = sharedRepo.GenerateUuidAsIdTable().String()
 	err = f.repo.AddTestimoniRepository(ctx, request)
@@ -20,7 +20,7 @@ func (f SalesFeature) AddTestimoniFeature(ctx context.Context, request modelRequ
 	return
 }
 
-func (f SalesFeature) UpdateTestimoniFeature(ctx context.Context, request modelRequest.Testimoni) (err error) {
+func (f salesFeature) UpdateTestimoniFeature(ctx context.Context, request modelRequest.Testimoni) (err error) {
 
 	err = f.repo.UpdateTestimoniRepository(ctx, request)
 	if err != nil {
@@ -30,7 +30,7 @@ func (f SalesFeature) UpdateTestimoniFeature(ctx context.Context, request modelR
 	return
 }
 
-func (f SalesFeature) GetTestimoniFeature(ctx context.Context, request modelRequest.Testimoni) (response modelRequest.Testimoni, err error) {
+func (f salesFeature) GetTestimoniFeature(ctx context.Context, request modelRequest.Testimoni) (response modelRequest.Testimoni, err error) {
 
 	response, err = f.repo.GetTestimoniRepository(ctx, request)
 	if err != nil {
@@ -40,7 +40,7 @@ func (f SalesFeature) GetTestimoniFeature(ctx context.Context, request modelRequ
 	return
 }
 
-func (f SalesFeature) GetListTestimoniFeature(ctx context.Context, request modelRequest.Testimoni, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, pagination *sharedModel.Pagination, err error) {
+func (f salesFeature) GetListTestimoniFeature(ctx context.Context, request modelRequest.Testimoni, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, pagination *sharedModel.Pagination, err error) {
 
 	response, err = f.repo.GetListTestimoniRepository(ctx, request, filter)
 	if err != nil {

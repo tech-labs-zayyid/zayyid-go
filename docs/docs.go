@@ -465,6 +465,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/sales/product": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "add data of Banner",
+                "tags": [
+                    "Data Product"
+                ],
+                "summary": "Add Data Banner",
+                "parameters": [
+                    {
+                        "description": "body payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.AddProductReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/sales/social-media": {
             "get": {
                 "description": "show list of Social Media",
@@ -1030,6 +1075,47 @@ const docTemplate = `{
                 }
             }
         },
+        "request.AddProductReq": {
+            "type": "object",
+            "properties": {
+                "best_product": {
+                    "type": "boolean"
+                },
+                "city_id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/request.ProductImage"
+                    }
+                },
+                "installment": {
+                    "type": "number"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "product_category_id": {
+                    "type": "string"
+                },
+                "product_category_name": {
+                    "type": "string"
+                },
+                "product_name": {
+                    "type": "string"
+                },
+                "product_sub_category": {
+                    "type": "string"
+                },
+                "tdp": {
+                    "type": "number"
+                }
+            }
+        },
         "request.AddSocialMediaReq": {
             "type": "object",
             "properties": {
@@ -1083,6 +1169,14 @@ const docTemplate = `{
                 "description": {
                     "type": "string"
                 },
+                "image_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.ProductImage": {
+            "type": "object",
+            "properties": {
                 "image_url": {
                     "type": "string"
                 }

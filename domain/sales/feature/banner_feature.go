@@ -12,7 +12,7 @@ import (
 	sharedError "zayyid-go/domain/shared/helper/error"
 )
 
-func (f SalesFeature) AddBannerSales(ctx context.Context, param request.BannerReq) (err error) {
+func (f salesFeature) AddBannerSales(ctx context.Context, param request.BannerReq) (err error) {
 	var (
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
@@ -61,7 +61,7 @@ func (f SalesFeature) AddBannerSales(ctx context.Context, param request.BannerRe
 	return
 }
 
-func (f SalesFeature) GetListBannerSales(ctx context.Context) (resp response.BannerListSalesResp, err error) {
+func (f salesFeature) GetListBannerSales(ctx context.Context) (resp response.BannerListSalesResp, err error) {
 	var (
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
@@ -75,7 +75,7 @@ func (f SalesFeature) GetListBannerSales(ctx context.Context) (resp response.Ban
 	return
 }
 
-func (f SalesFeature) GetListBannerPublic(ctx context.Context, subdomain, referral string) (resp response.BannerListPublicSalesResp, err error) {
+func (f salesFeature) GetListBannerPublic(ctx context.Context, subdomain, referral string) (resp response.BannerListPublicSalesResp, err error) {
 	//validation subdomain
 
 	//validation referal
@@ -87,7 +87,7 @@ func (f SalesFeature) GetListBannerPublic(ctx context.Context, subdomain, referr
 	return
 }
 
-func (f SalesFeature) GetBannerSales(ctx context.Context, id string) (resp response.BannerResp, err error) {
+func (f salesFeature) GetBannerSales(ctx context.Context, id string) (resp response.BannerResp, err error) {
 	var (
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
@@ -101,7 +101,7 @@ func (f SalesFeature) GetBannerSales(ctx context.Context, id string) (resp respo
 	return
 }
 
-func (f SalesFeature) UpdateBanner(ctx context.Context, req request.BannerUpdateReq) (err error) {
+func (f salesFeature) UpdateBanner(ctx context.Context, req request.BannerUpdateReq) (err error) {
 	var (
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)

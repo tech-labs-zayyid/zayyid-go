@@ -153,7 +153,7 @@ func (r salesRepository) HomeData(ctx context.Context, subdomain string) (resp r
 }
 
 func (r salesRepository) CheckExistsSubdomainSales(ctx context.Context, subdomain string) (exists bool, err error) {
-	query := `SELECT EXISTS(SELECT 1 FROM product_marketing.users WHERE username = $1)`
+	query := `SELECT EXISTS(SELECT 1 FROM product_marketing.users WHERE subdomain = $1)`
 
 	logger.LogInfo(constant.QUERY, query)
 	if err = r.database.QueryRowContext(ctx, query, subdomain).Scan(&exists); err != nil {

@@ -25,7 +25,7 @@ type Container struct {
 	EnvironmentConfig config.EnvironmentConfig
 	UserMenuFeature   *UserMenu.UserMenuFeature
 	MasterFeature     *Master.MasterFeature
-	SalesFeature      *Sales.SalesFeature
+	SalesFeature      Sales.SalesFeature
 	Slack             *slack.ConfigSlack
 	UserFeature       User.UserFeature
 }
@@ -47,6 +47,9 @@ func SetupContainer() Container {
 
 	notifBug := slack.InitConnectionSlack(config.Slack)
 
+	salesFeature := Sales.NewSalesFeature(SalesRepo.NewSalesRepository(db))
+	userFeature := User.NewUserFeature(UserRepo.NewUserRepository(db), notifBug)
+
 	return Container{
 		EnvironmentConfig: config,
 		UserMenuFeature: UserMenu.NewUserMenuFeature(
@@ -61,14 +64,7 @@ func SetupContainer() Container {
 			atomicRepo.NewUOWRepository(db),
 			notifBug,
 		),
-		SalesFeature: Sales.NewSalesFeature(
-			config,
-			SalesRepo.NewSalesRepository(db),
-			notifBug,
-		),
-		UserFeature: User.NewUserFeature(
-			UserRepo.NewUserRepository(db),
-			notifBug,
-		),
+		SalesFeature: salesFeature,
+		UserFeature:  userFeature,
 	}
 }

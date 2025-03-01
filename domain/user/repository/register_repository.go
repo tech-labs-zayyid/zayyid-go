@@ -11,7 +11,7 @@ func (r UserRepository) RegisterRepository(ctx context.Context, payload model.Re
 	// define query for insert
 	query := `
 		INSERT INTO 
-			sales.users (
+			product_marketing.users (
 				id, 
 				username, 
 				name, 
@@ -75,7 +75,7 @@ func (r UserRepository) GetUserById(ctx context.Context, userId string) (resp mo
 			created_at, 
 			created_by 
 		FROM 
-			sales.users 
+			product_marketing.users 
 		WHERE id = $1`
 
 	// Prepare statement

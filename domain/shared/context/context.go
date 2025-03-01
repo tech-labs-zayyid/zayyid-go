@@ -13,27 +13,19 @@ func CreateContext() context.Context {
 }
 
 func SetValueToContext(ctx context.Context, c *fiber.Ctx) context.Context {
-	Token := c.Get("Authorization")
-	UserId, ok := c.Locals("x-user-id").(string)
+	UserId, ok := c.Locals("user_id").(string)
 	if !ok {
 		UserId = "0"
 	}
 
-	salesId, ok := c.Locals("x-key-sales-id").(string)
+	role, ok := c.Locals("role").(string)
 	if !ok {
-		salesId = "0"
-	}
-
-	agentId, ok := c.Locals("x-key-agent_id").(string)
-	if !ok {
-		agentId = "0"
+		role = "0"
 	}
 
 	ctx = context.WithValue(ctx, constant.HeaderContext, model.ValueContext{
-		UserId:  UserId,
-		SalesId: salesId,
-		AgentId: agentId,
-		Token:   Token,
+		UserId: UserId,
+		Role:   role,
 	})
 
 	return context.WithValue(ctx, constant.FiberContext, c)

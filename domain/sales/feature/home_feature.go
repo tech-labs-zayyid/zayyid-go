@@ -9,7 +9,7 @@ import (
 	sharedError "zayyid-go/domain/shared/helper/error"
 )
 
-func (f SalesFeature) HomeSalesData(ctx context.Context, subdomain, referral string) (resp response.DataHome, err error) {
+func (f salesFeature) HomeSalesData(ctx context.Context, subdomain, referral string) (resp response.DataHome, err error) {
 	exists, err := f.repo.CheckExistsSubdomainSales(ctx, subdomain)
 	if err != nil {
 		return

@@ -51,5 +51,7 @@ const (
 	ErrMaximumUploadBanner  = "you have reached the maximum limit for uploading banner"
 	ErrRequestGallery       = "error invalid request gallery is empty"
 	ErrRequestBanner        = "error invalid request banner is empty"
+	ErrRequestProduct       = "error invalid request image product is empty"
 	ErrDataNotFound         = "data not found"
+	ErrDataUserIdNotFound   = "error not found user id"
 )
