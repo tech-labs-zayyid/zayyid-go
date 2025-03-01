@@ -36,7 +36,7 @@ func (f SalesFeature) HomeSalesData(ctx context.Context, subdomain, referral str
 	resp.PhoneNumber = "087635342667"
 	resp.Email = "eko@mail.com"
 	resp.Desc = "Stay Humble, peace love & Gaul"
-
+	resp.UrlImage = "https://res.cloudinary.com/dyj8vcauy/image/upload/v1740813846/hirm-astray_red_frame-1000x1000_nbfhbq.jpg"
 	resp.Testimony = append(resp.Testimony, response.TestimonyListHome{
 		IdTestimony: "01955073-a98d-7707-954b-540d8c37034b",
 		Name:        "Jefri Santuy",
