@@ -5,6 +5,7 @@ type DataHome struct {
 	PhoneNumber string                    `json:"phone_number"`
 	Email       string                    `json:"email"`
 	Desc        string                    `json:"desc"`
+	UrlImage    string                    `json:"url_image"`
 	Gallery     []GalleryDataHomeResp     `json:"gallery"`
 	Banner      []BannerHomeResp          `json:"banner"`
 	SocialMedia []DataListSocialMediaHome `json:"social_media"`
@@ -45,9 +46,14 @@ type TestimonyListHome struct {
 }
 
 type BestProduct struct {
-	IdProduct   string  `json:"id_product"`
-	ProductName string  `json:"product_name"`
-	Price       float32 `json:"price"`
+	IdProduct          string  `json:"id_product"`
+	ProductName        string  `json:"product_name"`
+	Price              float32 `json:"price"`
+	ProductSubCategory string  `json:"product_sub_category"`
+	TDP                float32 `json:"tdp"`
+	Installment        float32 `json:"installment"`
+	CityId             string  `json:"city_id"`
+	BestProduct        bool    `json:"best_product"`
 }
 
 type DataAgent struct {
