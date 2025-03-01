@@ -7,6 +7,7 @@ type RegisterRequest struct {
 	Email          string `json:"email"`
 	Password       string `json:"password"`
 	ImageUrl       string `json:"image_url"`
+	ReferalCode    string `json:"-"`
 	Role           string `json:"role" validate:"required,oneof=sales agent"`
 }
 
