@@ -6,6 +6,7 @@ type RegisterRequest struct {
 	WhatsappNumber string `json:"whatsapp_number"`
 	Email          string `json:"email"`
 	Password       string `json:"password"`
+	ImageUrl       string `json:"image_url"`
 	Role           string `json:"role" validate:"required,oneof=sales agent"`
 }
 
