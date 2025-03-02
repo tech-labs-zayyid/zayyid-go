@@ -1,11 +1,31 @@
 package handler
 
 import (
+	"zayyid-go/domain/sales/feature"
+	"zayyid-go/infrastructure/service/slack"
+
 	"github.com/gofiber/fiber/v2"
 )
 
+type salesHandler struct {
+	feature         feature.SalesFeature
+	isRequestLogged bool
+	slackConf       slack.SlackNotificationBug
+}
+
+func NewSalesHandler(feature feature.SalesFeature, isRequestLogged bool, slackConfig slack.SlackNotificationBug) SalesHandlerInterface {
+	return salesHandler{
+		feature:         feature,
+		isRequestLogged: isRequestLogged,
+		slackConf:       slackConfig,
+	}
+}
+
 type SalesHandlerInterface interface {
 	GetDataHome(c *fiber.Ctx) (err error)
+
+	//product
+	AddProductSales(c *fiber.Ctx) (err error)
 
 	//gallery
 	AddGallerySales(c *fiber.Ctx) (err error)
@@ -19,6 +39,7 @@ type SalesHandlerInterface interface {
 	UpdateTestimoniHandler(c *fiber.Ctx) error
 	GetTestimoniHandler(c *fiber.Ctx) error
 	GetListTestimoniHandler(c *fiber.Ctx) error
+	GetPublicListTestimoniHandler(c *fiber.Ctx) error
 
 	// banner
 	AddBannerSales(c *fiber.Ctx) (err error)

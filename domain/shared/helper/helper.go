@@ -48,7 +48,7 @@ func camelCaseToSpaces(s string) string {
 }
 
 // Secret key (harus disimpan dengan aman, misalnya di env)
-var secretKey = []byte(os.Getenv("JWT_SECRET"))
+var SecretKey = []byte(os.Getenv("JWT_SECRET"))
 
 // GenerateToken creates a JWT token with user_id and role claims
 func GenerateToken(userID string, role string) (string, error) {
@@ -65,7 +65,7 @@ func GenerateToken(userID string, role string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Sign the token
-	return token.SignedString(secretKey)
+	return token.SignedString(SecretKey)
 }
 
 // GenerateToken creates a JWT token with user_id and role claims
@@ -83,7 +83,7 @@ func GenerateRefreshToken(userID string, role string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Sign the token
-	return token.SignedString(secretKey)
+	return token.SignedString(SecretKey)
 }
 
 // ValidateToken parses and validates a JWT token
@@ -94,7 +94,7 @@ func ValidateToken(tokenString string) (model.Claim, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
 		}
-		return secretKey, nil
+		return SecretKey, nil
 	})
 
 	if err != nil {

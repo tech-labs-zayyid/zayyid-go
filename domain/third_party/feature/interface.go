@@ -7,12 +7,12 @@ import (
 )
 
 type ThirdPartyFeature struct {
-	repo      repository.ThirdPartyRepository
+	repo      repository.ThirdPartyRepositoryInterface
 	SlackConf slack.SlackNotificationBug
 	config    *config.EnvironmentConfig
 }
 
-func NewThirdPartyFeature(repo repository.ThirdPartyRepository, SlackConf slack.SlackNotificationBug, config *config.EnvironmentConfig) ThirdPartyFeature {
+func NewThirdPartyFeature(repo repository.ThirdPartyRepositoryInterface, SlackConf slack.SlackNotificationBug, config *config.EnvironmentConfig) ThirdPartyFeature {
 	return ThirdPartyFeature{
 		repo:      repo,
 		SlackConf: SlackConf,

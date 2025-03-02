@@ -4,32 +4,15 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"zayyid-go/config"
 	"zayyid-go/domain/sales/model/request"
 	"zayyid-go/domain/sales/model/response"
-	"zayyid-go/domain/sales/repository"
 	sharedContext "zayyid-go/domain/shared/context"
 	sharedHelper "zayyid-go/domain/shared/helper"
 	sharedConstant "zayyid-go/domain/shared/helper/constant"
 	sharedError "zayyid-go/domain/shared/helper/error"
-	"zayyid-go/infrastructure/service/slack"
 )
 
-type SalesFeature struct {
-	config    config.EnvironmentConfig
-	repo      repository.SalesRepository
-	SlackConf slack.SlackNotificationBug
-}
-
-func NewSalesFeature(config config.EnvironmentConfig, repo repository.SalesRepository, slackConfig slack.SlackNotificationBug) *SalesFeature {
-	return &SalesFeature{
-		config:    config,
-		repo:      repo,
-		SlackConf: slackConfig,
-	}
-}
-
-func (f SalesFeature) AddGallerySales(ctx context.Context, param request.AddGalleryParam) (err error) {
+func (f salesFeature) AddGallerySales(ctx context.Context, param request.AddGalleryParam) (err error) {
 	var (
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
@@ -74,7 +57,7 @@ func (f SalesFeature) AddGallerySales(ctx context.Context, param request.AddGall
 	return
 }
 
-func (f SalesFeature) GetDataListGallery(ctx context.Context) (resp response.GalleryResp, err error) {
+func (f salesFeature) GetDataListGallery(ctx context.Context) (resp response.GalleryResp, err error) {
 	var (
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
@@ -88,7 +71,7 @@ func (f SalesFeature) GetDataListGallery(ctx context.Context) (resp response.Gal
 	return
 }
 
-func (f SalesFeature) GetDataListGalleryPublic(ctx context.Context, subdomain, referral string) (resp response.GalleryPublicResp, err error) {
+func (f salesFeature) GetDataListGalleryPublic(ctx context.Context, subdomain, referral string) (resp response.GalleryPublicResp, err error) {
 	//validation subdomain
 
 	//validation referral code
@@ -100,7 +83,7 @@ func (f SalesFeature) GetDataListGalleryPublic(ctx context.Context, subdomain, r
 	return
 }
 
-func (f SalesFeature) GetDataGallerySales(ctx context.Context, id string) (resp response.GalleryDataResp, err error) {
+func (f salesFeature) GetDataGallerySales(ctx context.Context, id string) (resp response.GalleryDataResp, err error) {
 	var (
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
@@ -114,7 +97,7 @@ func (f SalesFeature) GetDataGallerySales(ctx context.Context, id string) (resp 
 	return
 }
 
-func (f SalesFeature) UpdateGallery(ctx context.Context, req request.UpdateGalleryParam) (err error) {
+func (f salesFeature) UpdateGallery(ctx context.Context, req request.UpdateGalleryParam) (err error) {
 	var (
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)

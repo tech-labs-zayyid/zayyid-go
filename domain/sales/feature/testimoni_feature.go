@@ -9,7 +9,7 @@ import (
 	modelRequest "zayyid-go/domain/sales/model/request"
 )
 
-func (f SalesFeature) AddTestimoniFeature(ctx context.Context, request modelRequest.Testimoni) (err error) {
+func (f salesFeature) AddTestimoniFeature(ctx context.Context, request modelRequest.Testimoni) (err error) {
 
 	request.Id = sharedRepo.GenerateUuidAsIdTable().String()
 	err = f.repo.AddTestimoniRepository(ctx, request)
@@ -17,21 +17,21 @@ func (f SalesFeature) AddTestimoniFeature(ctx context.Context, request modelRequ
 	return
 }
 
-func (f SalesFeature) UpdateTestimoniFeature(ctx context.Context, request modelRequest.Testimoni) (err error) {
+func (f salesFeature) UpdateTestimoniFeature(ctx context.Context, request modelRequest.Testimoni) (err error) {
 
 	err = f.repo.UpdateTestimoniRepository(ctx, request)
 
 	return
 }
 
-func (f SalesFeature) GetTestimoniFeature(ctx context.Context, request modelRequest.Testimoni) (response modelRequest.Testimoni, err error) {
+func (f salesFeature) GetTestimoniFeature(ctx context.Context, request modelRequest.Testimoni) (response modelRequest.Testimoni, err error) {
 
 	response, err = f.repo.GetTestimoniRepository(ctx, request)
 
 	return
 }
 
-func (f SalesFeature) GetListTestimoniFeature(ctx context.Context, request modelRequest.Testimoni, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, pagination *sharedModel.Pagination, err error) {
+func (f salesFeature) GetListTestimoniFeature(ctx context.Context, request modelRequest.Testimoni, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, pagination *sharedModel.Pagination, err error) {
 
 	response, err = f.repo.GetListTestimoniRepository(ctx, request, filter)
 	if err != nil {
@@ -53,7 +53,7 @@ func (f SalesFeature) GetListTestimoniFeature(ctx context.Context, request model
 	return
 }
 
-func (f SalesFeature) GetPublicListTestimoniFeature(ctx context.Context, subDomain, referral string, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, pagination *sharedModel.Pagination, err error) {
+func (f salesFeature) GetPublicListTestimoniFeature(ctx context.Context, subDomain, referral string, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, pagination *sharedModel.Pagination, err error) {
 
 	response, err = f.repo.GetPublicListTestimoniRepository(ctx, subDomain, filter)
 	if err != nil {

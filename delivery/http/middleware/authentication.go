@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"os"
 	"strings"
+	"zayyid-go/domain/shared/helper"
 	"zayyid-go/domain/shared/helper/constant"
 	sharedError "zayyid-go/domain/shared/helper/error"
 	sharedModel "zayyid-go/domain/shared/model"
@@ -30,16 +30,11 @@ func Auth(c *fiber.Ctx) error {
 	}
 	tokenString := tokenParts[1]
 
-	secretKey := os.Getenv("JWT_SECRET")
-	if secretKey == "" {
-		return sharedError.ResponseErrorWithContext(ctx, sharedError.New(http.StatusInternalServerError, "Missing JWT secret", errors.New("jwt secret key is not set in environment variables")), nil)
-	}
-
 	token, err := jwt.ParseWithClaims(tokenString, &sharedModel.Claim{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, sharedError.New(http.StatusBadRequest, "Failed to parse token", errors.New("unexpected signing method"))
 		}
-		return []byte(secretKey), nil
+		return helper.SecretKey, nil
 	})
 
 	if err != nil {

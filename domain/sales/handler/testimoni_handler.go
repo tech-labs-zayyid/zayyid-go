@@ -26,17 +26,17 @@ func (h salesHandler) AddTestimoniHandler(c *fiber.Ctx) error {
 	var bodyReq modelRequest.Testimoni
 	err := c.BodyParser(&bodyReq)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	errResp := sharedHelper.Validate(bodyReq)
 	if errResp != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	err = h.feature.AddTestimoniFeature(ctx, bodyReq)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return response.ResponseOK(c, sharedConstant.SUCCESS, "")
@@ -56,17 +56,17 @@ func (h salesHandler) UpdateTestimoniHandler(c *fiber.Ctx) error {
 	var bodyReq modelRequest.Testimoni
 	err := c.BodyParser(&bodyReq)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	errResp := sharedHelper.Validate(bodyReq)
 	if errResp != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	err = h.feature.UpdateTestimoniFeature(ctx, bodyReq)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return response.ResponseOK(c, sharedConstant.SUCCESS, "")
@@ -86,12 +86,12 @@ func (h salesHandler) GetTestimoniHandler(c *fiber.Ctx) error {
 	filter := new(modelRequest.Testimoni)
 
 	if err := c.QueryParser(filter); err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	data, err := h.feature.GetTestimoniFeature(ctx, *filter)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return response.ResponseOK(c, sharedConstant.SUCCESS, data)
@@ -111,18 +111,18 @@ func (h salesHandler) GetListTestimoniHandler(c *fiber.Ctx) error {
 	param := new(modelRequest.Testimoni)
 
 	if err := c.QueryParser(param); err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	filter := new(modelRequest.TestimoniSearch)
 
 	if err := c.QueryParser(filter); err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	data, pagination, err := h.feature.GetListTestimoniFeature(ctx, *param, *filter)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return response.ResponseOkWithPagination(c, sharedConstant.SUCCESS, data, pagination)
@@ -143,18 +143,18 @@ func (h salesHandler) GetPublicListTestimoniHandler(c *fiber.Ctx) error {
 	subDomain := c.Params("subdomain")
 	if subDomain == "" {
 		err := sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	filter := new(modelRequest.TestimoniSearch)
 
 	if err := c.QueryParser(filter); err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	data, pagination, err := h.feature.GetPublicListTestimoniFeature(ctx, subDomain, referral, *filter)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return response.ResponseOkWithPagination(c, sharedConstant.SUCCESS, data, pagination)

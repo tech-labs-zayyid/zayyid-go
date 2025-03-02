@@ -8,7 +8,7 @@ import (
 	sharedHelper "zayyid-go/domain/shared/helper"
 )
 
-func (f SalesFeature) AddTemplateSales(ctx context.Context, param request.AddTemplateReq) (err error) {
+func (f salesFeature) AddTemplateSales(ctx context.Context, param request.AddTemplateReq) (err error) {
 	var (
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
@@ -25,7 +25,7 @@ func (f SalesFeature) AddTemplateSales(ctx context.Context, param request.AddTem
 	return
 }
 
-func (f SalesFeature) GetListTemplateSales(ctx context.Context) (resp response.TemplateListSalesResp, err error) {
+func (f salesFeature) GetListTemplateSales(ctx context.Context) (resp response.TemplateListSalesResp, err error) {
 	var (
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
@@ -39,7 +39,7 @@ func (f SalesFeature) GetListTemplateSales(ctx context.Context) (resp response.T
 	return
 }
 
-func (f SalesFeature) GetListPublicTemplateSales(ctx context.Context, subdomain, referral string) (resp response.TemplateListPublicResp, err error) {
+func (f salesFeature) GetListPublicTemplateSales(ctx context.Context, subdomain, referral string) (resp response.TemplateListPublicResp, err error) {
 	//validation subdomain
 
 	//validation referral
@@ -51,7 +51,7 @@ func (f SalesFeature) GetListPublicTemplateSales(ctx context.Context, subdomain,
 	return
 }
 
-func (f SalesFeature) GetDetailTemplateSales(ctx context.Context, id string) (resp response.TemplateDetailResp, err error) {
+func (f salesFeature) GetDetailTemplateSales(ctx context.Context, id string) (resp response.TemplateDetailResp, err error) {
 	var (
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
@@ -65,7 +65,7 @@ func (f SalesFeature) GetDetailTemplateSales(ctx context.Context, id string) (re
 	return
 }
 
-func (f SalesFeature) UpdateTemplateSales(ctx context.Context, req request.UpdateTemplateReq) (err error) {
+func (f salesFeature) UpdateTemplateSales(ctx context.Context, req request.UpdateTemplateReq) (err error) {
 	var (
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)

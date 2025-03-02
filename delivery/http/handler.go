@@ -9,6 +9,7 @@ import (
 	ThirdPartyHandler "zayyid-go/domain/third_party/handler"
 	UserHandler "zayyid-go/domain/user/handler"
 	UserMenuHandler "zayyid-go/domain/user_menu/handler"
+	"zayyid-go/infrastructure/service/slack"
 )
 
 type Handler struct {
@@ -25,6 +26,7 @@ func SetupHandler(container container.Container) Handler {
 		isRequestLogged = false
 	}
 
+	notifBug := slack.InitConnectionSlack(container.EnvironmentConfig.Slack)
 	return Handler{
 		userMenuHandler: UserMenuHandler.NewUserMenuHandler(
 			container.UserMenuFeature, isRequestLogged,
@@ -33,7 +35,7 @@ func SetupHandler(container container.Container) Handler {
 			container.MasterFeature, isRequestLogged,
 		),
 		salesHandler: SalesHandler.NewSalesHandler(
-			container.SalesFeature, isRequestLogged,
+			container.SalesFeature, isRequestLogged, notifBug,
 		),
 		userHandler: UserHandler.NewUserHandler(
 			&container.UserFeature,

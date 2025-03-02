@@ -20,4 +20,5 @@ type IUserRepository interface {
 	RegisterRepository(ctx context.Context, payload model.RegisterRequest, userId string) (err error)
 	GetUserById(ctx context.Context, userId string) (resp model.UserRes, err error)
 	GetByQueryRepository(ctx context.Context, q model.QueryUser) (user model.UserRes, err error)
+	GetDataUserByUserId(ctx context.Context, userId string) (resp model.UserDataResp, err error)
 }

@@ -15,9 +15,14 @@ func (h ThirdPartyHandler) CallbackPaymentReceivingMidtrans(c *fiber.Ctx) (err e
 	defer cancel()
 	ctx = context.SetValueToContext(ctx, c)
 
-	var req model.MidtransBodyReq
+	var req model.MidtransNotificationBodyReq
 	if err = c.BodyParser(&req); err != nil {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, err)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+	}
+
+	err = h.feature.MidtransNotificationFeature(ctx, req)
+	if err != nil {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 

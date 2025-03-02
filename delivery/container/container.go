@@ -27,7 +27,7 @@ type Container struct {
 	EnvironmentConfig config.EnvironmentConfig
 	UserMenuFeature   *UserMenu.UserMenuFeature
 	MasterFeature     *Master.MasterFeature
-	SalesFeature      *Sales.SalesFeature
+	SalesFeature      Sales.SalesFeature
 	Slack             *slack.ConfigSlack
 	UserFeature       User.UserFeature
 	ThirdPartyFeature ThirdParty.ThirdPartyFeature
@@ -50,33 +50,18 @@ func SetupContainer() Container {
 
 	notifBug := slack.InitConnectionSlack(config.Slack)
 
+	userMenuFeature := UserMenu.NewUserMenuFeature(config, UserMenuRepo.NewUserMenuRepository(db), atomicRepo.NewUOWRepository(db), notifBug)
+	masterFeature := Master.NewMasterFeature(config, MasterRepo.NewMasterRepository(db), atomicRepo.NewUOWRepository(db), notifBug)
+	salesFeature := Sales.NewSalesFeature(SalesRepo.NewSalesRepository(db))
+	userFeature := User.NewUserFeature(UserRepo.NewUserRepository(db), notifBug)
+	thirdPartyFeature := ThirdParty.NewThirdPartyFeature(ThirdPartyRepo.NewThirdPartyRepository(db), notifBug, &config)
+
 	return Container{
 		EnvironmentConfig: config,
-		UserMenuFeature: UserMenu.NewUserMenuFeature(
-			config,
-			UserMenuRepo.NewUserMenuRepository(db),
-			atomicRepo.NewUOWRepository(db),
-			notifBug,
-		),
-		MasterFeature: Master.NewMasterFeature(
-			config,
-			MasterRepo.NewMasterRepository(db),
-			atomicRepo.NewUOWRepository(db),
-			notifBug,
-		),
-		SalesFeature: Sales.NewSalesFeature(
-			config,
-			SalesRepo.NewSalesRepository(db),
-			notifBug,
-		),
-		UserFeature: User.NewUserFeature(
-			UserRepo.NewUserRepository(db),
-			notifBug,
-		),
-		ThirdPartyFeature: ThirdParty.NewThirdPartyFeature(
-			ThirdPartyRepo.NewThirdPartyRepository(db),
-			notifBug,
-			&config,
-		),
+		UserMenuFeature:   userMenuFeature,
+		MasterFeature:     masterFeature,
+		SalesFeature:      salesFeature,
+		UserFeature:       userFeature,
+		ThirdPartyFeature: thirdPartyFeature,
 	}
 }

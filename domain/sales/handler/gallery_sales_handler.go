@@ -4,25 +4,12 @@ import (
 	"errors"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
-	"zayyid-go/domain/sales/feature"
 	"zayyid-go/domain/sales/model/request"
 	"zayyid-go/domain/shared/context"
 	sharedConstant "zayyid-go/domain/shared/helper/constant"
 	sharedError "zayyid-go/domain/shared/helper/error"
 	sharedResponse "zayyid-go/domain/shared/response"
 )
-
-type salesHandler struct {
-	feature         *feature.SalesFeature
-	isRequestLogged bool
-}
-
-func NewSalesHandler(feature *feature.SalesFeature, isRequestLogged bool) SalesHandlerInterface {
-	return &salesHandler{
-		feature:         feature,
-		isRequestLogged: isRequestLogged,
-	}
-}
 
 // Add Data Gallery godoc
 // @Summary      Add Data Gallery
@@ -40,16 +27,16 @@ func (h salesHandler) AddGallerySales(c *fiber.Ctx) (err error) {
 	var req request.AddGalleryParam
 	if err = c.BodyParser(&req); err != nil {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, err)
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	if len(req.ImageUrl) == 0 {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrRequestGallery, err)
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	if err = h.feature.AddGallerySales(ctx, req); err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), "")
@@ -69,7 +56,7 @@ func (h salesHandler) GetGallerySales(c *fiber.Ctx) (err error) {
 
 	resp, err := h.feature.GetDataListGallery(ctx)
 	if err != nil {
-		err = sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		err = sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 		return
 	}
 
@@ -93,13 +80,13 @@ func (h salesHandler) GetGallerySalesPublic(c *fiber.Ctx) (err error) {
 	subdomain := c.Params("subdomain")
 	if subdomain == "" {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	referral := c.Params("*")
 	resp, err := h.feature.GetDataListGalleryPublic(ctx, subdomain, referral)
 	if err != nil {
-		err = sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		err = sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 		return
 	}
 
@@ -122,12 +109,12 @@ func (h salesHandler) GetDataGallerySales(c *fiber.Ctx) (err error) {
 	id := c.Params("id")
 	if id == "" {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	resp, err := h.feature.GetDataGallerySales(ctx, id)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), resp)
@@ -150,17 +137,17 @@ func (h salesHandler) UpdateGallerySales(c *fiber.Ctx) (err error) {
 	var req request.UpdateGalleryParam
 	if err = c.BodyParser(&req); err != nil {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, err)
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	req.Id = c.Params("id")
 	if req.Id == "" {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	if err = h.feature.UpdateGallery(ctx, req); err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), "")

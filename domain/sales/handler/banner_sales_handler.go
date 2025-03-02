@@ -27,16 +27,16 @@ func (h salesHandler) AddBannerSales(c *fiber.Ctx) (err error) {
 	var req request.BannerReq
 	if err = c.BodyParser(&req); err != nil {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, err)
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	if len(req.DataBanner) == 0 {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrRequestBanner, err)
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	if err = h.feature.AddBannerSales(ctx, req); err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), "")
@@ -56,7 +56,7 @@ func (h salesHandler) GetListBannerSales(c *fiber.Ctx) (err error) {
 
 	resp, err := h.feature.GetListBannerSales(ctx)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), resp)
@@ -79,13 +79,13 @@ func (h salesHandler) GetBannerPublicSales(c *fiber.Ctx) (err error) {
 	subdomain := c.Params("subdomain")
 	if subdomain == "" {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	referral := c.Params("*")
 	resp, err := h.feature.GetListBannerPublic(ctx, subdomain, referral)
 	if err != nil {
-		err = sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		err = sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 		return
 	}
 
@@ -108,12 +108,12 @@ func (h salesHandler) GetBannerSales(c *fiber.Ctx) (err error) {
 	id := c.Params("id")
 	if id == "" {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	resp, err := h.feature.GetBannerSales(ctx, id)
 	if err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), resp)
@@ -136,17 +136,17 @@ func (h salesHandler) UpdateBannerSales(c *fiber.Ctx) (err error) {
 	var req request.BannerUpdateReq
 	if err = c.BodyParser(&req); err != nil {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, err)
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	req.Id = c.Params("id")
 	if req.Id == "" {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	if err = h.feature.UpdateBanner(ctx, req); err != nil {
-		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
 	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), "")

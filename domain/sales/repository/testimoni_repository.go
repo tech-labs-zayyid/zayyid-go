@@ -22,9 +22,9 @@ func (r salesRepository) AddTestimoniRepository(ctx context.Context, request mod
 	}
 
 	query := `
-		INSERT INTO product_marketing.sales_testimony (id, public_access, fullname, description, photo_url, is_active, created_at)
+		INSERT INTO product_marketing.sales_testimony (id, public_access, fullname, description, photo_url, is_active)
 		VALUES
-			($1,$2,$3,$4,$5,$6,NOW())`
+			($1,$2,$3,$4,$5,$6)`
 
 	stmt, err := r.database.Preparex(query)
 	if err != nil {
@@ -155,7 +155,7 @@ func (r salesRepository) GetPublicListTestimoniRepository(ctx context.Context, r
 			product_marketing.sales_testimony
 		WHERE
 			1 = 1
-			AND is_active = 1
+			AND is_active = TRUE
 			AND public_access = $1
 			%s`, queryLimit)
 	logger.LogInfo(constant.QUERY, query)

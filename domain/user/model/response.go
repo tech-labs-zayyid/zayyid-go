@@ -19,3 +19,12 @@ type UserRes struct {
 	// token response
 	TokenData TokenRes `json:"token_data" db:"-"`
 }
+
+type UserDataResp struct {
+	UserId         string `json:"user_id"`
+	Username       string `json:"username"`
+	Name           string `json:"name"`
+	WhatsappNumber string `json:"whatsapp_number"`
+	Email          string `json:"email"`
+	Role           string `json:"role"`
+}
