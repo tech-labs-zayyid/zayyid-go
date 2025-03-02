@@ -956,6 +956,58 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/update": {
+            "put": {
+                "description": "Update data sales",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update a user",
+                "parameters": [
+                    {
+                        "description": "User Data",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -994,6 +1046,9 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
+                "image_url": {
+                    "type": "string"
+                },
                 "name": {
                     "description": "fullname",
                     "type": "string"
@@ -1027,6 +1082,26 @@ const docTemplate = `{
                 }
             }
         },
+        "model.UpdateUser": {
+            "type": "object",
+            "properties": {
+                "image_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "whatsapp_number": {
+                    "type": "string"
+                }
+            }
+        },
         "model.UserRes": {
             "type": "object",
             "properties": {
@@ -1042,7 +1117,13 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "image_url": {
+                    "type": "string"
+                },
                 "name": {
+                    "type": "string"
+                },
+                "referal_code": {
                     "type": "string"
                 },
                 "role": {
@@ -1087,7 +1168,7 @@ const docTemplate = `{
                 "description": {
                     "type": "string"
                 },
-                "image": {
+                "images": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/request.ProductImage"
@@ -1099,16 +1180,13 @@ const docTemplate = `{
                 "price": {
                     "type": "number"
                 },
-                "product_category_id": {
-                    "type": "string"
-                },
-                "product_category_name": {
-                    "type": "string"
-                },
                 "product_name": {
                     "type": "string"
                 },
                 "product_sub_category": {
+                    "type": "string"
+                },
+                "public_access": {
                     "type": "string"
                 },
                 "tdp": {

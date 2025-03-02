@@ -24,3 +24,11 @@ type QueryUser struct {
 type RefreshToken struct {
 	RefreshToken string `json:"refresh_token" validate:"required"`
 }
+
+type UpdateUser struct {
+	Name           string `json:"name"`
+	Username       string `json:"username"`
+	WhatsappNumber string `json:"whatsapp_number"`
+	Password       string `json:"password"`
+	ImageUrl       string `json:"image_url"`
+}

@@ -20,4 +20,5 @@ type IUserHandler interface {
 	RegisterUserHandler(c *fiber.Ctx) (err error)
 	AuthUserHandler(c *fiber.Ctx) (err error)
 	RefreshTokenHandler(c *fiber.Ctx) (err error)
+	UpdateHandler(c *fiber.Ctx) (err error)
 }
