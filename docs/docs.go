@@ -972,6 +972,13 @@ const docTemplate = `{
                 "summary": "Update a user",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "User Data",
                         "name": "payload",
                         "in": "body",

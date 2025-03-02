@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"zayyid-go/domain/shared/context"
 	sharedHelper "zayyid-go/domain/shared/helper"
 	sharedError "zayyid-go/domain/shared/helper/error"
@@ -43,6 +44,7 @@ func (h UserHandler) RegisterUserHandler(c *fiber.Ctx) (err error) {
 
 	// Call register feature
 	resp, err := h.feature.RegisterFeature(ctx, payload)
+	fmt.Println("ada error apa ",err)
 	if err != nil {
 		// Handle for any error
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)

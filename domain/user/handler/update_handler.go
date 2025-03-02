@@ -17,6 +17,7 @@ import (
 // @Tags User
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Bearer token"
 // @Param payload body model.UpdateUser true "User Data"
 // @Success 200 {object} sharedResponse.Response
 // @Failure 400 {object} sharedResponse.Response
@@ -56,6 +57,6 @@ func (h UserHandler) UpdateHandler(c *fiber.Ctx) (err error) {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
-	return sharedResponse.ResponseOK(c, "Register user success!", nil)
+	return sharedResponse.ResponseOK(c, "Update user success!", nil)
 
 }

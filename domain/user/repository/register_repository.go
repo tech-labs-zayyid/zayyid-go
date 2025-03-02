@@ -32,8 +32,8 @@ func (r UserRepository) RegisterRepository(ctx context.Context, payload model.Re
 			$5, 
 			$6, 
 			$7, 
-			$8
-			$9
+			$8,
+			$9,
 			NOW(), 
 			$10
 		)
@@ -78,8 +78,8 @@ func (r UserRepository) GetUserById(ctx context.Context, userId string) (resp mo
 			whatsapp_number, 
 			email, 
 			role, 
-			IFNULL(image_url, "") AS image_url,
-			IFNULL(referal_code, "") AS referal_code,
+			COALESCE(image_url, '') AS image_url,
+    		COALESCE(referal_code, '') AS referal_code,
 			created_at,  
 			created_by 
 		FROM 
