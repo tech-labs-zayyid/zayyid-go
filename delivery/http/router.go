@@ -82,9 +82,9 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		sales.Get("/social-media", handler.salesHandler.GetListSocialMediaSales)
 	}
 
-	_ = app.Group("/agent")
+	agent := app.Group("/agent")
 	{
-		//list API for Agent
+		agent.Post("/create", middleware.Auth, handler.userHandler.CreateAgentHandler)
 	}
 
 	// user endpoint

@@ -2,7 +2,6 @@ package feature
 
 import (
 	"context"
-	"fmt"
 	sharedHelper "zayyid-go/domain/shared/helper"
 	sharedHelperRepo "zayyid-go/domain/shared/repository"
 	"zayyid-go/domain/user/model"
@@ -40,7 +39,6 @@ func (f UserFeature) RegisterFeature(ctx context.Context, payload model.Register
 
 	// get one user by userid
 	user, err := f.repo.GetUserById(ctx, userId.String())
-	fmt.Println("disini ya error nya ", err)
 	if err != nil {
 		return
 	}

@@ -11,17 +11,17 @@ import (
 )
 
 // RegisterUserHandler godoc
-// @Summary Register a new user
+// @Summary Create agent
 // @Description Register a new user with the provided details
-// @Tags User
+// @Tags Agent
 // @Accept json
 // @Produce json
 // @Param payload body model.RegisterRequest true "Register Request"
 // @Success 200 {object} sharedResponse.Response{data=model.UserRes}
 // @Failure 400 {object} sharedResponse.Response
 // @Failure 500 {object} sharedResponse.Response
-// @Router /user/register [post]
-func (h UserHandler) RegisterUserHandler(c *fiber.Ctx) (err error) {
+// @Router /agent/create [post]
+func (h UserHandler) CreateAgentHandler(c *fiber.Ctx) (err error) {
 
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
@@ -41,13 +41,16 @@ func (h UserHandler) RegisterUserHandler(c *fiber.Ctx) (err error) {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
+	// get user id from local fiber 
+	userID := c.Locals("user_id").(string)
+
 	// Call register feature
-	resp, err := h.feature.RegisterFeature(ctx, payload)
+	resp, err := h.feature.CreateAgentFeature(ctx, payload, userID)
 	if err != nil {
 		// Handle for any error
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
-	return sharedResponse.ResponseOK(c, "Register user success!", resp)
+	return sharedResponse.ResponseOK(c, "Create agent success!", resp)
 
 }
