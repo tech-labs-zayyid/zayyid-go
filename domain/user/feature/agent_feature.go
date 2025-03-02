@@ -2,9 +2,9 @@ package feature
 
 import (
 	"context"
-	"errors"
 	sharedHelper "zayyid-go/domain/shared/helper"
 	sharedHelperErr "zayyid-go/domain/shared/helper/error"
+	sharedHelperRepo "zayyid-go/domain/shared/repository"
 	"zayyid-go/domain/user/model"
 )
 
@@ -12,7 +12,7 @@ func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.Regis
 
 	// if role not agent return error 
 	if payload.Role != "agent" {
-		err = sharedHelperErr.New(403, "Unauthorized", errors.New("role should be agent"))
+		err = sharedHelperErr.New(403, "Role should be an agent", nil)
 		return 
 	}
 
@@ -40,14 +40,17 @@ func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.Regis
 	// set up password 
 	payload.Password = encryptedPassword
 
+	// generate agent id
+	agentId := sharedHelperRepo.GenerateUuidAsIdTable()
+
 	// call repo
-	err = f.repo.RegisterRepository(ctx, payload, userId)
+	err = f.repo.RegisterRepository(ctx, payload, agentId.String())
 	if err != nil {
 		return
 	}
 
 	// get one user by userid
-	user, err := f.repo.GetUserById(ctx, userId)
+	user, err := f.repo.GetUserById(ctx, agentId.String())
 	if err != nil {
 		return
 	}
@@ -64,8 +67,9 @@ func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.Regis
 		return
 	}
 
+	// TODO: send password to agent email
 	resp = model.UserRes{
-		Id:             userId,
+		Id:             agentId.String(),
 		Name:           user.Name,
 		UserName:       user.UserName,
 		Email:          user.Email,
