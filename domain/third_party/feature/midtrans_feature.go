@@ -62,7 +62,7 @@ func (t ThirdPartyFeature) MidtransNotificationFeature(ctx context.Context, requ
 
 func (t ThirdPartyFeature) FrontendPaymentNotificationFeature(ctx context.Context, request model.FrontendNotificationBodyReq) (err error) {
 
-	if request.StatusMessage != sharedConstant.SETTELMENT && request.FraudStatus != sharedConstant.ACCEPT {
+	if request.TransactionStatus != sharedConstant.SETTELMENT && request.FraudStatus != sharedConstant.ACCEPT {
 		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrStatusNotSettelment, errors.New(sharedConstant.ErrStatusNotSettelment))
 	} else {
 		_, err = t.repo.GetSalesPaymentRepository(ctx, request)
