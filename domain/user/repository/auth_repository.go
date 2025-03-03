@@ -62,3 +62,14 @@ func (r UserRepository) GetDataUserByUserId(ctx context.Context, userId string) 
 
 	return
 }
+
+func (r UserRepository) CheckExistsUserId(ctx context.Context, userId string) (exists bool, err error) {
+	query := `SELECT EXISTS(SELECT 1 FROM product_marketing.users WHERE id = $1 AND role = 'sales')`
+
+	logger.LogInfo(constant.QUERY, query)
+	if err = r.database.QueryRowContext(ctx, query, userId).Scan(&exists); err != nil {
+		err = sharedError.HandleError(err)
+	}
+
+	return
+}

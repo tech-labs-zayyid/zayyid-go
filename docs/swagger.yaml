@@ -82,7 +82,7 @@ definitions:
         type: string
       description:
         type: string
-      image:
+      images:
         items:
           $ref: '#/definitions/request.ProductImage'
         type: array
@@ -90,10 +90,6 @@ definitions:
         type: number
       price:
         type: number
-      product_category_id:
-        type: string
-      product_category_name:
-        type: string
       product_name:
         type: string
       product_sub_category:
@@ -143,6 +139,13 @@ definitions:
       image_url:
         type: string
     type: object
+  request.ProductImageUpdate:
+    properties:
+      image_url:
+        type: string
+      is_active:
+        type: boolean
+    type: object
   request.SocialMediaListReq:
     properties:
       link_embed:
@@ -177,6 +180,35 @@ definitions:
         type: string
     required:
     - image_url
+    type: object
+  request.UpdateProductSales:
+    properties:
+      best_product:
+        type: boolean
+      city_id:
+        type: string
+      description:
+        type: string
+      id_description:
+        type: string
+      images:
+        items:
+          $ref: '#/definitions/request.ProductImageUpdate'
+        type: array
+      installment:
+        type: number
+      price:
+        type: number
+      product_name:
+        type: string
+      product_sub_category:
+        type: string
+      slug:
+        type: string
+      status:
+        type: string
+      tdp:
+        type: number
     type: object
   request.UpdateTemplateReq:
     properties:
@@ -264,7 +296,6 @@ paths:
       - description: referral
         in: path
         name: referral
-        required: true
         type: string
       responses:
         "200":
@@ -498,6 +529,26 @@ paths:
       tags:
       - Data Gallery
   /sales/product:
+    get:
+      description: show List of Product
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get List Product
+      tags:
+      - Data Product
     post:
       description: add data of Banner
       parameters:
@@ -507,6 +558,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/request.AddProductReq'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       responses:
         "200":
           description: OK
@@ -520,9 +576,64 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      security:
-      - ApiKeyAuth: []
       summary: Add Data Banner
+      tags:
+      - Data Product
+  /sales/product/{id}:
+    get:
+      description: show Detail of Product
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Detail Product
+      tags:
+      - Data Product
+    put:
+      description: update of Product
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: body payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateProductSales'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Update Product
       tags:
       - Data Product
   /sales/social-media:

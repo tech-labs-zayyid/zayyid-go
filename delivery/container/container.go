@@ -47,8 +47,8 @@ func SetupContainer() Container {
 
 	notifBug := slack.InitConnectionSlack(config.Slack)
 
-	salesFeature := Sales.NewSalesFeature(SalesRepo.NewSalesRepository(db))
 	userFeature := User.NewUserFeature(UserRepo.NewUserRepository(db), notifBug)
+	salesFeature := Sales.NewSalesFeature(SalesRepo.NewSalesRepository(db), UserRepo.NewUserRepository(db))
 
 	return Container{
 		EnvironmentConfig: config,

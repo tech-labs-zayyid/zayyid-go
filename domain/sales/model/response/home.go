@@ -46,14 +46,21 @@ type TestimonyListHome struct {
 }
 
 type BestProduct struct {
-	IdProduct          string  `json:"id_product"`
-	ProductName        string  `json:"product_name"`
-	Price              float32 `json:"price"`
-	ProductSubCategory string  `json:"product_sub_category"`
-	TDP                float32 `json:"tdp"`
-	Installment        float32 `json:"installment"`
-	CityId             string  `json:"city_id"`
-	BestProduct        bool    `json:"best_product"`
+	IdProduct          string             `json:"id_product"`
+	ProductName        string             `json:"product_name"`
+	Price              float32            `json:"price"`
+	ProductSubCategory string             `json:"product_sub_category"`
+	TDP                float32            `json:"tdp"`
+	Installment        float32            `json:"installment"`
+	CityId             string             `json:"city_id"`
+	BestProduct        bool               `json:"best_product"`
+	Slug               string             `json:"slug"`
+	Images             []BestProductImage `json:"images"`
+}
+
+type BestProductImage struct {
+	ProductImageId string `json:"product_image_id"`
+	ImageUrl       string `json:"image_url"`
 }
 
 type DataAgent struct {

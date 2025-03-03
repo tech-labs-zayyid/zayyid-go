@@ -36,13 +36,17 @@ const (
 )
 
 const (
-	PAGE        = "page"
-	LIMIT       = "limit"
-	SORT_BY     = "sort_by"
-	SORT_ORDER  = "sort_order"
-	SEARCH      = "search"
-	STATUS      = "status"
-	PROVINCE_ID = "province_id"
+	PAGE                 = "page"
+	LIMIT                = "limit"
+	SORT_BY              = "sort_by"
+	SORT_ORDER           = "sort_order"
+	SEARCH               = "search"
+	STATUS               = "status"
+	PROVINCE_ID          = "province_id"
+	IS_ACTIVE            = "is_active"
+	SUB_CATEGORY_PRODUCT = "sub_category_product"
+	BEST_PRODUCT         = "best_product"
+	STATUS_PRODUCT       = "status_product"
 )
 
 const (
@@ -51,7 +55,10 @@ const (
 	ErrMaximumUploadBanner  = "you have reached the maximum limit for uploading banner"
 	ErrRequestGallery       = "error invalid request gallery is empty"
 	ErrRequestBanner        = "error invalid request banner is empty"
-	ErrRequestProduct       = "error invalid request image product is empty"
+	ErrRequestProductImages = "error invalid request image product not valid length"
 	ErrDataNotFound         = "data not found"
 	ErrDataUserIdNotFound   = "error not found user id"
+	ErrIdProductNotFound    = "id product not found"
+	ErrDuplicateProductName = "product name duplicate entry"
+	ErrStatusInvalid        = "invalid status product"
 )

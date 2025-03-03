@@ -44,6 +44,15 @@ func (f salesFeature) HomeSalesData(ctx context.Context, subdomain, referral str
 		PhotoUrl:    "https://res.cloudinary.com/dyj8vcauy/image/upload/v1740811698/WhatsApp_Image_2025-02-28_at_17.46.01_ukk40e.jpg",
 	})
 
+	var dataImage []response.BestProductImage
+	dataImage = append(dataImage, response.BestProductImage{
+		ProductImageId: "01955a8b-027d-76f1-98d2-5ec2efb361d8",
+		ImageUrl:       "https://res.cloudinary.com/dyj8vcauy/image/upload/v1740038333/gallery_01951f6b-db3f-7d07-8b2c-80d2e2d1be30_008_umavcs.avif",
+	}, response.BestProductImage{
+		ProductImageId: "01955a87-5afb-7952-818b-65c469944a05",
+		ImageUrl:       "https://res.cloudinary.com/dyj8vcauy/image/upload/v1740038336/gallery_01951f6b-db3f-7d07-8b2c-80d2e2d1be30_004_orbcbl.avif",
+	})
+
 	resp.Product = append(resp.Product, response.BestProduct{
 		IdProduct:          "0195508a-8ec1-7a78-8236-8ab98a4854a7",
 		ProductName:        "Lambo Lambe",
@@ -53,6 +62,8 @@ func (f salesFeature) HomeSalesData(ctx context.Context, subdomain, referral str
 		Installment:        125000000,
 		CityId:             "01951519-c232-775a-b8ef-76c2d0e2fa7e",
 		BestProduct:        true,
+		Slug:               "Lambo-Lambe",
+		Images:             dataImage,
 	})
 	return
 }

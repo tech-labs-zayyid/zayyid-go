@@ -21,4 +21,5 @@ type IUserRepository interface {
 	GetUserById(ctx context.Context, userId string) (resp model.UserRes, err error)
 	GetByQueryRepository(ctx context.Context, q model.QueryUser) (user model.UserRes, err error)
 	GetDataUserByUserId(ctx context.Context, userId string) (resp model.UserDataResp, err error)
+	CheckExistsUserId(ctx context.Context, userId string) (exists bool, err error)
 }

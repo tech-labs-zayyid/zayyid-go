@@ -2,7 +2,6 @@ package http
 
 import (
 	"fmt"
-
 	"zayyid-go/delivery/http/middleware"
 	"zayyid-go/infrastructure/helper"
 
@@ -52,6 +51,9 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 	sales := app.Group("/sales")
 	{
 		sales.Post("/product", middleware.Auth, handler.salesHandler.AddProductSales)
+		sales.Get("/product", middleware.Auth, handler.salesHandler.GetListProductSales)
+		sales.Get("/product/:id", middleware.Auth, handler.salesHandler.GetDetailProductSales)
+		sales.Put("/product/:id", middleware.Auth, handler.salesHandler.UpdateProductSales)
 
 		//gallery
 		sales.Post("/gallery", handler.salesHandler.AddGallerySales)

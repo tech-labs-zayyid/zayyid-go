@@ -112,8 +112,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "referral",
                         "name": "referral",
-                        "in": "path",
-                        "required": true
+                        "in": "path"
                     }
                 ],
                 "responses": {
@@ -466,12 +465,37 @@ const docTemplate = `{
             }
         },
         "/sales/product": {
-            "post": {
-                "security": [
+            "get": {
+                "description": "show List of Product",
+                "tags": [
+                    "Data Product"
+                ],
+                "summary": "Get List Product",
+                "parameters": [
                     {
-                        "ApiKeyAuth": []
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
                 "description": "add data of Banner",
                 "tags": [
                     "Data Product"
@@ -486,6 +510,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/request.AddProductReq"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -497,6 +528,91 @@ const docTemplate = `{
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/sales/product/{id}": {
+            "get": {
+                "description": "show Detail of Product",
+                "tags": [
+                    "Data Product"
+                ],
+                "summary": "Get Detail Product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "update of Product",
+                "tags": [
+                    "Data Product"
+                ],
+                "summary": "Update Product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "body payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateProductSales"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -1087,7 +1203,7 @@ const docTemplate = `{
                 "description": {
                     "type": "string"
                 },
-                "image": {
+                "images": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/request.ProductImage"
@@ -1098,12 +1214,6 @@ const docTemplate = `{
                 },
                 "price": {
                     "type": "number"
-                },
-                "product_category_id": {
-                    "type": "string"
-                },
-                "product_category_name": {
-                    "type": "string"
                 },
                 "product_name": {
                     "type": "string"
@@ -1182,6 +1292,17 @@ const docTemplate = `{
                 }
             }
         },
+        "request.ProductImageUpdate": {
+            "type": "object",
+            "properties": {
+                "image_url": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                }
+            }
+        },
         "request.SocialMediaListReq": {
             "type": "object",
             "properties": {
@@ -1233,6 +1354,50 @@ const docTemplate = `{
             "properties": {
                 "image_url": {
                     "type": "string"
+                }
+            }
+        },
+        "request.UpdateProductSales": {
+            "type": "object",
+            "properties": {
+                "best_product": {
+                    "type": "boolean"
+                },
+                "city_id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id_description": {
+                    "type": "string"
+                },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/request.ProductImageUpdate"
+                    }
+                },
+                "installment": {
+                    "type": "number"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "product_name": {
+                    "type": "string"
+                },
+                "product_sub_category": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tdp": {
+                    "type": "number"
                 }
             }
         },

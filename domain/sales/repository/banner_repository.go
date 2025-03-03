@@ -139,7 +139,7 @@ func (r salesRepository) UpdateBannerSales(ctx context.Context, req request.Bann
 	}
 	if req.Description != "" {
 		args = append(args, req.Description)
-		buildQuery = append(buildQuery, " deskripsi = $2")
+		buildQuery = append(buildQuery, " description = $2")
 	}
 
 	buildQuery = append(buildQuery, " updated_at = NOW()")

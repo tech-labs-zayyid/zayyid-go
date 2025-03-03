@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"zayyid-go/domain/sales/model/request"
 	"zayyid-go/domain/sales/model/response"
+	sharedModel "zayyid-go/domain/shared/model"
 	"zayyid-go/infrastructure/database"
 )
 
@@ -13,9 +14,16 @@ type SalesRepository interface {
 	HomeData(ctx context.Context, subdomain string) (resp response.DataHome, err error)
 
 	// product
-	CheckExistsUserId(ctx context.Context, userId string) (exists bool, err error)
+	CheckExistsProductName(ctx context.Context, productName, salesId string) (exists bool, err error)
 	AddProductSales(ctx context.Context, tx *sql.Tx, param request.AddProductReq) (err error)
 	GetProductTier(ctx context.Context) (resp response.TierResp, err error)
+	GetListProduct(ctx context.Context, filter sharedModel.QueryRequest) (resp map[string]*response.ProductListBySales, err error)
+	CountListProduct(ctx context.Context, filter sharedModel.QueryRequest) (count int, err error)
+	CheckExistsProductId(ctx context.Context, id string) (exists bool, err error)
+	DetailSalesProduct(ctx context.Context, id string) (resp response.ProductDetailResp, err error)
+	GetCountDataImageByProductId(ctx context.Context, productId string) (count int, err error)
+	UpdateProductSales(ctx context.Context, tx *sql.Tx, param request.UpdateProductSales) (err error)
+	ChangeStatusProductSales(ctx context.Context, tx *sql.Tx, param request.UpdateProductSales) (err error)
 
 	// galery
 	GetCountDataGalleryBySalesId(ctx context.Context, salesId string) (count int, err error)
