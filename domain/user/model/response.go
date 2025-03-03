@@ -13,6 +13,8 @@ type UserRes struct {
 	Email          string `json:"email" db:"email"`
 	Role           string `json:"role" db:"role"`
 	Password       string `json:"-" db:"password"`
+	ImageUrl       string `json:"image_url" db:"image_url"`
+	ReferalCode    string `json:"referal_code" db:"referal_code"`
 	CreatedAt      string `json:"created_at" db:"created_at"`
 	CreatedBy      string `json:"created_by" db:"created_by"`
 

@@ -20,6 +20,17 @@ func (f UserFeature) RegisterFeature(ctx context.Context, payload model.Register
 
 	userId := sharedHelperRepo.GenerateUuidAsIdTable()
 
+	// if agent was register generate referal code
+	if payload.Role == "agent" {
+		referalCode, errGenerateReferal := sharedHelper.GenerateRandomString(10)
+		if errGenerateReferal != nil {
+			err = errGenerateReferal
+			return
+		}
+
+		payload.ReferalCode = referalCode
+	}
+
 	// call repo
 	err = f.repo.RegisterRepository(ctx, payload, userId.String())
 	if err != nil {
