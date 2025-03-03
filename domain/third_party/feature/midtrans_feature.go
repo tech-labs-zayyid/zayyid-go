@@ -48,13 +48,17 @@ func (t ThirdPartyFeature) MidtransNotificationFeature(ctx context.Context, requ
 		Bank:              request.Bank,
 	}
 
-	_, err = t.repo.GetSalesPaymentRepository(ctx, payload)
-	switch err {
-	case sql.ErrNoRows:
-		err = t.repo.AddSalesPaymentRepository(ctx, payload)
+	if request.TransactionStatus != sharedConstant.SETTLEMENT && request.FraudStatus != sharedConstant.ACCEPT {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrStatusNotSettelment, errors.New(sharedConstant.ErrStatusNotSettelment))
+	} else {
+		_, err = t.repo.GetSalesPaymentRepository(ctx, payload)
+		switch err {
+		case sql.ErrNoRows:
+			err = t.repo.AddSalesPaymentRepository(ctx, payload)
 
-	case nil:
-		err = t.repo.UpdateSalesPaymentRepository(ctx, payload)
+		case nil:
+			err = t.repo.UpdateSalesPaymentRepository(ctx, payload)
+		}
 	}
 
 	return
