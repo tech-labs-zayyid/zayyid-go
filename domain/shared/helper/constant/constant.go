@@ -59,6 +59,6 @@ const (
 )
 
 const (
-	SETTELMENT = "settelment"
+	SETTLEMENT = "settlement"
 	ACCEPT     = "accept"
 )
