@@ -120,12 +120,14 @@ func (r salesRepository) GetTestimoniRepository(ctx context.Context, request mod
 	return
 }
 
-func (r salesRepository) GetPublicListTestimoniRepository(ctx context.Context, request string, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, err error) {
+func (r salesRepository) GetPublicListTestimoniRepository(ctx context.Context, subDomain string, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, err error) {
 
 	var (
 		args     []interface{}
 		argIndex = 1
 	)
+
+	args = append(args, subDomain)
 
 	offset := (filter.Page - 1) * filter.Limit
 

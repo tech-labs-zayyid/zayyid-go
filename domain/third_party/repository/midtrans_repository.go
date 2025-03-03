@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"zayyid-go/domain/shared/helper/constant"
+	sharedError "zayyid-go/domain/shared/helper/error"
 	"zayyid-go/domain/third_party/model"
 	"zayyid-go/infrastructure/logger"
 )
@@ -39,19 +40,19 @@ func (t thirdPartyRepository) AddSalesPaymentRepository(ctx context.Context, req
 
 	stmt, err := t.database.Preparex(query)
 	if err != nil {
-		return
+		err = sharedError.HandleError(err)
 	}
 	defer stmt.Close()
 
 	_, err = stmt.ExecContext(ctx, args...)
 	if err != nil {
-		return
+		err = sharedError.HandleError(err)
 	}
 
 	return
 }
 
-func (t thirdPartyRepository) UpdateTestimoniRepository(ctx context.Context, request model.FrontendNotificationBodyReq) (err error) {
+func (t thirdPartyRepository) UpdateSalesPaymentRepository(ctx context.Context, request model.FrontendNotificationBodyReq) (err error) {
 
 	args := []interface{}{}
 	buildQuery := []string{}
@@ -95,13 +96,13 @@ func (t thirdPartyRepository) UpdateTestimoniRepository(ctx context.Context, req
 	logger.LogInfo(constant.QUERY, query)
 	stmt, err := t.database.Preparex(query)
 	if err != nil {
-		return
+		err = sharedError.HandleError(err)
 	}
 	defer stmt.Close()
 
 	_, err = stmt.ExecContext(ctx, args...)
 	if err != nil {
-		return
+		err = sharedError.HandleError(err)
 	}
 
 	return
@@ -131,13 +132,13 @@ func (t thirdPartyRepository) GetSalesPaymentRepository(ctx context.Context, req
 
 	stmt, err := t.database.Preparex(query)
 	if err != nil {
-		return
+		err = sharedError.HandleError(err)
 	}
 	defer stmt.Close()
 
 	err = stmt.GetContext(ctx, response, request.TransactionId, request.OrderId)
 	if err != nil {
-		return
+		err = sharedError.HandleError(err)
 	}
 
 	return

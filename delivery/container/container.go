@@ -54,7 +54,7 @@ func SetupContainer() Container {
 	masterFeature := Master.NewMasterFeature(config, MasterRepo.NewMasterRepository(db), atomicRepo.NewUOWRepository(db), notifBug)
 	salesFeature := Sales.NewSalesFeature(SalesRepo.NewSalesRepository(db))
 	userFeature := User.NewUserFeature(UserRepo.NewUserRepository(db), notifBug)
-	thirdPartyFeature := ThirdParty.NewThirdPartyFeature(ThirdPartyRepo.NewThirdPartyRepository(db), notifBug, &config)
+	thirdPartyFeature := ThirdParty.NewThirdPartyFeature(ThirdPartyRepo.NewThirdPartyRepository(db), &config)
 
 	return Container{
 		EnvironmentConfig: config,

@@ -55,4 +55,10 @@ const (
 	ErrDataNotFound         = "data not found"
 	ErrInvalidSignatureKey  = "invalid signature key"
 	ErrDataUserIdNotFound   = "error not found user id"
+	ErrStatusNotSettelment  = "status not settelment"
+)
+
+const (
+	SETTELMENT = "settelment"
+	ACCEPT     = "accept"
 )

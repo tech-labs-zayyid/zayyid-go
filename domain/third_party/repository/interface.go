@@ -8,7 +8,7 @@ import (
 
 type ThirdPartyRepositoryInterface interface {
 	AddSalesPaymentRepository(ctx context.Context, request model.FrontendNotificationBodyReq) (err error)
-	UpdateTestimoniRepository(ctx context.Context, request model.FrontendNotificationBodyReq) (err error)
+	UpdateSalesPaymentRepository(ctx context.Context, request model.FrontendNotificationBodyReq) (err error)
 	GetSalesPaymentRepository(ctx context.Context, request model.FrontendNotificationBodyReq) (response model.SalesPaymentResp, err error)
 }
 type thirdPartyRepository struct {

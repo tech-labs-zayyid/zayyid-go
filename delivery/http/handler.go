@@ -28,20 +28,10 @@ func SetupHandler(container container.Container) Handler {
 
 	notifBug := slack.InitConnectionSlack(container.EnvironmentConfig.Slack)
 	return Handler{
-		userMenuHandler: UserMenuHandler.NewUserMenuHandler(
-			container.UserMenuFeature, isRequestLogged,
-		),
-		masterHandler: MasterHandler.NewMasterHandler(
-			container.MasterFeature, isRequestLogged,
-		),
-		salesHandler: SalesHandler.NewSalesHandler(
-			container.SalesFeature, isRequestLogged, notifBug,
-		),
-		userHandler: UserHandler.NewUserHandler(
-			&container.UserFeature,
-		),
-		thirdPartyHandler: ThirdPartyHandler.NewThirdPartyHandler(
-			&container.ThirdPartyFeature,
-		),
+		userMenuHandler:   UserMenuHandler.NewUserMenuHandler(container.UserMenuFeature, isRequestLogged),
+		masterHandler:     MasterHandler.NewMasterHandler(container.MasterFeature, isRequestLogged),
+		salesHandler:      SalesHandler.NewSalesHandler(container.SalesFeature, isRequestLogged, notifBug),
+		userHandler:       UserHandler.NewUserHandler(&container.UserFeature),
+		thirdPartyHandler: ThirdPartyHandler.NewThirdPartyHandler(&container.ThirdPartyFeature, notifBug),
 	}
 }

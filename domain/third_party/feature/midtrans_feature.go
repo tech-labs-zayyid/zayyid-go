@@ -54,29 +54,25 @@ func (t ThirdPartyFeature) MidtransNotificationFeature(ctx context.Context, requ
 		err = t.repo.AddSalesPaymentRepository(ctx, payload)
 
 	case nil:
-		err = t.repo.UpdateTestimoniRepository(ctx, payload)
-	}
-
-	if err != nil {
-		err = sharedError.HandleError(err)
+		err = t.repo.UpdateSalesPaymentRepository(ctx, payload)
 	}
 
 	return
 }
 
-func (t ThirdPartyFeature) FrontendNotificationFeature(ctx context.Context, request model.FrontendNotificationBodyReq) (err error) {
+func (t ThirdPartyFeature) FrontendPaymentNotificationFeature(ctx context.Context, request model.FrontendNotificationBodyReq) (err error) {
 
-	_, err = t.repo.GetSalesPaymentRepository(ctx, request)
-	switch err {
-	case sql.ErrNoRows:
-		err = t.repo.AddSalesPaymentRepository(ctx, request)
+	if request.StatusMessage != sharedConstant.SETTELMENT && request.FraudStatus != sharedConstant.ACCEPT {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrStatusNotSettelment, errors.New(sharedConstant.ErrStatusNotSettelment))
+	} else {
+		_, err = t.repo.GetSalesPaymentRepository(ctx, request)
+		switch err {
+		case sql.ErrNoRows:
+			err = t.repo.AddSalesPaymentRepository(ctx, request)
 
-	case nil:
-		err = t.repo.UpdateTestimoniRepository(ctx, request)
-	}
-
-	if err != nil {
-		err = sharedError.HandleError(err)
+		case nil:
+			err = t.repo.UpdateSalesPaymentRepository(ctx, request)
+		}
 	}
 
 	return
