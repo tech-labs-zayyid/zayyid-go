@@ -82,9 +82,9 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		sales.Get("/social-media", handler.salesHandler.GetListSocialMediaSales)
 	}
 
-	_ = app.Group("/agent")
+	agent := app.Group("/agent")
 	{
-		//list API for Agent
+		agent.Post("/create", middleware.Auth, handler.userHandler.CreateAgentHandler)
 	}
 
 	// user endpoint
@@ -93,6 +93,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		user.Post("/register", handler.userHandler.RegisterUserHandler)
 		user.Post("/login", handler.userHandler.AuthUserHandler)
 		user.Post("/refresh-token", handler.userHandler.RefreshTokenHandler)
+		user.Put("/update", middleware.Auth, handler.userHandler.UpdateHandler)
 	}
 
 	// app.All("/:base_path/*", middleware.SignatureMiddleware(), handler.applicationMenuHandler.Handle)

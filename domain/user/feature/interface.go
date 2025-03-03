@@ -23,4 +23,5 @@ type IUserFeature interface {
 	RegisterFeature(ctx context.Context, payload model.RegisterRequest) (resp model.UserRes, err error)
 	AuthUserFeature(ctx context.Context, payload model.AuthUserRequest) (resp model.UserRes, err error)
 	RefreshTokenFeature(ctx context.Context, refreshToken string) (resp model.TokenRes, err error)
+	CreateAgentFeature(ctx context.Context, payload model.RegisterRequest, userId string) (resp model.UserRes, err error)
 }

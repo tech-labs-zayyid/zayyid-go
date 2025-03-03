@@ -19,6 +19,8 @@ func (r UserRepository) RegisterRepository(ctx context.Context, payload model.Re
 				email, 
 				password, 
 				role, 
+				image_url,
+				referal_code,
 				created_at, 
 				created_by
 			)
@@ -30,8 +32,10 @@ func (r UserRepository) RegisterRepository(ctx context.Context, payload model.Re
 			$5, 
 			$6, 
 			$7, 
+			$8,
+			$9,
 			NOW(), 
-			$8
+			$10
 		)
 	`
 
@@ -51,6 +55,8 @@ func (r UserRepository) RegisterRepository(ctx context.Context, payload model.Re
 		payload.Email,
 		payload.Password,
 		payload.Role,
+		payload.ImageUrl,
+		payload.ReferalCode,
 		payload.Email,
 	)
 	if err != nil {
@@ -72,7 +78,9 @@ func (r UserRepository) GetUserById(ctx context.Context, userId string) (resp mo
 			whatsapp_number, 
 			email, 
 			role, 
-			created_at, 
+			COALESCE(image_url, '') AS image_url,
+    		COALESCE(referal_code, '') AS referal_code,
+			created_at,  
 			created_by 
 		FROM 
 			product_marketing.users 
