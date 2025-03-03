@@ -69,7 +69,6 @@ func (r salesRepository) UpdateTestimoniRepository(ctx context.Context, request 
 	args = append(args, request.PublicAccess)
 	query := fmt.Sprintf(`UPDATE product_marketing.sales_testimony SET %s  WHERE id = ? AND public_access = ? `, updateQuery)
 
-	logger.LogInfo(constant.QUERY, query)
 	stmt, err := r.database.Preparex(query)
 	if err != nil {
 		err = sharedError.HandleError(err)
@@ -91,7 +90,7 @@ func (r salesRepository) GetTestimoniRepository(ctx context.Context, request mod
 	query := `
 		SELECT
 			id, 
-			oublic_access, 
+			public_access, 
 			fullname, 
 			description, 
 			photo_url, 
