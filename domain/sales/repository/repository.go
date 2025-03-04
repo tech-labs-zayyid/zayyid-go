@@ -24,6 +24,8 @@ type SalesRepository interface {
 	GetCountDataImageByProductId(ctx context.Context, productId string) (count int, err error)
 	UpdateProductSales(ctx context.Context, tx *sql.Tx, param request.UpdateProductSales) (err error)
 	ChangeStatusProductSales(ctx context.Context, tx *sql.Tx, param request.UpdateProductSales) (err error)
+	GetListProductSalesPublic(ctx context.Context, filter sharedModel.QueryRequest) (resp map[string]*response.ProductListSalesPublic, err error)
+	CountListProductSalesPublic(ctx context.Context, filter sharedModel.QueryRequest) (count int, err error)
 
 	// galery
 	GetCountDataGalleryBySalesId(ctx context.Context, salesId string) (count int, err error)

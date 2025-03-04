@@ -297,8 +297,8 @@ func (r salesRepository) CountListProduct(ctx context.Context, filter sharedMode
 		argIndex++
 	}
 
-	if filter.Status != "" {
-		isActive, errParse := strconv.ParseBool(filter.Status)
+	if filter.IsActive != "" {
+		isActive, errParse := strconv.ParseBool(filter.IsActive)
 		if errParse != nil {
 			err = sharedError.New(http.StatusBadRequest, errParse.Error(), errParse)
 			return
@@ -452,6 +452,203 @@ func (r salesRepository) ChangeStatusProductSales(ctx context.Context, tx *sql.T
 
 	logger.LogInfo(constant.QUERY, query)
 	if _, err = stmtProductStatus.ExecContext(ctx, sharedRepo.GenerateUuidAsIdTable().String(), param.ProductId, param.Status); err != nil {
+		err = sharedError.HandleError(err)
+	}
+
+	return
+}
+
+func (r salesRepository) GetListProductSalesPublic(ctx context.Context, filter sharedModel.QueryRequest) (resp map[string]*response.ProductListSalesPublic, err error) {
+	var (
+		data      response.ProductListSalesPublic
+		dataImage response.ProductImagePublic
+		dataMap   = make(map[string]*response.ProductListSalesPublic)
+		argIndex  = 1
+		offset    = (filter.Page - 1) * filter.Limit
+		args      = []interface{}{}
+	)
+
+	// Construct the SQL query
+	query := `SELECT sp.id, COALESCE(sp.sub_category_product, ''), sp.product_name, sp.slug, sp.price, sp.tdp, sp.installment,
+			sp.best_product, spd.description, statusProduct.status, spi.image_url, COALESCE(mp.name, '') AS province_name, 
+			COALESCE(mc.name, '') AS city_name, sp.created_at, sp.updated_at
+			FROM product_marketing.sales_product sp
+			LEFT JOIN product_marketing.sales_product_description spd ON sp.id = spd.product_id
+			LEFT JOIN LATERAL (
+				SELECT status
+				FROM product_marketing.sales_product_status
+				WHERE product_id = sp.id
+				GROUP BY product_id, created_at, status
+				ORDER BY created_at DESC LIMIT 1
+			) statusProduct on true
+			LEFT JOIN product_marketing.sales_product_image spi ON sp.id = spi.product_id
+			LEFT JOIN product_marketing.master_city mc ON sp.city_id = mc.id
+			LEFT JOIN product_marketing.master_province mp ON mc.province_id = mp.id
+			WHERE 1 = 1 AND sp.is_active = TRUE`
+
+	if filter.PublicAccess != "" {
+		query += fmt.Sprintf(" AND sp.public_access = $%d", argIndex)
+		args = append(args, filter.PublicAccess)
+		argIndex++
+	}
+
+	if filter.Search != "" {
+		query += fmt.Sprintf(" AND sp.product_name ILIKE $%d", argIndex)
+		args = append(args, "%"+filter.Search+"%")
+		argIndex++
+	}
+
+	if filter.SubCategoryProduct != "" {
+		query += fmt.Sprintf(" AND sp.sub_category_product = $%d", argIndex)
+		args = append(args, filter.SubCategoryProduct)
+		argIndex++
+	}
+
+	if filter.StatusProduct != "" {
+		query += fmt.Sprintf(" AND statusProduct.status = $%d", argIndex)
+		args = append(args, filter.StatusProduct)
+		argIndex++
+	}
+
+	if filter.BestProduct != "" {
+		bestProduct, errParse := strconv.ParseBool(filter.BestProduct)
+		if errParse != nil {
+			err = sharedError.New(http.StatusBadRequest, errParse.Error(), errParse)
+			return
+		}
+
+		query += fmt.Sprintf(" AND sp.best_product = $%d", argIndex)
+		args = append(args, bestProduct)
+		argIndex++
+	}
+
+	if filter.MinimumPrice != 0 && filter.MaximumPrice != 0 {
+		query += fmt.Sprintf(" AND sp.price BETWEEN $%d AND $%d", argIndex, argIndex+1)
+		args = append(args, filter.MinimumPrice, filter.MaximumPrice)
+		argIndex += 2
+	}
+
+	if filter.SortBy != "" {
+		query += " ORDER BY " + filter.SortBy
+
+		if filter.SortOrder != "" {
+			query += " " + filter.SortOrder
+		}
+	}
+
+	query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", argIndex, argIndex+1)
+	args = append(args, filter.Limit, offset)
+
+	logger.LogInfo(constant.QUERY, query)
+	rows, err := r.database.QueryContext(ctx, query, args...)
+	if err != nil {
+		err = sharedError.HandleError(err)
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		if err = rows.Scan(&data.IdProduct, &data.ProductSubCategory, &data.ProductName, &data.Slug, &data.Price,
+			&data.TDP, &data.Installment, &data.BestProduct, &data.Description, &data.Status,
+			&dataImage.ImageUrl, &data.ProvinceName, &data.CityName, &data.CreatedAt,
+			&data.UpdatedAt); err != nil {
+			err = sharedError.HandleError(err)
+			return
+		}
+
+		if _, ok := dataMap[data.IdProduct]; !ok {
+			dataMap[data.IdProduct] = &response.ProductListSalesPublic{
+				ProductName:        data.ProductName,
+				Price:              data.Price,
+				ProductSubCategory: data.ProductSubCategory,
+				TDP:                data.TDP,
+				Installment:        data.Installment,
+				ProvinceName:       data.ProvinceName,
+				CityName:           data.CityName,
+				Description:        data.Description,
+				Status:             data.Status,
+				ProductImages:      []response.ProductImagePublic{},
+			}
+		}
+
+		if dataImage.ProductImageId != "" {
+			dataMap[data.IdProduct].ProductImages = append(dataMap[data.IdProduct].ProductImages, response.ProductImagePublic{
+				ProductImageId: dataImage.ProductImageId,
+				ImageUrl:       dataImage.ImageUrl,
+			})
+		}
+	}
+
+	resp = dataMap
+	return
+}
+
+func (r salesRepository) CountListProductSalesPublic(ctx context.Context, filter sharedModel.QueryRequest) (count int, err error) {
+	var (
+		argIndex = 1
+		args     = []interface{}{}
+	)
+
+	// Construct the SQL query
+	query := `SELECT COUNT(DISTINCT sp.id)
+			FROM product_marketing.sales_product sp
+			LEFT JOIN product_marketing.sales_product_description spd ON sp.id = spd.product_id
+			LEFT JOIN LATERAL (
+				SELECT status
+				FROM product_marketing.sales_product_status
+				WHERE product_id = sp.id
+				GROUP BY product_id, created_at, status
+				ORDER BY created_at DESC LIMIT 1
+			) statusProduct on true
+			LEFT JOIN product_marketing.sales_product_image spi ON sp.id = spi.product_id
+			LEFT JOIN product_marketing.master_city mc ON sp.city_id = mc.id
+			LEFT JOIN product_marketing.master_province mp ON mc.province_id = mp.id
+			WHERE 1 = 1 AND sp.is_active = TRUE`
+
+	if filter.PublicAccess != "" {
+		query += fmt.Sprintf(" AND sp.public_access = $%d", argIndex)
+		args = append(args, filter.PublicAccess)
+		argIndex++
+	}
+
+	if filter.Search != "" {
+		query += fmt.Sprintf(" AND sp.product_name ILIKE $%d", argIndex)
+		args = append(args, "%"+filter.Search+"%")
+		argIndex++
+	}
+
+	if filter.SubCategoryProduct != "" {
+		query += fmt.Sprintf(" AND sp.sub_category_product = $%d", argIndex)
+		args = append(args, filter.SubCategoryProduct)
+		argIndex++
+	}
+
+	if filter.StatusProduct != "" {
+		query += fmt.Sprintf(" AND statusProduct.status = $%d", argIndex)
+		args = append(args, filter.StatusProduct)
+		argIndex++
+	}
+
+	if filter.BestProduct != "" {
+		bestProduct, errParse := strconv.ParseBool(filter.BestProduct)
+		if errParse != nil {
+			err = sharedError.New(http.StatusBadRequest, errParse.Error(), errParse)
+			return
+		}
+
+		query += fmt.Sprintf(" AND sp.best_product = $%d", argIndex)
+		args = append(args, bestProduct)
+		argIndex++
+	}
+
+	if filter.MinimumPrice != 0 && filter.MaximumPrice != 0 {
+		query += fmt.Sprintf(" AND sp.price BETWEEN $%d AND $%d", argIndex, argIndex+1)
+		args = append(args, filter.MinimumPrice, filter.MaximumPrice)
+		argIndex += 2
+	}
+
+	logger.LogInfo(constant.QUERY, query)
+	if err = r.database.QueryRowContext(ctx, query, args...).Scan(&count); err != nil {
 		err = sharedError.HandleError(err)
 	}
 

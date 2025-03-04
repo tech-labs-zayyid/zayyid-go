@@ -44,3 +44,17 @@ type ProductImageUpdate struct {
 	ImageUrl  string `json:"image_url"`
 	IsActive  bool   `json:"is_active"`
 }
+
+type ProductListPublic struct {
+	Page               int    `json:"page" query:"page" default:"1"`
+	Limit              int    `json:"limit" query:"limit" default:"20"`
+	SortBy             string `json:"sort_by" query:"sort_by"`
+	SortOrder          string `json:"sort_order" query:"sort_order"`
+	Search             string `json:"search" query:"search"`
+	SubCategoryProduct string `json:"sub_category_product" query:"sub_category_product"`
+	BestProduct        string `json:"best_product" query:"best_product"`
+	StatusProduct      string `json:"status_product" query:"status_product"`
+	SalesId            string `json:"sales_id" query:"sales_id"`
+	MinimumPrice       string `json:"minimum_price" query:"minimum_price"`
+	MaximumPrice       string `json:"maximum_price" query:"maximum_price"`
+}

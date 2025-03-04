@@ -28,6 +28,7 @@ type SalesHandlerInterface interface {
 	GetListProductSales(c *fiber.Ctx) (err error)
 	GetDetailProductSales(c *fiber.Ctx) (err error)
 	UpdateProductSales(c *fiber.Ctx) (err error)
+	GetListProductSalesPublic(c *fiber.Ctx) (err error)
 
 	//gallery
 	AddGallerySales(c *fiber.Ctx) (err error)

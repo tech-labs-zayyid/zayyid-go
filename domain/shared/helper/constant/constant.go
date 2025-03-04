@@ -47,6 +47,8 @@ const (
 	SUB_CATEGORY_PRODUCT = "sub_category_product"
 	BEST_PRODUCT         = "best_product"
 	STATUS_PRODUCT       = "status_product"
+	MINIMUM_PRICE        = "minimum_price"
+	MAXIMUM_PRICE        = "maximum_price"
 )
 
 const (

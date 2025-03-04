@@ -3,10 +3,10 @@ package feature
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/gosimple/slug"
 	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
 	"zayyid-go/domain/sales/helper"
 	"zayyid-go/domain/sales/model/request"
@@ -211,7 +211,6 @@ func (f salesFeature) UpdateProductSales(ctx context.Context, param request.Upda
 		return
 	}
 
-	fmt.Println(dataProduct.ProductName, param.ProductName, dataProduct.ProductName != param.ProductName)
 	if dataProduct.ProductName != param.ProductName {
 		re := regexp.MustCompile(`\W`)
 		cleaned := re.ReplaceAllString(param.ProductName, "")
@@ -235,5 +234,73 @@ func (f salesFeature) UpdateProductSales(ctx context.Context, param request.Upda
 
 	param.Slug = slug.Make(param.ProductName)
 	err = f.repo.UpdateProductSales(ctx, tx, param)
+	return
+}
+
+func (f salesFeature) GetListProductSalesPublic(ctx context.Context, filter request.ProductListPublic, subdomain string) (resp []response.ProductListSalesPublic, pagination *sharedModel.Pagination, err error) {
+	var (
+		minimumPrice float64
+		maximumPrice float64
+	)
+
+	exists, err := f.userRepo.CheckExistsSubdomain(ctx, subdomain)
+	if err != nil {
+		return
+	}
+
+	if !exists {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrDataUserIdNotFound, errors.New(sharedConstant.ErrDataUserIdNotFound))
+		return
+	}
+
+	sharedHelper.SetDefaults(&filter)
+	if filter.MinimumPrice != "" {
+		minimumPrice, err = strconv.ParseFloat(filter.MinimumPrice, 32)
+		if err != nil {
+			return
+		}
+	}
+
+	if filter.MaximumPrice != "" {
+		maximumPrice, err = strconv.ParseFloat(filter.MaximumPrice, 32)
+		if err != nil {
+			return
+		}
+	}
+
+	queryRequest := sharedModel.QueryRequest{
+		Search:             filter.Search,
+		SubCategoryProduct: filter.SubCategoryProduct,
+		BestProduct:        filter.BestProduct,
+		StatusProduct:      filter.StatusProduct,
+		MinimumPrice:       minimumPrice,
+		MaximumPrice:       maximumPrice,
+		Page:               filter.Page,
+		Limit:              filter.Limit,
+		SortBy:             filter.SortBy,
+		SortOrder:          filter.SortOrder,
+		PublicAccess:       subdomain,
+	}
+
+	respList, err := f.repo.GetListProductSalesPublic(ctx, queryRequest)
+	if err != nil {
+		return
+	}
+
+	for _, v := range respList {
+		resp = append(resp, *v)
+	}
+
+	count, err := f.repo.CountListProductSalesPublic(ctx, queryRequest)
+	if err != nil {
+		return
+	}
+
+	pagination, err = paginate.CalculatePagination(ctx, filter.Limit, count)
+	if err != nil {
+		return
+	}
+
+	pagination.Page = filter.Page
 	return
 }

@@ -17,6 +17,7 @@ type SalesFeature interface {
 	ListProductSales(ctx context.Context, paramFilter sharedModel.QueryRequest) (resp []response.ProductListBySales, pagination *sharedModel.Pagination, err error)
 	GetDetailSalesProduct(ctx context.Context, id string) (resp response.ProductDetailResp, err error)
 	UpdateProductSales(ctx context.Context, param request.UpdateProductSales) (err error)
+	GetListProductSalesPublic(ctx context.Context, filter request.ProductListPublic, subdomain string) (resp []response.ProductListSalesPublic, pagination *sharedModel.Pagination, err error)
 
 	//banner
 	AddBannerSales(ctx context.Context, param request.BannerReq) (err error)

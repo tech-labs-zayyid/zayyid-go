@@ -146,5 +146,37 @@ func (h salesHandler) UpdateProductSales(c *fiber.Ctx) (err error) {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
-	return
+	return sharedResponse.ResponseOK(c, http.StatusText(http.StatusOK), "")
+}
+
+// Get List Product Public godoc
+// @Summary      Get List Product Public
+// @Description  show List of Product Public
+// @Tags         Data Product
+// @Success      200  {object}  response.Response
+// @Failure      500  {object}  response.Response
+// @Router       /public/product/{domain} [get]
+func (h salesHandler) GetListProductSalesPublic(c *fiber.Ctx) (err error) {
+	ctx, cancel := context.CreateContextWithTimeout()
+	defer cancel()
+	ctx = context.SetValueToContext(ctx, c)
+
+	var param request.ProductListPublic
+	err = c.QueryParser(&param)
+	if err != nil {
+		return
+	}
+
+	subdomain := c.Params("subdomain")
+	if subdomain == "" {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
+	}
+
+	resp, pagination, err := h.feature.GetListProductSalesPublic(ctx, param, subdomain)
+	if err != nil {
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
+	}
+
+	return sharedResponse.ResponseOkWithPagination(c, sharedConstant.SUCCESS, resp, pagination)
 }

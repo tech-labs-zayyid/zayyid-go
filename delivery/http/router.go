@@ -39,6 +39,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		public.Get("/banner/:subdomain/*", handler.salesHandler.GetBannerPublicSales)
 		public.Get("/template/:subdomain/*", handler.salesHandler.GetListPublicTemplateSales)
 		public.Get("/social-media/:subdomain/*", handler.salesHandler.GetListPublicSocialMediaSales)
+		public.Get("/product/:subdomain", handler.salesHandler.GetListProductSalesPublic)
 	}
 
 	master := app.Group("/master")

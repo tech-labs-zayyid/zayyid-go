@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"reflect"
 	"strings"
 	"time"
 	"unicode"
@@ -130,4 +131,20 @@ func HashPassword(password string) (string, error) {
 func VerifyPassword(hashedPassword, plainPassword string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(plainPassword))
 	return err == nil // Jika tidak ada error, berarti password cocok
+}
+
+func SetDefaults(obj interface{}) {
+	v := reflect.ValueOf(obj).Elem()
+	t := v.Type()
+
+	for i := 0; i < v.NumField(); i++ {
+		field := v.Field(i)
+		defaultTag := t.Field(i).Tag.Get("default")
+
+		if field.Kind() == reflect.String && field.String() == "" {
+			field.SetString(defaultTag)
+		} else if field.Kind() == reflect.Int && field.Int() == 0 {
+			fmt.Sscanf(defaultTag, "%d", field.Addr().Interface()) // Konversi string ke int
+		}
+	}
 }
