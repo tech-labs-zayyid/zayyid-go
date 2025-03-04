@@ -33,6 +33,12 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		api.Get("/ping", handler.userMenuHandler.Ping)
 	}
 
+	thirdParty := app.Group("/third-party")
+	{
+		thirdParty.Post("/callback-payment-receiving", handler.thirdPartyHandler.CallbackPaymentReceivingMidtrans)
+		thirdParty.Post("/frontend-payment-notification", handler.thirdPartyHandler.FrontendPaymentNotification)
+	}
+
 	public := app.Group("/public")
 	{
 		public.Get("/home/:subdomain/*", handler.salesHandler.GetDataHome)
@@ -40,6 +46,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		public.Get("/banner/:subdomain/*", handler.salesHandler.GetBannerPublicSales)
 		public.Get("/template/:subdomain/*", handler.salesHandler.GetListPublicTemplateSales)
 		public.Get("/social-media/:subdomain/*", handler.salesHandler.GetListPublicSocialMediaSales)
+		public.Get("/testimony/:subdomain/*", handler.salesHandler.GetPublicListTestimoniHandler)
 	}
 
 	master := app.Group("/master")

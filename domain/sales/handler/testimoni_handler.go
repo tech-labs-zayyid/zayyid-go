@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"errors"
+	"net/http"
 	modelRequest "zayyid-go/domain/sales/model/request"
 	sharedHelper "zayyid-go/domain/shared/helper"
 	sharedConstant "zayyid-go/domain/shared/helper/constant"
@@ -119,6 +121,38 @@ func (h salesHandler) GetListTestimoniHandler(c *fiber.Ctx) error {
 	}
 
 	data, pagination, err := h.feature.GetListTestimoniFeature(ctx, *param, *filter)
+	if err != nil {
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
+	}
+
+	return response.ResponseOkWithPagination(c, sharedConstant.SUCCESS, data, pagination)
+}
+
+// Get Public List Customer godoc
+// @Summary      Get Public public List Customer
+// @Description  show list of Customer
+// @Tags         Data Testimoni
+// @Param        subdomain   path      string  true  "sub domain"
+// @Success      200  {object}  response.Response
+// @Failure      500  {object}  response.Response
+// @Router       /testimony/list/{subdomain}/{referral} [get]
+func (h salesHandler) GetPublicListTestimoniHandler(c *fiber.Ctx) error {
+	ctx := c.UserContext()
+
+	referral := c.Params("*")
+	subDomain := c.Params("subdomain")
+	if subDomain == "" {
+		err := sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
+	}
+
+	filter := new(modelRequest.TestimoniSearch)
+
+	if err := c.QueryParser(filter); err != nil {
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
+	}
+
+	data, pagination, err := h.feature.GetPublicListTestimoniFeature(ctx, subDomain, referral, *filter)
 	if err != nil {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}

@@ -1,9 +1,10 @@
 package handler
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"zayyid-go/domain/sales/feature"
 	"zayyid-go/infrastructure/service/slack"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type salesHandler struct {
@@ -38,6 +39,7 @@ type SalesHandlerInterface interface {
 	UpdateTestimoniHandler(c *fiber.Ctx) error
 	GetTestimoniHandler(c *fiber.Ctx) error
 	GetListTestimoniHandler(c *fiber.Ctx) error
+	GetPublicListTestimoniHandler(c *fiber.Ctx) error
 
 	// banner
 	AddBannerSales(c *fiber.Ctx) (err error)
