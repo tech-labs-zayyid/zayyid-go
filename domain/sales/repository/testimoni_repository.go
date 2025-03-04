@@ -14,17 +14,17 @@ func (r salesRepository) AddTestimoniRepository(ctx context.Context, request mod
 
 	args := []interface{}{
 		request.Id,
-		request.UserName,
-		request.Position,
-		request.Deskripsi,
+		request.PublicAccess,
+		request.FullName,
+		request.Description,
 		request.PhotoUrl,
 		request.IsActive,
 	}
 
 	query := `
-		INSERT INTO product_marketing.sales_testimony (id, user_name, position, deskripsi, photo_url, is_active, created_at)
+		INSERT INTO product_marketing.sales_testimony (id, public_access, fullname, description, photo_url, is_active)
 		VALUES
-			($1,$2,$3,$4,$5,$6,NOW())`
+			($1,$2,$3,$4,$5,$6)`
 
 	stmt, err := r.database.Preparex(query)
 	if err != nil {
@@ -47,13 +47,13 @@ func (r salesRepository) UpdateTestimoniRepository(ctx context.Context, request 
 	args := []interface{}{}
 	buildQuery := []string{}
 
-	if request.Position != "" {
-		args = append(args, request.Position)
-		buildQuery = append(buildQuery, " position = $1")
+	if request.FullName != "" {
+		args = append(args, request.FullName)
+		buildQuery = append(buildQuery, " fullname = $1")
 	}
-	if request.Deskripsi != "" {
-		args = append(args, request.Deskripsi)
-		buildQuery = append(buildQuery, " deskripsi = $2")
+	if request.Description != "" {
+		args = append(args, request.Description)
+		buildQuery = append(buildQuery, " description = $2")
 	}
 	if request.PhotoUrl != "" {
 		args = append(args, request.PhotoUrl)
@@ -66,10 +66,9 @@ func (r salesRepository) UpdateTestimoniRepository(ctx context.Context, request 
 
 	updateQuery := strings.Join(buildQuery, ",")
 	args = append(args, request.Id)
-	args = append(args, request.UserName)
-	query := fmt.Sprintf(`UPDATE product_marketing.sales_testimony SET %s  WHERE id = ? AND user_name = ? `, updateQuery)
+	args = append(args, request.PublicAccess)
+	query := fmt.Sprintf(`UPDATE product_marketing.sales_testimony SET %s  WHERE id = ? AND public_access = ? `, updateQuery)
 
-	logger.LogInfo(constant.QUERY, query)
 	stmt, err := r.database.Preparex(query)
 	if err != nil {
 		err = sharedError.HandleError(err)
@@ -91,9 +90,9 @@ func (r salesRepository) GetTestimoniRepository(ctx context.Context, request mod
 	query := `
 		SELECT
 			id, 
-			user_name, 
-			position, 
-			deskripsi, 
+			public_access, 
+			fullname, 
+			description, 
 			photo_url, 
 			is_active, 
 			created_at,
@@ -120,6 +119,64 @@ func (r salesRepository) GetTestimoniRepository(ctx context.Context, request mod
 	return
 }
 
+func (r salesRepository) GetPublicListTestimoniRepository(ctx context.Context, subDomain string, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, err error) {
+
+	var (
+		args     []interface{}
+		argIndex = 1
+	)
+
+	args = append(args, subDomain)
+
+	offset := (filter.Page - 1) * filter.Limit
+
+	querySort := ""
+	if filter.SortBy != "" {
+		querySort += " ORDER BY " + filter.SortBy
+
+		if filter.SortOrder != "" {
+			querySort += " " + filter.SortOrder
+		}
+	}
+
+	args = append(args, filter.Limit, offset)
+	queryLimit := fmt.Sprintf(" LIMIT $%d OFFSET $%d", argIndex, argIndex+1)
+
+	query := fmt.Sprintf(`
+		SELECT
+			id, 
+			public_access, 
+			fullname, 
+			description, 
+			photo_url, 
+			is_active, 
+			created_at,
+			modified_at
+		FROM
+			product_marketing.sales_testimony
+		WHERE
+			1 = 1
+			AND is_active = TRUE
+			AND public_access = $1
+			%s`, queryLimit)
+	logger.LogInfo(constant.QUERY, query)
+
+	stmt, err := r.database.Preparex(query)
+	if err != nil {
+		err = sharedError.HandleError(err)
+		return
+	}
+	defer stmt.Close()
+
+	err = stmt.SelectContext(ctx, response, args...)
+	if err != nil {
+		err = sharedError.HandleError(err)
+		return
+	}
+
+	return
+}
+
 func (r salesRepository) GetListTestimoniRepository(ctx context.Context, request modelRequest.Testimoni, filter modelRequest.TestimoniSearch) (response []modelRequest.Testimoni, err error) {
 
 	var (
@@ -130,9 +187,9 @@ func (r salesRepository) GetListTestimoniRepository(ctx context.Context, request
 	offset := (filter.Page - 1) * filter.Limit
 
 	queryCond := ""
-	if request.UserName != "" {
-		args = append(args, request.UserName)
-		queryCond += fmt.Sprintf(" AND user_name = $%d", argIndex)
+	if request.PublicAccess != "" {
+		args = append(args, request.PublicAccess)
+		queryCond += fmt.Sprintf(" AND public_access = $%d", argIndex)
 		argIndex++
 	}
 
@@ -151,9 +208,9 @@ func (r salesRepository) GetListTestimoniRepository(ctx context.Context, request
 	query := fmt.Sprintf(`
 		SELECT
 			id, 
-			user_name, 
-			position, 
-			deskripsi, 
+			fullname, 
+			public_access, 
+			description, 
 			photo_url, 
 			is_active, 
 			created_at,
@@ -189,9 +246,9 @@ func (r salesRepository) CountListTestimoniRepository(ctx context.Context, reque
 	)
 
 	queryCond := ""
-	if request.UserName != "" {
-		args = append(args, request.UserName)
-		queryCond += fmt.Sprintf(" AND user_name = $%d", argIndex)
+	if request.PublicAccess != "" {
+		args = append(args, request.PublicAccess)
+		queryCond += fmt.Sprintf(" AND public_access = $%d", argIndex)
 		argIndex++
 	}
 

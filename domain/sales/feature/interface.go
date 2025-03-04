@@ -50,6 +50,7 @@ type SalesFeature interface {
 	UpdateTestimoniFeature(ctx context.Context, request request.Testimoni) (err error)
 	GetTestimoniFeature(ctx context.Context, request request.Testimoni) (response request.Testimoni, err error)
 	GetListTestimoniFeature(ctx context.Context, request request.Testimoni, filter request.TestimoniSearch) (response []request.Testimoni, pagination *sharedModel.Pagination, err error)
+	GetPublicListTestimoniFeature(ctx context.Context, subDomain, referral string, filter request.TestimoniSearch) (response []request.Testimoni, pagination *sharedModel.Pagination, err error)
 }
 
 type salesFeature struct {

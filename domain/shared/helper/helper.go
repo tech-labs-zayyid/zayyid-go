@@ -3,6 +3,7 @@ package helper
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"os"
 	"reflect"
@@ -131,6 +132,18 @@ func HashPassword(password string) (string, error) {
 func VerifyPassword(hashedPassword, plainPassword string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(plainPassword))
 	return err == nil // Jika tidak ada error, berarti password cocok
+}
+
+// GenerateRandomString generates a random string of the specified length
+func GenerateRandomString(length int) (string, error) {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	var seededRand = rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[seededRand.Intn(len(charset))]
+	}
+	return string(b), nil
 }
 
 func SetDefaults(obj interface{}) {

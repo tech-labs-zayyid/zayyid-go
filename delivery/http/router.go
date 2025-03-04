@@ -32,6 +32,12 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		api.Get("/ping", handler.userMenuHandler.Ping)
 	}
 
+	thirdParty := app.Group("/third-party")
+	{
+		thirdParty.Post("/callback-payment-receiving", handler.thirdPartyHandler.CallbackPaymentReceivingMidtrans)
+		thirdParty.Post("/frontend-payment-notification", handler.thirdPartyHandler.FrontendPaymentNotification)
+	}
+
 	public := app.Group("/public")
 	{
 		public.Get("/home/:subdomain/*", handler.salesHandler.GetDataHome)
@@ -39,6 +45,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		public.Get("/banner/:subdomain/*", handler.salesHandler.GetBannerPublicSales)
 		public.Get("/template/:subdomain/*", handler.salesHandler.GetListPublicTemplateSales)
 		public.Get("/social-media/:subdomain/*", handler.salesHandler.GetListPublicSocialMediaSales)
+		public.Get("/testimony/:subdomain/*", handler.salesHandler.GetPublicListTestimoniHandler)
 		public.Get("/product/:subdomain", handler.salesHandler.GetListProductSalesPublic)
 	}
 
@@ -85,9 +92,9 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		sales.Get("/social-media", handler.salesHandler.GetListSocialMediaSales)
 	}
 
-	_ = app.Group("/agent")
+	agent := app.Group("/agent")
 	{
-		//list API for Agent
+		agent.Post("/create", middleware.Auth, handler.userHandler.CreateAgentHandler)
 	}
 
 	// user endpoint
@@ -96,6 +103,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 		user.Post("/register", handler.userHandler.RegisterUserHandler)
 		user.Post("/login", handler.userHandler.AuthUserHandler)
 		user.Post("/refresh-token", handler.userHandler.RefreshTokenHandler)
+		user.Put("/update", middleware.Auth, handler.userHandler.UpdateHandler)
 	}
 
 	// app.All("/:base_path/*", middleware.SignatureMiddleware(), handler.applicationMenuHandler.Handle)

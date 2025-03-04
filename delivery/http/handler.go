@@ -6,17 +6,18 @@ import (
 	"zayyid-go/delivery/container"
 	MasterHandler "zayyid-go/domain/master/handler"
 	SalesHandler "zayyid-go/domain/sales/handler"
+	ThirdPartyHandler "zayyid-go/domain/third_party/handler"
 	UserHandler "zayyid-go/domain/user/handler"
 	UserMenuHandler "zayyid-go/domain/user_menu/handler"
 	"zayyid-go/infrastructure/service/slack"
 )
 
 type Handler struct {
-	slackConfig     slack.SlackNotificationBug
-	userMenuHandler UserMenuHandler.UserHandlerInterface
-	masterHandler   MasterHandler.MasterHandlerInterface
-	salesHandler    SalesHandler.SalesHandlerInterface
-	userHandler     UserHandler.IUserHandler
+	userMenuHandler   UserMenuHandler.UserHandlerInterface
+	masterHandler     MasterHandler.MasterHandlerInterface
+	salesHandler      SalesHandler.SalesHandlerInterface
+	userHandler       UserHandler.IUserHandler
+	thirdPartyHandler ThirdPartyHandler.ThirdPartyHandler
 }
 
 func SetupHandler(container container.Container) Handler {
@@ -27,17 +28,10 @@ func SetupHandler(container container.Container) Handler {
 
 	notifBug := slack.InitConnectionSlack(container.EnvironmentConfig.Slack)
 	return Handler{
-		userMenuHandler: UserMenuHandler.NewUserMenuHandler(
-			container.UserMenuFeature, isRequestLogged,
-		),
-		masterHandler: MasterHandler.NewMasterHandler(
-			container.MasterFeature, isRequestLogged,
-		),
-		salesHandler: SalesHandler.NewSalesHandler(
-			container.SalesFeature, isRequestLogged, notifBug,
-		),
-		userHandler: UserHandler.NewUserHandler(
-			&container.UserFeature,
-		),
+		userMenuHandler:   UserMenuHandler.NewUserMenuHandler(container.UserMenuFeature, isRequestLogged),
+		masterHandler:     MasterHandler.NewMasterHandler(container.MasterFeature, isRequestLogged),
+		salesHandler:      SalesHandler.NewSalesHandler(container.SalesFeature, isRequestLogged, notifBug),
+		userHandler:       UserHandler.NewUserHandler(&container.UserFeature),
+		thirdPartyHandler: ThirdPartyHandler.NewThirdPartyHandler(&container.ThirdPartyFeature, notifBug),
 	}
 }

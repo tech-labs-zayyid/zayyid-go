@@ -59,8 +59,15 @@ const (
 	ErrRequestBanner        = "error invalid request banner is empty"
 	ErrRequestProductImages = "error invalid request image product not valid length"
 	ErrDataNotFound         = "data not found"
+	ErrInvalidSignatureKey  = "invalid signature key"
 	ErrDataUserIdNotFound   = "error not found user id"
 	ErrIdProductNotFound    = "id product not found"
 	ErrDuplicateProductName = "product name duplicate entry"
 	ErrStatusInvalid        = "invalid status product"
+	ErrStatusNotSettelment  = "status not settelment"
+)
+
+const (
+	SETTLEMENT = "settlement"
+	ACCEPT     = "accept"
 )

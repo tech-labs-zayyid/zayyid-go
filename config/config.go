@@ -16,8 +16,14 @@ type EnvironmentConfig struct {
 	App      App
 	Database database.DatabaseConfig
 	Slack    slack.ConfigSlack
+	Midtrans Midtrans
 }
 
+type Midtrans struct {
+	MerchantID string
+	ClientKey  string
+	ServerKey  string
+}
 type App struct {
 	Name    string
 	Version string
@@ -54,6 +60,11 @@ func LoadENVConfig() (config EnvironmentConfig, err error) {
 		Slack: slack.ConfigSlack{
 			ApiToken:  os.Getenv("API_TOKEN"),
 			ChannelId: os.Getenv("CHANNEL_ID"),
+		},
+		Midtrans: Midtrans{
+			MerchantID: os.Getenv("MIDTRANS_MERCHANT_ID"),
+			ClientKey:  os.Getenv("MIDTRANS_CLIECT_KEY"),
+			ServerKey:  os.Getenv("MIDTRANS_SERVER_KEY"),
 		},
 	}
 
