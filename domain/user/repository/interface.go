@@ -24,4 +24,6 @@ type IUserRepository interface {
 	UpdateRepository(ctx context.Context, payload model.UpdateUser, userId string) (err error)
 	CheckExistsUserId(ctx context.Context, userId string) (exists bool, err error)
 	CheckExistsSubdomain(ctx context.Context, subdomain string) (exists bool, err error)
+	CheckExistsCodeReferal(ctx context.Context, referal string) (exists bool, err error)
+	GetDataAgentByReferralCode(ctx context.Context, referralCode string) (resp model.UserDataResp, err error)
 }

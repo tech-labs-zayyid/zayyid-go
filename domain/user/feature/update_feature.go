@@ -2,7 +2,7 @@ package feature
 
 import (
 	"context"
-	sharedHelper "zayyid-go/domain/shared/helper"
+	sharedHelper "zayyid-go/domain/shared/helper/general"
 	"zayyid-go/domain/user/model"
 )
 

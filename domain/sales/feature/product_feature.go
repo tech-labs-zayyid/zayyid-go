@@ -12,9 +12,9 @@ import (
 	"zayyid-go/domain/sales/model/request"
 	"zayyid-go/domain/sales/model/response"
 	sharedContext "zayyid-go/domain/shared/context"
-	sharedHelper "zayyid-go/domain/shared/helper"
 	sharedConstant "zayyid-go/domain/shared/helper/constant"
 	sharedError "zayyid-go/domain/shared/helper/error"
+	sharedHelper "zayyid-go/domain/shared/helper/general"
 	paginate "zayyid-go/domain/shared/helper/pagination"
 	sharedModel "zayyid-go/domain/shared/model"
 )
@@ -133,7 +133,7 @@ func (f salesFeature) GetDetailSalesProduct(ctx context.Context, id string) (res
 		return
 	}
 
-	existsProduct, err := f.repo.CheckExistsProductId(ctx, id)
+	existsProduct, err := f.repo.CheckExistsProductId(ctx, id, valueCtx.UserId)
 	if err != nil {
 		return
 	}
@@ -186,7 +186,7 @@ func (f salesFeature) UpdateProductSales(ctx context.Context, param request.Upda
 		return
 	}
 
-	existsProduct, err := f.repo.CheckExistsProductId(ctx, param.ProductId)
+	existsProduct, err := f.repo.CheckExistsProductId(ctx, param.ProductId, valueCtx.UserId)
 	if err != nil {
 		return
 	}
@@ -249,7 +249,7 @@ func (f salesFeature) GetListProductSalesPublic(ctx context.Context, filter requ
 	}
 
 	if !exists {
-		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrDataUserIdNotFound, errors.New(sharedConstant.ErrDataUserIdNotFound))
+		err = sharedError.New(http.StatusNotFound, sharedConstant.ErrDataUserIdNotFound, errors.New(sharedConstant.ErrDataUserIdNotFound))
 		return
 	}
 
@@ -302,5 +302,30 @@ func (f salesFeature) GetListProductSalesPublic(ctx context.Context, filter requ
 	}
 
 	pagination.Page = filter.Page
+	return
+}
+
+func (f salesFeature) DetailProductSalesPublic(ctx context.Context, subdomain, slug string) (resp response.ProductDetailPublicResp, err error) {
+	exists, err := f.userRepo.CheckExistsSubdomain(ctx, subdomain)
+	if err != nil {
+		return
+	}
+
+	if !exists {
+		err = sharedError.New(http.StatusNotFound, sharedConstant.ErrDataUserIdNotFound, errors.New(sharedConstant.ErrDataUserIdNotFound))
+		return
+	}
+
+	existsSlug, err := f.repo.CheckExistsSlugProductSales(ctx, slug)
+	if err != nil {
+		return
+	}
+
+	if !existsSlug {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrSlugNotFound, errors.New(sharedConstant.ErrSlugNotFound))
+		return
+	}
+
+	resp, err = f.repo.DetailSalesProductPublic(ctx, subdomain, slug)
 	return
 }

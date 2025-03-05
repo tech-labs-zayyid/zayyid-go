@@ -1,10 +1,11 @@
-package helper
+package general
 
 import (
 	"errors"
 	"fmt"
 	"math/rand"
 	"net/http"
+	"net/url"
 	"os"
 	"reflect"
 	"strings"
@@ -160,4 +161,32 @@ func SetDefaults(obj interface{}) {
 			fmt.Sscanf(defaultTag, "%d", field.Addr().Interface()) // Konversi string ke int
 		}
 	}
+}
+
+func ValidationProductTier(limitation string, lengthLimitation, count int) bool {
+	switch limitation {
+	case "count":
+		if lengthLimitation == count {
+			return true
+		}
+	}
+
+	return false
+}
+
+func IsYouTubeURL(inputURL string) bool {
+	parsedURL, err := url.Parse(inputURL)
+	if err != nil {
+		return false // Jika parsing gagal, berarti bukan URL valid
+	}
+
+	// Cek domain YouTube
+	youtubeDomains := []string{"www.youtube.com", "youtube.com", "m.youtube.com", "youtu.be"}
+	for _, domain := range youtubeDomains {
+		if strings.EqualFold(parsedURL.Host, domain) {
+			return true
+		}
+	}
+
+	return false
 }

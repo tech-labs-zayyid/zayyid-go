@@ -141,3 +141,15 @@ func (r salesRepository) UpdateTemplateSales(ctx context.Context, req request.Up
 	}
 	return
 }
+
+func (r salesRepository) CheckExistsTemplateId(ctx context.Context, id, salesId string) (exists bool, err error) {
+	query := `SELECT EXISTS(SELECT 1 FROM product_marketing.sales_template 
+        	WHERE id = $1 AND sales_id = $2)`
+
+	logger.LogInfo(constant.QUERY, query)
+	if err = r.database.QueryRowContext(ctx, query, id, salesId).Scan(&exists); err != nil {
+		err = sharedError.HandleError(err)
+	}
+
+	return
+}

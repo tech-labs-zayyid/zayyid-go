@@ -4,9 +4,9 @@ import (
 	"errors"
 	"net/http"
 	modelRequest "zayyid-go/domain/sales/model/request"
-	sharedHelper "zayyid-go/domain/shared/helper"
 	sharedConstant "zayyid-go/domain/shared/helper/constant"
 	sharedError "zayyid-go/domain/shared/helper/error"
+	sharedHelper "zayyid-go/domain/shared/helper/general"
 	"zayyid-go/domain/shared/response"
 
 	"github.com/gofiber/fiber/v2"

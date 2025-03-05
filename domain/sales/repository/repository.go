@@ -10,8 +10,7 @@ import (
 )
 
 type SalesRepository interface {
-	CheckExistsSubdomainSales(ctx context.Context, subdomain string) (exists bool, err error)
-	HomeData(ctx context.Context, subdomain string) (resp response.DataHome, err error)
+	HomeData(ctx context.Context, subdomain string) (resp response.DataHome, product map[string]*response.BestProduct, err error)
 
 	// product
 	CheckExistsProductName(ctx context.Context, productName, salesId string) (exists bool, err error)
@@ -19,13 +18,15 @@ type SalesRepository interface {
 	GetProductTier(ctx context.Context) (resp response.TierResp, err error)
 	GetListProduct(ctx context.Context, filter sharedModel.QueryRequest) (resp map[string]*response.ProductListBySales, err error)
 	CountListProduct(ctx context.Context, filter sharedModel.QueryRequest) (count int, err error)
-	CheckExistsProductId(ctx context.Context, id string) (exists bool, err error)
+	CheckExistsProductId(ctx context.Context, id, salesId string) (exists bool, err error)
 	DetailSalesProduct(ctx context.Context, id string) (resp response.ProductDetailResp, err error)
 	GetCountDataImageByProductId(ctx context.Context, productId string) (count int, err error)
 	UpdateProductSales(ctx context.Context, tx *sql.Tx, param request.UpdateProductSales) (err error)
 	ChangeStatusProductSales(ctx context.Context, tx *sql.Tx, param request.UpdateProductSales) (err error)
 	GetListProductSalesPublic(ctx context.Context, filter sharedModel.QueryRequest) (resp map[string]*response.ProductListSalesPublic, err error)
 	CountListProductSalesPublic(ctx context.Context, filter sharedModel.QueryRequest) (count int, err error)
+	DetailSalesProductPublic(ctx context.Context, subdomain, slug string) (resp response.ProductDetailPublicResp, err error)
+	CheckExistsSlugProductSales(ctx context.Context, slug string) (exists bool, err error)
 
 	// galery
 	GetCountDataGalleryBySalesId(ctx context.Context, salesId string) (count int, err error)
@@ -34,6 +35,7 @@ type SalesRepository interface {
 	GetListDataGalleryPublic(ctx context.Context, subdomain string) (resp response.GalleryPublicResp, err error)
 	GetDataGallerySales(ctx context.Context, id, salesId string) (resp response.GalleryDataResp, err error)
 	UpdateGallerySales(ctx context.Context, req request.UpdateGalleryParam) (err error)
+	CheckExistsGalleryId(ctx context.Context, id, salesId string) (exists bool, err error)
 
 	// banner
 	CountBannerSales(ctx context.Context, salesId string) (count int, err error)
@@ -42,6 +44,7 @@ type SalesRepository interface {
 	GetListBannerPublicSales(ctx context.Context, subdomain string) (resp response.BannerListPublicSalesResp, err error)
 	GetBannerSales(ctx context.Context, id, salesId string) (resp response.BannerResp, err error)
 	UpdateBannerSales(ctx context.Context, req request.BannerUpdateReq) (err error)
+	CheckExistsBannerId(ctx context.Context, id, salesId string) (exists bool, err error)
 
 	// testimoni
 	AddTestimoniRepository(ctx context.Context, request request.Testimoni) (err error)
@@ -57,11 +60,15 @@ type SalesRepository interface {
 	GetListPublicTemplateSales(ctx context.Context, subdomain string) (resp response.TemplateListPublicResp, err error)
 	GetDetailTemplateSales(ctx context.Context, id, salesId string) (resp response.TemplateDetailResp, err error)
 	UpdateTemplateSales(ctx context.Context, req request.UpdateTemplateReq) (err error)
+	CheckExistsTemplateId(ctx context.Context, id, salesId string) (exists bool, err error)
 
 	//social media
 	AddSocialMediaSales(ctx context.Context, param request.AddSocialMediaReq) (err error)
 	GetListSocialMediaSales(ctx context.Context, salesId string) (resp response.SocialMediaListResp, err error)
 	GetListPublicSocialMediaSales(ctx context.Context, subdomain string) (resp response.SocialMediaListResp, err error)
+	CheckExistsSocialMediaId(ctx context.Context, id, salesId string) (exists bool, err error)
+	GetDataSocialMediaSales(ctx context.Context, id, salesId string) (resp response.DetailSocialMediaListRes, err error)
+	UpdateSocialMediaSales(ctx context.Context, req request.UpdateSocialMediaSales) (err error)
 
 	//transaction schema DB
 	OpenTransaction(ctx context.Context) (tx *sql.Tx)

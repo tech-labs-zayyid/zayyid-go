@@ -317,11 +317,11 @@ func (r salesRepository) CountListProduct(ctx context.Context, filter sharedMode
 	return
 }
 
-func (r salesRepository) CheckExistsProductId(ctx context.Context, id string) (exists bool, err error) {
-	query := `SELECT EXISTS(SELECT 1 FROM product_marketing.sales_product WHERE id = $1)`
+func (r salesRepository) CheckExistsProductId(ctx context.Context, id, salesId string) (exists bool, err error) {
+	query := `SELECT EXISTS(SELECT 1 FROM product_marketing.sales_product WHERE id = $1 AND sales_id = $2)`
 
 	logger.LogInfo(constant.QUERY, query)
-	if err = r.database.QueryRowContext(ctx, query, id).Scan(&exists); err != nil {
+	if err = r.database.QueryRowContext(ctx, query, id, salesId).Scan(&exists); err != nil {
 		err = sharedError.HandleError(err)
 	}
 
@@ -470,7 +470,7 @@ func (r salesRepository) GetListProductSalesPublic(ctx context.Context, filter s
 
 	// Construct the SQL query
 	query := `SELECT sp.id, COALESCE(sp.sub_category_product, ''), sp.product_name, sp.slug, sp.price, sp.tdp, sp.installment,
-			sp.best_product, spd.description, statusProduct.status, spi.image_url, COALESCE(mp.name, '') AS province_name, 
+			sp.best_product, spd.description, statusProduct.status, spi.id, spi.image_url, COALESCE(mp.name, '') AS province_name, 
 			COALESCE(mc.name, '') AS city_name, sp.created_at, sp.updated_at
 			FROM product_marketing.sales_product sp
 			LEFT JOIN product_marketing.sales_product_description spd ON sp.id = spd.product_id
@@ -549,7 +549,7 @@ func (r salesRepository) GetListProductSalesPublic(ctx context.Context, filter s
 
 	for rows.Next() {
 		if err = rows.Scan(&data.IdProduct, &data.ProductSubCategory, &data.ProductName, &data.Slug, &data.Price,
-			&data.TDP, &data.Installment, &data.BestProduct, &data.Description, &data.Status,
+			&data.TDP, &data.Installment, &data.BestProduct, &data.Description, &data.Status, &dataImage.ProductImageId,
 			&dataImage.ImageUrl, &data.ProvinceName, &data.CityName, &data.CreatedAt,
 			&data.UpdatedAt); err != nil {
 			err = sharedError.HandleError(err)
@@ -559,6 +559,7 @@ func (r salesRepository) GetListProductSalesPublic(ctx context.Context, filter s
 		if _, ok := dataMap[data.IdProduct]; !ok {
 			dataMap[data.IdProduct] = &response.ProductListSalesPublic{
 				ProductName:        data.ProductName,
+				Slug:               data.Slug,
 				Price:              data.Price,
 				ProductSubCategory: data.ProductSubCategory,
 				TDP:                data.TDP,
@@ -649,6 +650,70 @@ func (r salesRepository) CountListProductSalesPublic(ctx context.Context, filter
 
 	logger.LogInfo(constant.QUERY, query)
 	if err = r.database.QueryRowContext(ctx, query, args...).Scan(&count); err != nil {
+		err = sharedError.HandleError(err)
+	}
+
+	return
+}
+
+func (r salesRepository) DetailSalesProductPublic(ctx context.Context, subdomain, slug string) (resp response.ProductDetailPublicResp, err error) {
+	var (
+		dataImage    response.ProductImageDetailPublic
+		dataMapImage = make(map[string]*response.ProductImageDetailPublic)
+	)
+
+	query := `SELECT sp.id, sp.sub_category_product, sp.product_name, sp.price, sp.tdp, sp.installment,
+			sp.best_product, spd.description, statusProduct.status, spi.id, 
+			spi.image_url, COALESCE(mp.name, '') AS province_name, COALESCE(mc.name, '') AS city_name
+			FROM product_marketing.sales_product sp
+			LEFT JOIN product_marketing.sales_product_description spd ON sp.id = spd.product_id
+			LEFT JOIN LATERAL (
+				SELECT status
+				FROM product_marketing.sales_product_status
+				WHERE product_id = sp.id
+				GROUP BY product_id, created_at, status
+				ORDER BY created_at DESC LIMIT 1
+			) statusProduct on true
+			LEFT JOIN product_marketing.sales_product_image spi ON sp.id = spi.product_id
+			LEFT JOIN product_marketing.master_city mc ON sp.city_id = mc.id
+			LEFT JOIN product_marketing.master_province mp ON mc.province_id = mp.id
+			WHERE sp.public_access = $1 AND sp.slug = $2 AND sp.is_active = TRUE`
+
+	logger.LogInfo(constant.QUERY, query)
+	rows, err := r.database.QueryContext(ctx, query, subdomain, slug)
+	if err != nil {
+		err = sharedError.HandleError(err)
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		if err = rows.Scan(&resp.IdProduct, &resp.ProductSubCategory, &resp.ProductName, &resp.Price,
+			&resp.TDP, &resp.Installment, &resp.BestProduct, &resp.Description, &resp.Status,
+			&dataImage.ProductImageId, &dataImage.ImageUrl, &resp.ProvinceName, &resp.CityName); err != nil {
+			err = sharedError.HandleError(err)
+		}
+
+		if _, ok := dataMapImage[dataImage.ProductImageId]; !ok {
+			if dataImage.ProductImageId != "" {
+				resp.ProductImages = append(resp.ProductImages, response.ProductImageDetailPublic{
+					ProductImageId: dataImage.ProductImageId,
+					ImageUrl:       dataImage.ImageUrl,
+				})
+			}
+
+			dataMapImage[dataImage.ProductImageId] = &dataImage
+		}
+	}
+
+	return
+}
+
+func (r salesRepository) CheckExistsSlugProductSales(ctx context.Context, slug string) (exists bool, err error) {
+	query := `SELECT EXISTS(SELECT 1 FROM product_marketing.sales_product WHERE slug = $1)`
+
+	logger.LogInfo(constant.QUERY, query)
+	if err = r.database.QueryRowContext(ctx, query, slug).Scan(&exists); err != nil {
 		err = sharedError.HandleError(err)
 	}
 

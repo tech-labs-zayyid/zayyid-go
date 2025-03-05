@@ -5,9 +5,9 @@ import (
 	"errors"
 	"net/http"
 	"strings"
-	"zayyid-go/domain/shared/helper"
 	"zayyid-go/domain/shared/helper/constant"
 	sharedError "zayyid-go/domain/shared/helper/error"
+	"zayyid-go/domain/shared/helper/general"
 	sharedModel "zayyid-go/domain/shared/model"
 
 	"github.com/gofiber/fiber/v2"
@@ -34,7 +34,7 @@ func Auth(c *fiber.Ctx) error {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, sharedError.New(http.StatusBadRequest, "Failed to parse token", errors.New("unexpected signing method"))
 		}
-		return helper.SecretKey, nil
+		return general.SecretKey, nil
 	})
 
 	if err != nil {

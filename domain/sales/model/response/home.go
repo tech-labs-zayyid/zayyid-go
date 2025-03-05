@@ -46,15 +46,19 @@ type TestimonyListHome struct {
 }
 
 type BestProduct struct {
-	IdProduct          string             `json:"id_product"`
+	IdProduct          string             `json:"-"`
 	ProductName        string             `json:"product_name"`
 	Price              float32            `json:"price"`
 	ProductSubCategory string             `json:"product_sub_category"`
 	TDP                float32            `json:"tdp"`
 	Installment        float32            `json:"installment"`
+	ProvinceId         string             `json:"province_id"`
+	ProvinceName       string             `json:"province_name"`
 	CityId             string             `json:"city_id"`
+	CityName           string             `json:"city_name"`
 	BestProduct        bool               `json:"best_product"`
 	Slug               string             `json:"slug"`
+	Description        string             `json:"description"`
 	Images             []BestProductImage `json:"images"`
 }
 

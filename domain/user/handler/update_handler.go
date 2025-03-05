@@ -3,8 +3,8 @@ package handler
 import (
 	"errors"
 	"zayyid-go/domain/shared/context"
-	sharedHelper "zayyid-go/domain/shared/helper"
 	sharedError "zayyid-go/domain/shared/helper/error"
+	sharedHelper "zayyid-go/domain/shared/helper/general"
 	sharedResponse "zayyid-go/domain/shared/response"
 	"zayyid-go/domain/user/model"
 

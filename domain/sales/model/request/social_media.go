@@ -11,3 +11,12 @@ type SocialMediaListReq struct {
 	UserAccount     string `json:"user_account"`
 	LinkEmbed       string `json:"link_embed"`
 }
+
+type UpdateSocialMediaSales struct {
+	Id              string `json:"-"`
+	SalesId         string `json:"-"`
+	SocialMediaName string `json:"social_media_name"`
+	UserAccount     string `json:"user_account"`
+	LinkEmbed       string `json:"link_embed"`
+	IsActive        bool   `json:"is_active"`
+}

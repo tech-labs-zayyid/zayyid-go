@@ -82,3 +82,23 @@ type ProductImagePublic struct {
 	ProductImageId string `json:"-"`
 	ImageUrl       string `json:"image_url"`
 }
+
+type ProductDetailPublicResp struct {
+	IdProduct          string                     `json:"id_product"`
+	ProductName        string                     `json:"product_name"`
+	Price              float32                    `json:"price"`
+	ProductSubCategory string                     `json:"product_sub_category"`
+	TDP                float32                    `json:"tdp"`
+	Installment        float32                    `json:"installment"`
+	ProvinceName       string                     `json:"province_name"`
+	CityName           string                     `json:"city_name"`
+	BestProduct        bool                       `json:"best_product"`
+	Description        string                     `json:"description"`
+	Status             string                     `json:"status"`
+	ProductImages      []ProductImageDetailPublic `json:"product_images"`
+}
+
+type ProductImageDetailPublic struct {
+	ProductImageId string `json:"product_image_id"`
+	ImageUrl       string `json:"image_url"`
+}

@@ -7,9 +7,9 @@ import (
 	"zayyid-go/domain/sales/model/request"
 	"zayyid-go/domain/sales/model/response"
 	sharedContext "zayyid-go/domain/shared/context"
-	sharedHelper "zayyid-go/domain/shared/helper"
 	sharedConstant "zayyid-go/domain/shared/helper/constant"
 	sharedError "zayyid-go/domain/shared/helper/error"
+	sharedHelper "zayyid-go/domain/shared/helper/general"
 )
 
 func (f salesFeature) AddGallerySales(ctx context.Context, param request.AddGalleryParam) (err error) {
@@ -33,13 +33,22 @@ func (f salesFeature) AddGallerySales(ctx context.Context, param request.AddGall
 		}
 	}()
 
-	//mocking sales id
-	valueCtx.SalesId = "01951f6b-db3f-7d07-8b2c-80d2e2d1be30"
-	valueCtx.Username = "ekotoyota"
+	exists, err := f.userRepo.CheckExistsUserId(ctx, valueCtx.UserId)
+	if err != nil {
+		return
+	}
 
-	//validation exists or not sales id in t_gallery
+	if !exists {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrDataUserIdNotFound, errors.New(sharedConstant.ErrDataUserIdNotFound))
+		return
+	}
 
-	count, err := f.repo.GetCountDataGalleryBySalesId(ctx, valueCtx.SalesId)
+	dataUser, err := f.userRepo.GetDataUserByUserId(ctx, valueCtx.UserId)
+	if err != nil {
+		return
+	}
+
+	count, err := f.repo.GetCountDataGalleryBySalesId(ctx, valueCtx.UserId)
 	if err != nil {
 		return
 	}
@@ -48,8 +57,8 @@ func (f salesFeature) AddGallerySales(ctx context.Context, param request.AddGall
 		return sharedError.New(http.StatusBadRequest, sharedConstant.ErrMaximumUploadGallery, errors.New(sharedConstant.ErrMaximumUploadGallery))
 	}
 
-	param.SalesId = valueCtx.SalesId
-	param.PublicAccess = valueCtx.Username
+	param.SalesId = valueCtx.UserId
+	param.PublicAccess = dataUser.Username
 	if err = f.repo.AddGallerySales(ctx, tx, param); err != nil {
 		return
 	}
@@ -62,21 +71,29 @@ func (f salesFeature) GetDataListGallery(ctx context.Context) (resp response.Gal
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
 
-	//mocking sales id
-	valueCtx.SalesId = "01951f6b-db3f-7d07-8b2c-80d2e2d1be30"
+	exists, err := f.userRepo.CheckExistsUserId(ctx, valueCtx.UserId)
+	if err != nil {
+		return
+	}
 
-	//validation sales id
+	if !exists {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrDataUserIdNotFound, errors.New(sharedConstant.ErrDataUserIdNotFound))
+		return
+	}
 
-	resp, err = f.repo.GetListDataGallerySales(ctx, valueCtx.SalesId)
+	resp, err = f.repo.GetListDataGallerySales(ctx, valueCtx.UserId)
 	return
 }
 
-func (f salesFeature) GetDataListGalleryPublic(ctx context.Context, subdomain, referral string) (resp response.GalleryPublicResp, err error) {
-	//validation subdomain
+func (f salesFeature) GetDataListGalleryPublic(ctx context.Context, subdomain string) (resp response.GalleryPublicResp, err error) {
+	exists, err := f.userRepo.CheckExistsSubdomain(ctx, subdomain)
+	if err != nil {
+		return
+	}
 
-	//validation referral code
-	if referral != "" {
-
+	if !exists {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrDataUserIdNotFound, errors.New(sharedConstant.ErrDataUserIdNotFound))
+		return
 	}
 
 	resp, err = f.repo.GetListDataGalleryPublic(ctx, subdomain)
@@ -88,12 +105,27 @@ func (f salesFeature) GetDataGallerySales(ctx context.Context, id string) (resp 
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
 
-	//mocking sales id
-	valueCtx.SalesId = "01951f6b-db3f-7d07-8b2c-80d2e2d1be30"
+	exists, err := f.userRepo.CheckExistsUserId(ctx, valueCtx.UserId)
+	if err != nil {
+		return
+	}
 
-	//validation sales id
+	if !exists {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrDataUserIdNotFound, errors.New(sharedConstant.ErrDataUserIdNotFound))
+		return
+	}
 
-	resp, err = f.repo.GetDataGallerySales(ctx, id, valueCtx.SalesId)
+	existGalleryId, err := f.repo.CheckExistsGalleryId(ctx, id, valueCtx.UserId)
+	if err != nil {
+		return
+	}
+
+	if !existGalleryId {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrIdGalleryNotFound, errors.New(sharedConstant.ErrIdGalleryNotFound))
+		return
+	}
+
+	resp, err = f.repo.GetDataGallerySales(ctx, id, valueCtx.UserId)
 	return
 }
 
@@ -102,15 +134,30 @@ func (f salesFeature) UpdateGallery(ctx context.Context, req request.UpdateGalle
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
 
-	//mocking sales id
-	valueCtx.SalesId = "01951f6b-db3f-7d07-8b2c-80d2e2d1be30"
+	exists, err := f.userRepo.CheckExistsUserId(ctx, valueCtx.UserId)
+	if err != nil {
+		return
+	}
+
+	if !exists {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrDataUserIdNotFound, errors.New(sharedConstant.ErrDataUserIdNotFound))
+		return
+	}
 
 	err = sharedHelper.Validate(req)
 	if err != nil {
 		return
 	}
 
-	//validation sales id
+	existGalleryId, err := f.repo.CheckExistsGalleryId(ctx, req.Id, valueCtx.UserId)
+	if err != nil {
+		return
+	}
+
+	if !existGalleryId {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrIdGalleryNotFound, errors.New(sharedConstant.ErrIdGalleryNotFound))
+		return
+	}
 
 	req.SalesId = valueCtx.SalesId
 	err = f.repo.UpdateGallerySales(ctx, req)

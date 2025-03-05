@@ -18,11 +18,11 @@ import (
 // @Summary      Add Data Banner
 // @Description  add data of Banner
 // @Tags         Data Product
+// @Param 		 Authorization header string true "Bearer token"
 // @Param        payload    body   request.AddProductReq  true  "body payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
 // @Failure      401  {object}  response.Response
-// @Param 		 Authorization header string true "Bearer token"
 // @Router       /sales/product [post]
 func (h salesHandler) AddProductSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
@@ -152,7 +152,7 @@ func (h salesHandler) UpdateProductSales(c *fiber.Ctx) (err error) {
 // Get List Product Public godoc
 // @Summary      Get List Product Public
 // @Description  show List of Product Public
-// @Tags         Data Product
+// @Tags         Public
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
 // @Router       /public/product/{domain} [get]
@@ -179,4 +179,36 @@ func (h salesHandler) GetListProductSalesPublic(c *fiber.Ctx) (err error) {
 	}
 
 	return sharedResponse.ResponseOkWithPagination(c, sharedConstant.SUCCESS, resp, pagination)
+}
+
+// Get Detail Product Public godoc
+// @Summary      Get Detail Product Public
+// @Description  show Detail of Product Public
+// @Tags         Public
+// @Success      200  {object}  response.Response
+// @Failure      500  {object}  response.Response
+// @Router       /public/product/detai/{domain}/{slug} [get]
+func (h salesHandler) GetDetailProductSalesPublic(c *fiber.Ctx) (err error) {
+	ctx, cancel := context.CreateContextWithTimeout()
+	defer cancel()
+	ctx = context.SetValueToContext(ctx, c)
+
+	subdomain := c.Params("subdomain")
+	if subdomain == "" {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
+	}
+
+	slug := c.Params("slug")
+	if subdomain == "" {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrInvalidRequest, errors.New(sharedConstant.ErrInvalidRequest))
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
+	}
+
+	resp, err := h.feature.DetailProductSalesPublic(ctx, subdomain, slug)
+	if err != nil {
+		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
+	}
+
+	return sharedResponse.ResponseOK(c, sharedConstant.SUCCESS, resp)
 }

@@ -10,4 +10,13 @@ type DataListSocialMedia struct {
 	SocialMediaName string `json:"social_media_name"`
 	UserAccount     string `json:"user_account"`
 	LinkEmbed       string `json:"link_embed"`
+	IsActive        bool   `json:"is_active"`
+}
+
+type DetailSocialMediaListRes struct {
+	IdSocialMedia   string `json:"id_social_media"`
+	SocialMediaName string `json:"social_media_name"`
+	UserAccount     string `json:"user_account"`
+	LinkEmbed       string `json:"link_embed"`
+	IsActive        bool   `json:"is_active"`
 }

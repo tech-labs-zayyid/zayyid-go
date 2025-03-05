@@ -137,6 +137,7 @@ func (r salesRepository) UpdateBannerSales(ctx context.Context, req request.Bann
 		args = append(args, req.ImageUrl)
 		buildQuery = append(buildQuery, " image_url = $1")
 	}
+
 	if req.Description != "" {
 		args = append(args, req.Description)
 		buildQuery = append(buildQuery, " description = $2")
@@ -159,6 +160,18 @@ func (r salesRepository) UpdateBannerSales(ctx context.Context, req request.Bann
 
 	_, err = stmt.ExecContext(ctx, args...)
 	if err != nil {
+		err = sharedError.HandleError(err)
+	}
+
+	return
+}
+
+func (r salesRepository) CheckExistsBannerId(ctx context.Context, id, salesId string) (exists bool, err error) {
+	query := `SELECT EXISTS(SELECT 1 FROM product_marketing.sales_banner 
+        	WHERE id = $1 AND sales_id = $2)`
+
+	logger.LogInfo(constant.QUERY, query)
+	if err = r.database.QueryRowContext(ctx, query, id, salesId).Scan(&exists); err != nil {
 		err = sharedError.HandleError(err)
 	}
 

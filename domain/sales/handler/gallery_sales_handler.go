@@ -15,6 +15,7 @@ import (
 // @Summary      Add Data Gallery
 // @Description  add data of Gallery
 // @Tags         Data Gallery
+// @Param 		 Authorization header string true "Bearer token"
 // @Param        payload    body   request.AddGalleryParam  true  "body payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
@@ -46,6 +47,7 @@ func (h salesHandler) AddGallerySales(c *fiber.Ctx) (err error) {
 // @Summary      Get List Gallery
 // @Description  show List of Gallery
 // @Tags         Data Gallery
+// @Param 		 Authorization header string true "Bearer token"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
 // @Router       /sales/gallery [get]
@@ -66,12 +68,12 @@ func (h salesHandler) GetGallerySales(c *fiber.Ctx) (err error) {
 // Get Detail Gallery godoc
 // @Summary      Get Detail Gallery
 // @Description  show detail of Gallery
-// @Tags         Data Gallery
+// @Tags         Public
 // @param        subdomain path string true "subdomain"
 // @param        referral path string true "referral"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /public/gallery/{subdomain}/{referral} [get]
+// @Router       /public/gallery/{subdomain} [get]
 func (h salesHandler) GetGallerySalesPublic(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
@@ -83,8 +85,7 @@ func (h salesHandler) GetGallerySalesPublic(c *fiber.Ctx) (err error) {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
-	referral := c.Params("*")
-	resp, err := h.feature.GetDataListGalleryPublic(ctx, subdomain, referral)
+	resp, err := h.feature.GetDataListGalleryPublic(ctx, subdomain)
 	if err != nil {
 		err = sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 		return
@@ -97,6 +98,7 @@ func (h salesHandler) GetGallerySalesPublic(c *fiber.Ctx) (err error) {
 // @Summary      Get Detail Gallery
 // @Description  show detail of Gallery
 // @Tags         Data Gallery
+// @Param 		 Authorization header string true "Bearer token"
 // @Param        id path string false "id"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
@@ -124,6 +126,7 @@ func (h salesHandler) GetDataGallerySales(c *fiber.Ctx) (err error) {
 // @Summary      Update Data Gallery
 // @Description  Update Data of Gallery
 // @Tags         Data Gallery
+// @Param 		 Authorization header string true "Bearer token"
 // @Param        id path string false "id"
 // @Param        payload    body   request.UpdateGalleryParam  true  "body payload"
 // @Success      200  {object}  response.Response

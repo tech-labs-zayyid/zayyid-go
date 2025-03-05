@@ -3,6 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"strings"
 	"zayyid-go/domain/sales/model/request"
 	"zayyid-go/domain/sales/model/response"
 	"zayyid-go/domain/shared/helper/constant"
@@ -36,7 +38,7 @@ func (r salesRepository) GetListSocialMediaSales(ctx context.Context, salesId st
 		data response.DataListSocialMedia
 	)
 
-	query := `SELECT id, social_media_name, user_account, link_embed FROM product_marketing.sales_social_media WHERE sales_id = $1`
+	query := `SELECT id, social_media_name, user_account, link_embed, is_active FROM product_marketing.sales_social_media WHERE sales_id = $1`
 
 	logger.LogInfo(constant.QUERY, query)
 	rows, err := r.database.QueryContext(ctx, query, salesId)
@@ -47,7 +49,7 @@ func (r salesRepository) GetListSocialMediaSales(ctx context.Context, salesId st
 	defer rows.Close()
 
 	for rows.Next() {
-		err = rows.Scan(&data.IdSocialMedia, &data.SocialMediaName, &data.UserAccount, &data.LinkEmbed)
+		err = rows.Scan(&data.IdSocialMedia, &data.SocialMediaName, &data.UserAccount, &data.LinkEmbed, &data.IsActive)
 		if err != nil {
 			err = sharedError.HandleError(err)
 			return
@@ -97,5 +99,73 @@ func (r salesRepository) GetListPublicSocialMediaSales(ctx context.Context, subd
 	}
 
 	resp.SalesId = salesId
+	return
+}
+
+func (r salesRepository) GetDataSocialMediaSales(ctx context.Context, id, salesId string) (resp response.DetailSocialMediaListRes, err error) {
+	query := `SELECT id, social_media_name, user_account, link_embed, is_active FROM product_marketing.sales_social_media WHERE id = $1 AND sales_id = $2`
+
+	logger.LogInfo(constant.QUERY, query)
+	if err = r.database.QueryRowContext(ctx, query, id, salesId).Scan(&resp.IdSocialMedia, &resp.SocialMediaName,
+		&resp.UserAccount, &resp.LinkEmbed, &resp.IsActive); err != nil {
+		err = sharedError.HandleError(err)
+	}
+
+	return
+}
+
+func (r salesRepository) CheckExistsSocialMediaId(ctx context.Context, id, salesId string) (exists bool, err error) {
+	query := `SELECT EXISTS(SELECT 1 FROM product_marketing.sales_social_media 
+        	WHERE id = $1 AND sales_id = $2)`
+
+	logger.LogInfo(constant.QUERY, query)
+	if err = r.database.QueryRowContext(ctx, query, id, salesId).Scan(&exists); err != nil {
+		err = sharedError.HandleError(err)
+	}
+
+	return
+}
+
+func (r salesRepository) UpdateSocialMediaSales(ctx context.Context, req request.UpdateSocialMediaSales) (err error) {
+	args := []interface{}{}
+	buildQuery := []string{}
+
+	if req.SocialMediaName != "" {
+		args = append(args, req.SocialMediaName)
+		buildQuery = append(buildQuery, " social_media_name = $1")
+	}
+
+	if req.UserAccount != "" {
+		args = append(args, req.UserAccount)
+		buildQuery = append(buildQuery, " user_account = $2")
+	}
+
+	if req.LinkEmbed != "" {
+		args = append(args, req.LinkEmbed)
+		buildQuery = append(buildQuery, " link_embed = $3")
+	}
+
+	args = append(args, req.IsActive)
+	buildQuery = append(buildQuery, fmt.Sprintf(" is_active = $%d", len(args)))
+	buildQuery = append(buildQuery, " updated_at = NOW()")
+
+	updateQuery := strings.Join(buildQuery, ",")
+	args = append(args, req.Id)
+	args = append(args, req.SalesId)
+	query := fmt.Sprintf(`UPDATE product_marketing.sales_social_media SET %s WHERE id = $%d AND sales_id = $%d `, updateQuery, len(args)-1, len(args))
+
+	logger.LogInfo(constant.QUERY, query)
+	stmt, err := r.database.Preparex(query)
+	if err != nil {
+		err = sharedError.HandleError(err)
+		return
+	}
+	defer stmt.Close()
+
+	_, err = stmt.ExecContext(ctx, args...)
+	if err != nil {
+		err = sharedError.HandleError(err)
+	}
+
 	return
 }
