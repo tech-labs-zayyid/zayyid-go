@@ -30,6 +30,13 @@ const docTemplate = `{
                 "summary": "Create agent",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Register Request",
                         "name": "payload",
                         "in": "body",
@@ -88,14 +95,23 @@ const docTemplate = `{
                 "summary": "Get agent list",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "type": "integer",
                         "name": "limit",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "type": "integer",
                         "name": "page",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -120,10 +136,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/model.UserRes"
-                                            }
+                                            "$ref": "#/definitions/model.AgentListPagination"
                                         }
                                     }
                                 }
@@ -1563,6 +1576,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "model.AgentListPagination": {
+            "type": "object",
+            "properties": {
+                "docs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.UserRes"
+                    }
+                },
+                "pagination": {
+                    "$ref": "#/definitions/model.Pagination"
+                }
+            }
+        },
         "model.AuthUserRequest": {
             "type": "object",
             "required": [
@@ -1575,6 +1602,23 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
+                }
+            }
+        },
+        "model.Pagination": {
+            "type": "object",
+            "properties": {
+                "current_page": {
+                    "type": "integer"
+                },
+                "limit_per_page": {
+                    "type": "integer"
+                },
+                "total_page": {
+                    "type": "integer"
+                },
+                "total_rows": {
+                    "type": "integer"
                 }
             }
         },

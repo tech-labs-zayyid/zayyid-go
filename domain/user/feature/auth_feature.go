@@ -46,7 +46,7 @@ func (f UserFeature) AuthUserFeature(ctx context.Context, payload model.AuthUser
 		Role:           user.Role,
 		CreatedAt:      user.CreatedAt,
 		CreatedBy:      user.CreatedBy,
-		TokenData: model.TokenRes{
+		TokenData: &model.TokenRes{
 			Token:        token,
 			RefreshToken: refreshToken,
 		},

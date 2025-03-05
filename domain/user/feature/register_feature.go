@@ -64,7 +64,7 @@ func (f UserFeature) RegisterFeature(ctx context.Context, payload model.Register
 		WhatsAppNumber: user.WhatsAppNumber,
 		CreatedAt:      user.CreatedAt,
 		CreatedBy:      user.CreatedBy,
-		TokenData: model.TokenRes{
+		TokenData: &model.TokenRes{
 			Token:        token,
 			RefreshToken: refreshToken,
 		},

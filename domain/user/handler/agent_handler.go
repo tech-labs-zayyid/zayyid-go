@@ -17,6 +17,7 @@ import (
 // @Tags Agent
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Bearer token"
 // @Param payload body model.RegisterRequest true "Register Request"
 // @Success 200 {object} sharedResponse.Response{data=model.UserRes}
 // @Failure 400 {object} sharedResponse.Response
@@ -47,7 +48,7 @@ func (h UserHandler) CreateAgentHandler(c *fiber.Ctx) (err error) {
 	userId := ctxValue.UserId
 
 	// Call register feature
-	resp, err := h.feature.CreateAgentFeature(ctx, payload, userID)
+	resp, err := h.feature.CreateAgentFeature(ctx, payload, userId)
 	if err != nil {
 		// Handle for any error
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
@@ -63,8 +64,9 @@ func (h UserHandler) CreateAgentHandler(c *fiber.Ctx) (err error) {
 // @Tags Agent
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Bearer token"
 // @Param query query model.QueryAgentList true "Query Agent List"
-// @Success 200 {object} sharedResponse.Response{data=[]model.UserRes}
+// @Success 200 {object} sharedResponse.Response{data=model.AgentListPagination}
 // @Failure 400 {object} sharedResponse.Response
 // @Failure 500 {object} sharedResponse.Response
 // @Router /agent/list [get]

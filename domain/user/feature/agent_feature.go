@@ -78,7 +78,7 @@ func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.Regis
 		WhatsAppNumber: user.WhatsAppNumber,
 		CreatedAt:      user.CreatedAt,
 		CreatedBy:      user.CreatedBy,
-		TokenData: model.TokenRes{
+		TokenData: &model.TokenRes{
 			Token:        token,
 			RefreshToken: refreshToken,
 		},
@@ -92,6 +92,7 @@ func (f UserFeature) GetAgentFeature(ctx context.Context, query model.QueryAgent
 	
 	agents, err := f.repo.GetAgentRepository(ctx, query) 
 	if err != nil {
+		err = sharedHelperErr.HandleError(err)
 		return 
 	}
 

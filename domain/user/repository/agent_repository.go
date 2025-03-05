@@ -7,25 +7,25 @@ import (
 	"zayyid-go/domain/user/model"
 )
 
-func (r UserRepository) GetAgentRepository(ctx context.Context, q model.QueryAgentList) (resp []model.UserDataResp, err error) {
+func (r UserRepository) GetAgentRepository(ctx context.Context, q model.QueryAgentList) (resp []model.UserRes, err error) {
 	
+	resp = []model.UserRes{}
 	// Base query
 	query := `
-	SELECT 
-		id,
-		username,
-		name,
-		whatspp_number,
-		email,
-		role,
-		image_url,
-		referal_code,
-		description,
-		created_at
-	FROM 
-		product_marketing.users
-	WHERE 
-		role = 'agent'
+		SELECT 
+			id,
+			username,
+			name,
+			whatsapp_number,
+			email,
+			role,
+			COALESCE(image_url, '') AS image_url,
+			COALESCE(referal_code, '') AS referal_code,
+			created_at
+		FROM 
+			product_marketing.users
+		WHERE 
+			role = 'agent'
 	`
 
 	// Parameters for query

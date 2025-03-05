@@ -1,4 +1,13 @@
 definitions:
+  model.AgentListPagination:
+    properties:
+      docs:
+        items:
+          $ref: '#/definitions/model.UserRes'
+        type: array
+      pagination:
+        $ref: '#/definitions/model.Pagination'
+    type: object
   model.AuthUserRequest:
     properties:
       email:
@@ -8,6 +17,17 @@ definitions:
     required:
     - email
     - password
+    type: object
+  model.Pagination:
+    properties:
+      current_page:
+        type: integer
+      limit_per_page:
+        type: integer
+      total_page:
+        type: integer
+      total_rows:
+        type: integer
     type: object
   model.RefreshToken:
     properties:
@@ -268,6 +288,11 @@ paths:
       - application/json
       description: Register a new user with the provided details
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Register Request
         in: body
         name: payload
@@ -303,11 +328,18 @@ paths:
       - application/json
       description: Retrieve a list of agents based on the provided query parameters
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - in: query
         name: limit
+        required: true
         type: integer
       - in: query
         name: page
+        required: true
         type: integer
       - in: query
         name: search
@@ -325,9 +357,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  items:
-                    $ref: '#/definitions/model.UserRes'
-                  type: array
+                  $ref: '#/definitions/model.AgentListPagination'
               type: object
         "400":
           description: Bad Request

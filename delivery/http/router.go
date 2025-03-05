@@ -98,7 +98,7 @@ func RegisterRoute(app *fiber.App, handler Handler) {
 	agent := app.Group("/agent")
 	{
 		agent.Post("/create", middleware.Auth, handler.userHandler.CreateAgentHandler)
-		agent.Get("/list", middleware.Auth, handler.userHandler.CreateAgentHandler)
+		agent.Get("/list", middleware.Auth, handler.userHandler.GetAgentHandler)
 	}
 
 	// user endpoint

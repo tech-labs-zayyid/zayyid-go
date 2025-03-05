@@ -35,7 +35,7 @@ type UpdateUser struct {
 
 type QueryAgentList struct {
 	Search string `json:"search"`
-	Limit int `json:"limit"`
-	Page int `json:"page"`
+	Limit int `json:"limit" validate:"required"`
+	Page int `json:"page" validate:"required"`
 	Sort string `json:"sort"` 
 }
