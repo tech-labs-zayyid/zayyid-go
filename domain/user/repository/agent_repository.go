@@ -7,62 +7,65 @@ import (
 	"zayyid-go/domain/user/model"
 )
 
-func (r UserRepository) GetAgentRepository(ctx context.Context, q model.QueryAgentList) (resp []model.UserRes, err error) {
-	
+func (r UserRepository) GetAgentRepository(ctx context.Context, q model.QueryAgentList, userId string) (resp []model.UserRes, err error) {
 	resp = []model.UserRes{}
+
 	// Base query
 	query := `
 		SELECT 
-			id,
-			username,
-			name,
-			whatsapp_number,
-			email,
-			role,
-			COALESCE(image_url, '') AS image_url,
-			COALESCE(referal_code, '') AS referal_code,
-			created_at
+			u.id,
+			u.username,
+			u.name,
+			u.whatsapp_number,
+			u.email,
+			u.role,
+			COALESCE(u.image_url, '') AS image_url,
+			COALESCE(u.referal_code, '') AS referal_code,
+			u.created_at
 		FROM 
-			product_marketing.users
+			product_marketing.users u
+		INNER JOIN product_marketing.sales_agent sa ON sa.agent_id = u.id
 		WHERE 
-			role = 'agent'
+			u.role = 'agent' AND 
+			sa.sales_id = $1
 	`
 
 	// Parameters for query
 	var params []interface{}
-	paramIndex := 1
+	params = append(params, userId)
+	paramIndex := 2 // Karena $1 sudah digunakan untuk `userId`
 
 	// Add search filter
 	if q.Search != "" {
-		query += fmt.Sprintf(" AND (LOWER(username) LIKE $%d OR LOWER(name) LIKE $%d OR LOWER(email) LIKE $%d)", paramIndex, paramIndex+1, paramIndex+2)
+		query += fmt.Sprintf(" AND (LOWER(u.username) LIKE $%d OR LOWER(u.name) LIKE $%d OR LOWER(u.email) LIKE $%d)", paramIndex, paramIndex+1, paramIndex+2)
 		searchParam := "%" + strings.ToLower(q.Search) + "%"
 		params = append(params, searchParam, searchParam, searchParam)
 		paramIndex += 3
 	}
 
 	// Sorting
-	sortField := "created_at" // Default sort field
-	sortOrder := "DESC"       // Default sort order
+	sortField := "u.created_at" // Default sort field
+	sortOrder := "DESC"         // Default sort order
 
 	if q.Sort != "" {
 		if strings.HasPrefix(q.Sort, "-") {
-			sortField = strings.TrimPrefix(q.Sort, "-")
+			sortField = "u." + strings.TrimPrefix(q.Sort, "-")
 			sortOrder = "DESC"
 		} else {
-			sortField = q.Sort
+			sortField = "u." + q.Sort
 			sortOrder = "ASC"
 		}
 
-		// Hindari SQL Injection dengan memastikan hanya field yang diperbolehkan
+		// Hindari SQL Injection dengan memvalidasi field
 		allowedSortFields := map[string]bool{
-			"name":        true,
-			"created_at":  true,
-			"username":    true,
-			"email":       true,
+			"u.name":       true,
+			"u.created_at": true,
+			"u.username":   true,
+			"u.email":      true,
 		}
 
 		if !allowedSortFields[sortField] {
-			sortField = "created_at"
+			sortField = "u.created_at"
 			sortOrder = "DESC"
 		}
 	}
@@ -70,25 +73,17 @@ func (r UserRepository) GetAgentRepository(ctx context.Context, q model.QueryAge
 	query += fmt.Sprintf(" ORDER BY %s %s", sortField, sortOrder)
 
 	// Pagination
-	offset := (q.Page - 1) * q.Limit
-	query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", paramIndex, paramIndex+1)
-	params = append(params, q.Limit, offset)
-
-	// Prepare query
-	stmt, err := r.database.PreparexContext(ctx, query)
-	if err != nil {
-		return resp, err
-	}
-	defer stmt.Close()
-
-	// Execute query and fetch data
-
-	err = stmt.SelectContext(ctx, &resp, params...)
-	if err != nil {
-		return resp, err
+	if q.Limit > 0 {
+		offset := (q.Page - 1) * q.Limit
+		query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", paramIndex, paramIndex+1)
+		params = append(params, q.Limit, offset)
 	}
 
-	return 
+	// Execute query
+	err = r.database.SelectContext(ctx, &resp, query, params...)
+	if err != nil {
+		return nil, err
+	}
 
+	return resp, nil
 }
-

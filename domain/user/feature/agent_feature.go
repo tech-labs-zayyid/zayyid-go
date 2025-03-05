@@ -2,6 +2,7 @@ package feature
 
 import (
 	"context"
+	"fmt"
 	sharedHelperErr "zayyid-go/domain/shared/helper/error"
 	sharedHelper "zayyid-go/domain/shared/helper/general"
 	sharedModel "zayyid-go/domain/shared/model"
@@ -17,10 +18,17 @@ func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.Regis
 		return
 	}
 
+	// Get data by userId 
+	userLogIn, err := f.repo.GetDataUserByUserId(ctx, userId)
+	if err != nil {
+		err = sharedHelperErr.HandleError(err)
+		return 
+	}
+
 	// if agent was register generate referal code
 	referalCode, errGenerateReferal := sharedHelper.GenerateRandomString(10)
 	if errGenerateReferal != nil {
-		err = errGenerateReferal
+		err = sharedHelperErr.HandleError(errGenerateReferal)
 		return
 	}
 
@@ -29,12 +37,14 @@ func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.Regis
 	// generate random string for password
 	password, err := sharedHelper.GenerateRandomString(5)
 	if err != nil {
+		err = sharedHelperErr.HandleError(err)
 		return
 	}
 
 	// encrypt password
 	encryptedPassword, err := sharedHelper.HashPassword(password)
 	if err != nil {
+		err = sharedHelperErr.HandleError(err)
 		return
 	}
 
@@ -44,27 +54,49 @@ func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.Regis
 	// generate agent id
 	agentId := sharedHelperRepo.GenerateUuidAsIdTable()
 
-	// call repo
-	err = f.repo.RegisterRepository(ctx, payload, agentId.String())
+	// Start transaction 
+	trx := f.repo.OpenTransaction(ctx)
+
+	// call repo to register user 
+	err = f.repo.RegisterRepositoryTransaction(ctx, payload, agentId.String(), trx)
 	if err != nil {
+		err = sharedHelperErr.HandleError(err)
 		return
 	}
+
+	fmt.Println("user Id nya ", userId)
+	fmt.Println("agent idn ya ", agentId)
+
+	// mapping sales agent 
+	err = f.repo.MappingSalesAgent(ctx, userId, agentId.String(), userLogIn.Email, trx)
+	if err != nil {
+		// rollback transaction 
+		trx.Rollback()
+		err = sharedHelperErr.HandleError(err)
+		return 
+	}
+
+	// commit transaction 
+	trx.Commit()
 
 	// get one user by userid
 	user, err := f.repo.GetUserById(ctx, agentId.String())
 	if err != nil {
+		err = sharedHelperErr.HandleError(err)
 		return
 	}
 
 	// Generate token
 	token, err := sharedHelper.GenerateToken(userId, payload.Role)
 	if err != nil {
+		err = sharedHelperErr.HandleError(err)
 		return
 	}
 
 	// generate refresh token
 	refreshToken, err := sharedHelper.GenerateRefreshToken(user.Id, user.Role)
 	if err != nil {
+		err = sharedHelperErr.HandleError(err)
 		return
 	}
 
@@ -90,7 +122,7 @@ func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.Regis
 
 func (f UserFeature) GetAgentFeature(ctx context.Context, query model.QueryAgentList, userId string) (resp model.AgentListPagination, err error) {
 	
-	agents, err := f.repo.GetAgentRepository(ctx, query) 
+	agents, err := f.repo.GetAgentRepository(ctx, query, userId) 
 	if err != nil {
 		err = sharedHelperErr.HandleError(err)
 		return 
