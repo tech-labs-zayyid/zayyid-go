@@ -43,7 +43,8 @@ func (h UserHandler) CreateAgentHandler(c *fiber.Ctx) (err error) {
 	}
 
 	// get user id from local fiber
-	userID := c.Locals("user_id").(string)
+	ctxValue := sharedContext.GetValueContext(ctx)
+	userId := ctxValue.UserId
 
 	// Call register feature
 	resp, err := h.feature.CreateAgentFeature(ctx, payload, userID)
