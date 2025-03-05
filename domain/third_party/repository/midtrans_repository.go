@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 	"zayyid-go/domain/shared/helper/constant"
 	sharedError "zayyid-go/domain/shared/helper/error"
@@ -135,8 +136,11 @@ func (t thirdPartyRepository) GetSalesPaymentRepository(ctx context.Context, req
 		err = sharedError.HandleError(err)
 	}
 	defer stmt.Close()
+	log.Println("query : ", query)
+	log.Println("request.TransactionId : ", request.TransactionId)
+	log.Println("request.OrderId : ", request.OrderId)
 
-	err = stmt.GetContext(ctx, response, request.TransactionId, request.OrderId)
+	err = stmt.GetContext(ctx, &response, request.TransactionId, request.OrderId)
 	if err != nil {
 		err = sharedError.HandleError(err)
 	}
