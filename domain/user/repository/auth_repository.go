@@ -97,7 +97,7 @@ func (r UserRepository) CheckExistsCodeReferal(ctx context.Context, referal stri
 }
 
 func (r UserRepository) GetDataAgentByReferralCode(ctx context.Context, referralCode string) (resp model.UserDataResp, err error) {
-	query := `SELECT id, username, name, whatsapp_number, email, role, description, image_url FROM product_marketing.users WHERE referal_code = $1`
+	query := `SELECT id, username, name, whatsapp_number, email, role, COALESCE(description,'') AS description, COALESCE(image_url, '') AS image_url FROM product_marketing.users WHERE referal_code = $1`
 
 	// Preparex
 	stmt, err := r.database.PreparexContext(ctx, query)
