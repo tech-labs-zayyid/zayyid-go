@@ -136,7 +136,7 @@ func (t thirdPartyRepository) GetSalesPaymentRepository(ctx context.Context, req
 	}
 	defer stmt.Close()
 
-	err = stmt.GetContext(ctx, response, request.TransactionId, request.OrderId)
+	err = stmt.GetContext(ctx, &response, request.TransactionId, request.OrderId)
 	if err != nil {
 		err = sharedError.HandleError(err)
 	}

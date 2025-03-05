@@ -10,4 +10,6 @@ type SalesPaymentResp struct {
 	GrossAmount       float64 `json:"gross_amount" db:"gross_amount"`
 	FraudStatus       string  `json:"fraud_status" db:"fraud_status"`
 	Bank              string  `json:"bank" db:"bank"`
+	CreatedAt         string  `json:"created_at" db:"created_at"`
+	UpdatedAt         string  `json:"updated_at" db:"updated_at"`
 }
