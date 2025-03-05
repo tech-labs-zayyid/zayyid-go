@@ -32,6 +32,7 @@ func (f salesFeature) HomeSalesData(ctx context.Context, subdomain, referral str
 
 		if !existsReferral {
 			err = sharedError.New(http.StatusNotFound, errors.New(sharedConstant.ErrReferralCode).Error(), errors.New(sharedConstant.ErrReferralCode))
+			return
 		}
 	}
 
