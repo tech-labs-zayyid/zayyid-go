@@ -2,7 +2,6 @@ package feature
 
 import (
 	"context"
-	"fmt"
 	sharedHelperErr "zayyid-go/domain/shared/helper/error"
 	sharedHelper "zayyid-go/domain/shared/helper/general"
 	sharedModel "zayyid-go/domain/shared/model"
@@ -63,9 +62,6 @@ func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.Regis
 		err = sharedHelperErr.HandleError(err)
 		return
 	}
-
-	fmt.Println("user Id nya ", userId)
-	fmt.Println("agent idn ya ", agentId)
 
 	// mapping sales agent 
 	err = f.repo.MappingSalesAgent(ctx, userId, agentId.String(), userLogIn.Email, trx)
