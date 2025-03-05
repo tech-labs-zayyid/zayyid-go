@@ -4,6 +4,7 @@ import (
 	"context"
 	sharedHelperErr "zayyid-go/domain/shared/helper/error"
 	sharedHelper "zayyid-go/domain/shared/helper/general"
+	sharedModel "zayyid-go/domain/shared/model"
 	sharedHelperRepo "zayyid-go/domain/shared/repository"
 	"zayyid-go/domain/user/model"
 )
@@ -85,4 +86,27 @@ func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.Regis
 
 	return
 
+}
+
+func (f UserFeature) GetAgentFeature(ctx context.Context, query model.QueryAgentList, userId string) (resp model.AgentListPagination, err error) {
+	
+	agents, err := f.repo.GetAgentRepository(ctx, query) 
+	if err != nil {
+		return 
+	}
+
+	totalPages := (len(agents) + query.Limit - 1) / query.Limit
+
+	resp = model.AgentListPagination{
+		Data: agents,
+		Pagination: sharedModel.Pagination{
+			Limit:     query.Limit,
+			Page:      query.Page,
+			TotalPage: totalPages,
+			TotalRows:     len(agents),
+		},
+	}
+
+	return 
+	
 }

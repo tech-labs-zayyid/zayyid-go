@@ -26,4 +26,5 @@ type IUserRepository interface {
 	CheckExistsSubdomain(ctx context.Context, subdomain string) (exists bool, err error)
 	CheckExistsCodeReferal(ctx context.Context, referal string) (exists bool, err error)
 	GetDataAgentByReferralCode(ctx context.Context, referralCode string) (resp model.UserDataResp, err error)
+	GetAgentRepository(ctx context.Context, q model.QueryAgentList) (resp []model.UserDataResp, err error)
 }

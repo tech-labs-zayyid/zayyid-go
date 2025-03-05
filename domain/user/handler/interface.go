@@ -22,4 +22,5 @@ type IUserHandler interface {
 	RefreshTokenHandler(c *fiber.Ctx) (err error)
 	UpdateHandler(c *fiber.Ctx) (err error)
 	CreateAgentHandler(c *fiber.Ctx) (err error)
+	GetAgentHandler(c *fiber.Ctx) (err error)
 }

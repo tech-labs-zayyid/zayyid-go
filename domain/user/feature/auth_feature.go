@@ -15,7 +15,8 @@ func (f UserFeature) AuthUserFeature(ctx context.Context, payload model.AuthUser
 		Email: payload.Email,
 	})
 	if err != nil {
-		return
+		err = sharedHelperErr.HandleError(err)
+		return 
 	}
 
 	// compare for the password

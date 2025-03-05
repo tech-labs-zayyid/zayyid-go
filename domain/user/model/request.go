@@ -32,3 +32,10 @@ type UpdateUser struct {
 	Password       string `json:"password"`
 	ImageUrl       string `json:"image_url"`
 }
+
+type QueryAgentList struct {
+	Search string `json:"search"`
+	Limit int `json:"limit"`
+	Page int `json:"page"`
+	Sort string `json:"sort"` 
+}

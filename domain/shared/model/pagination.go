@@ -25,3 +25,4 @@ type QueryRequest struct {
 	MaximumPrice       float64 `json:"maximum_price"`
 	PublicAccess       string  `json:"public_access"`
 }
+

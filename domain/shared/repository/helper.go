@@ -8,3 +8,4 @@ func GenerateUuidAsIdTable() (id uuid.UUID) {
 	id, _ = uuid.NewV7()
 	return
 }
+

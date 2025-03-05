@@ -50,6 +50,7 @@ func SetupContainer() Container {
 
 	notifBug := slack.InitConnectionSlack(config.Slack)
 
+
 	userMenuFeature := UserMenu.NewUserMenuFeature(config, UserMenuRepo.NewUserMenuRepository(db), atomicRepo.NewUOWRepository(db), notifBug)
 	masterFeature := Master.NewMasterFeature(config, MasterRepo.NewMasterRepository(db), atomicRepo.NewUOWRepository(db), notifBug)
 	salesFeature := Sales.NewSalesFeature(SalesRepo.NewSalesRepository(db), UserRepo.NewUserRepository(db))

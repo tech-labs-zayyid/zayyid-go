@@ -1,5 +1,9 @@
 package model
 
+import (
+	sharedModel "zayyid-go/domain/shared/model"
+)
+
 type TokenRes struct {
 	Token        string `json:"token"`
 	RefreshToken string `json:"refresh_token"`
@@ -31,4 +35,9 @@ type UserDataResp struct {
 	Role           string `json:"role"`
 	Desc           string `json:"desc"`
 	ImageUrl       string `json:"image_url"`
+}
+
+type AgentListPagination struct {
+	Data []UserDataResp `json:"docs"`
+	Pagination sharedModel.Pagination
 }

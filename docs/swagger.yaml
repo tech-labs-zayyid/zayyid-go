@@ -297,6 +297,49 @@ paths:
       summary: Create agent
       tags:
       - Agent
+  /agent/list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of agents based on the provided query parameters
+      parameters:
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: search
+        type: string
+      - in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.UserRes'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get agent list
+      tags:
+      - Agent
   /public/banner/{subdomain}:
     get:
       description: show public of Banner
