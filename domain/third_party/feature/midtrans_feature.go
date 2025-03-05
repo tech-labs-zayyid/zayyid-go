@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	sharedConstant "zayyid-go/domain/shared/helper/constant"
 	sharedError "zayyid-go/domain/shared/helper/error"
 	"zayyid-go/domain/third_party/model"
@@ -53,11 +54,13 @@ func (t ThirdPartyFeature) MidtransNotificationFeature(ctx context.Context, requ
 	} else {
 		_, err = t.repo.GetSalesPaymentRepository(ctx, payload)
 		switch err {
-		case sql.ErrNoRows:
-			err = t.repo.AddSalesPaymentRepository(ctx, payload)
-
 		case nil:
 			err = t.repo.UpdateSalesPaymentRepository(ctx, payload)
+
+		default:
+			if strings.Contains(err.Error(), sql.ErrNoRows.Error()) {
+				err = t.repo.AddSalesPaymentRepository(ctx, payload)
+			}
 		}
 	}
 
@@ -71,11 +74,13 @@ func (t ThirdPartyFeature) FrontendPaymentNotificationFeature(ctx context.Contex
 	} else {
 		_, err = t.repo.GetSalesPaymentRepository(ctx, request)
 		switch err {
-		case sql.ErrNoRows:
-			err = t.repo.AddSalesPaymentRepository(ctx, request)
-
 		case nil:
 			err = t.repo.UpdateSalesPaymentRepository(ctx, request)
+
+		default:
+			if strings.Contains(err.Error(), sql.ErrNoRows.Error()) {
+				err = t.repo.AddSalesPaymentRepository(ctx, request)
+			}
 		}
 	}
 
