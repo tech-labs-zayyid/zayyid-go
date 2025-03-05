@@ -32,9 +32,9 @@ type IUserRepository interface {
 	GetAgentRepository(ctx context.Context, q model.QueryAgentList, userId string) (resp []model.UserRes, err error)
 
 	RegisterRepositoryTransaction(ctx context.Context, payload model.RegisterRequest, userId string, tx *sqlx.Tx) (err error)
-	MappingSalesAgent(ctx context.Context, salesId, agentId, createdBy string, trx *sqlx.Tx)(err error)
+	MappingSalesAgent(ctx context.Context, salesId, agentId, createdBy string, trx *sqlx.Tx) (err error)
 
-	// Transaction repo 
+	// Transaction repo
 	OpenTransaction(ctx context.Context) (tx *sql.Tx)
 	RollbackTransaction(tx *sql.Tx) (rollBack error)
 	CommitTransaction(tx *sql.Tx) (commit error)

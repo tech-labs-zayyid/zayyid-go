@@ -165,8 +165,8 @@ func (r UserRepository) RegisterRepositoryTransaction(ctx context.Context, paylo
 
 }
 
-func (r UserRepository) MappingSalesAgent(ctx context.Context, salesId, agentId, createdBy string, trx *sqlx.Tx)(err error) {
-	
+func (r UserRepository) MappingSalesAgent(ctx context.Context, salesId, agentId, createdBy string, trx *sqlx.Tx) (err error) {
+
 	query := `
 		INSERT INTO product_marketing.sales_agent (
 			sales_id,
@@ -181,18 +181,18 @@ func (r UserRepository) MappingSalesAgent(ctx context.Context, salesId, agentId,
 		)
 	`
 
-	// Preparex 
+	// Preparex
 	stmt, err := trx.PreparexContext(ctx, query)
 	if err != nil {
-		return 
+		return
 	}
 
-	// execute query 
+	// execute query
 	_, err = stmt.ExecContext(ctx, salesId, agentId, createdBy)
 	if err != nil {
-		return 
+		return
 	}
 
-	return 
+	return
 
 }

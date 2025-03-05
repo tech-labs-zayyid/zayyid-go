@@ -17,11 +17,11 @@ func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.Regis
 		return
 	}
 
-	// Get data by userId 
+	// Get data by userId
 	userLogIn, err := f.repo.GetDataUserByUserId(ctx, userId)
 	if err != nil {
 		err = sharedHelperErr.HandleError(err)
-		return 
+		return
 	}
 
 	// if agent was register generate referal code
@@ -53,26 +53,26 @@ func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.Regis
 	// generate agent id
 	agentId := sharedHelperRepo.GenerateUuidAsIdTable()
 
-	// Start transaction 
+	// Start transaction
 	trx := f.repo.OpenTransaction(ctx)
 
-	// call repo to register user 
+	// call repo to register user
 	err = f.repo.RegisterRepositoryTransaction(ctx, payload, agentId.String(), trx)
 	if err != nil {
 		err = sharedHelperErr.HandleError(err)
 		return
 	}
 
-	// mapping sales agent 
+	// mapping sales agent
 	err = f.repo.MappingSalesAgent(ctx, userId, agentId.String(), userLogIn.Email, trx)
 	if err != nil {
-		// rollback transaction 
+		// rollback transaction
 		trx.Rollback()
 		err = sharedHelperErr.HandleError(err)
-		return 
+		return
 	}
 
-	// commit transaction 
+	// commit transaction
 	trx.Commit()
 
 	// get one user by userid
@@ -117,11 +117,11 @@ func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.Regis
 }
 
 func (f UserFeature) GetAgentFeature(ctx context.Context, query model.QueryAgentList, userId string) (resp model.AgentListPagination, err error) {
-	
-	agents, err := f.repo.GetAgentRepository(ctx, query, userId) 
+
+	agents, err := f.repo.GetAgentRepository(ctx, query, userId)
 	if err != nil {
 		err = sharedHelperErr.HandleError(err)
-		return 
+		return
 	}
 
 	totalPages := (len(agents) + query.Limit - 1) / query.Limit
@@ -132,10 +132,10 @@ func (f UserFeature) GetAgentFeature(ctx context.Context, query model.QueryAgent
 			Limit:     query.Limit,
 			Page:      query.Page,
 			TotalPage: totalPages,
-			TotalRows:     len(agents),
+			TotalRows: len(agents),
 		},
 	}
 
-	return 
-	
+	return
+
 }

@@ -38,6 +38,6 @@ type UserDataResp struct {
 }
 
 type AgentListPagination struct {
-	Data []UserRes `json:"docs"`
+	Data       []UserRes `json:"docs"`
 	Pagination sharedModel.Pagination
 }
