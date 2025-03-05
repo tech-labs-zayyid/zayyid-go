@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -76,7 +77,7 @@ func HandleError(err error) error {
 	switch {
 	case err == context.DeadlineExceeded:
 		return New(http.StatusInternalServerError, "timeout", err)
-	case err == sql.ErrNoRows:
+	case errors.Is(err, sql.ErrNoRows):
 		return New(http.StatusNotFound, "data not found", err)
 	default:
 		return New(http.StatusInternalServerError, "something when wrong", err)

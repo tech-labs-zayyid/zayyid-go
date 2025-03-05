@@ -2,8 +2,11 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"zayyid-go/domain/user/model"
 	"zayyid-go/infrastructure/database"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type UserRepository struct {
@@ -26,4 +29,13 @@ type IUserRepository interface {
 	CheckExistsSubdomain(ctx context.Context, subdomain string) (exists bool, err error)
 	CheckExistsCodeReferal(ctx context.Context, referal string) (exists bool, err error)
 	GetDataAgentByReferralCode(ctx context.Context, referralCode string) (resp model.UserDataResp, err error)
+	GetAgentRepository(ctx context.Context, q model.QueryAgentList, userId string) (resp []model.UserRes, err error)
+
+	RegisterRepositoryTransaction(ctx context.Context, payload model.RegisterRequest, userId string, tx *sqlx.Tx) (err error)
+	MappingSalesAgent(ctx context.Context, salesId, agentId, createdBy string, trx *sqlx.Tx) (err error)
+
+	// Transaction repo
+	OpenTransaction(ctx context.Context) (tx *sql.Tx)
+	RollbackTransaction(tx *sql.Tx) (rollBack error)
+	CommitTransaction(tx *sql.Tx) (commit error)
 }

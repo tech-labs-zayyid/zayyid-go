@@ -9,6 +9,7 @@ type RegisterRequest struct {
 	ImageUrl       string `json:"image_url"`
 	ReferalCode    string `json:"-"`
 	Role           string `json:"role" validate:"required,oneof=sales agent"`
+	SalesId        string `json:"sales_id"`
 }
 
 type AuthUserRequest struct {
@@ -31,4 +32,11 @@ type UpdateUser struct {
 	WhatsappNumber string `json:"whatsapp_number"`
 	Password       string `json:"password"`
 	ImageUrl       string `json:"image_url"`
+}
+
+type QueryAgentList struct {
+	Search string `json:"search"`
+	Limit  int    `json:"limit" validate:"required"`
+	Page   int    `json:"page" validate:"required"`
+	Sort   string `json:"sort"`
 }

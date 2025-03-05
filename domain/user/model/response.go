@@ -1,8 +1,12 @@
 package model
 
+import (
+	sharedModel "zayyid-go/domain/shared/model"
+)
+
 type TokenRes struct {
-	Token        string `json:"token"`
-	RefreshToken string `json:"refresh_token"`
+	Token        string `json:"token,omitempty"`
+	RefreshToken string `json:"refresh_token,omitempty"`
 }
 
 type UserRes struct {
@@ -16,10 +20,10 @@ type UserRes struct {
 	ImageUrl       string `json:"image_url" db:"image_url"`
 	ReferalCode    string `json:"referal_code" db:"referal_code"`
 	CreatedAt      string `json:"created_at" db:"created_at"`
-	CreatedBy      string `json:"created_by" db:"created_by"`
+	CreatedBy      string `json:"created_by,omitempty" db:"created_by"`
 
 	// token response
-	TokenData TokenRes `json:"token_data" db:"-"`
+	TokenData *TokenRes `json:"token_data,omitempty" db:"-"`
 }
 
 type UserDataResp struct {
@@ -31,4 +35,9 @@ type UserDataResp struct {
 	Role           string `json:"role"`
 	Desc           string `json:"desc"`
 	ImageUrl       string `json:"image_url"`
+}
+
+type AgentListPagination struct {
+	Data       []UserRes `json:"docs"`
+	Pagination sharedModel.Pagination
 }

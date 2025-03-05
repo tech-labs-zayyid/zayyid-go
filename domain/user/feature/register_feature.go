@@ -2,6 +2,9 @@ package feature
 
 import (
 	"context"
+	"errors"
+	"net/http"
+	sharedHelperErr "zayyid-go/domain/shared/helper/error"
 	sharedHelper "zayyid-go/domain/shared/helper/general"
 	sharedHelperRepo "zayyid-go/domain/shared/repository"
 	"zayyid-go/domain/user/model"
@@ -22,19 +25,46 @@ func (f UserFeature) RegisterFeature(ctx context.Context, payload model.Register
 
 	// if agent was register generate referal code
 	if payload.Role == "agent" {
+		if payload.SalesId == "" {
+			err = sharedHelperErr.New(http.StatusBadRequest, "sales id cannot be null", errors.New("bad request"))
+			return
+		}
+
 		referalCode, errGenerateReferal := sharedHelper.GenerateRandomString(10)
 		if errGenerateReferal != nil {
-			err = errGenerateReferal
+			err = sharedHelperErr.New(http.StatusBadRequest, "error generate referal", errGenerateReferal)
 			return
 		}
 
 		payload.ReferalCode = referalCode
-	}
 
-	// call repo
-	err = f.repo.RegisterRepository(ctx, payload, userId.String())
-	if err != nil {
-		return
+		// use transaction for registration
+		trx := f.repo.OpenTransaction(ctx)
+
+		// register with transaction
+		err = f.repo.RegisterRepositoryTransaction(ctx, payload, userId.String(), trx)
+		if err != nil {
+			err = sharedHelperErr.HandleError(err)
+			return
+		}
+
+		// mapping sales agent
+		err = f.repo.MappingSalesAgent(ctx, payload.SalesId, userId.String(), payload.Email, trx)
+		if err != nil {
+			// rollback transaction
+			trx.Rollback()
+			err = sharedHelperErr.HandleError(err)
+			return
+		}
+
+		// commit transaction
+		trx.Commit()
+	} else { // register as sales
+		// call repo
+		err = f.repo.RegisterRepository(ctx, payload, userId.String())
+		if err != nil {
+			return
+		}
 	}
 
 	// get one user by userid
@@ -64,7 +94,7 @@ func (f UserFeature) RegisterFeature(ctx context.Context, payload model.Register
 		WhatsAppNumber: user.WhatsAppNumber,
 		CreatedAt:      user.CreatedAt,
 		CreatedBy:      user.CreatedBy,
-		TokenData: model.TokenRes{
+		TokenData: &model.TokenRes{
 			Token:        token,
 			RefreshToken: refreshToken,
 		},
