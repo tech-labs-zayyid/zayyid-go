@@ -1659,6 +1659,9 @@ const docTemplate = `{
                         "agent"
                     ]
                 },
+                "sales_id": {
+                    "type": "string"
+                },
                 "username": {
                     "type": "string"
                 },
