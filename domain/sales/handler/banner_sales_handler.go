@@ -15,6 +15,7 @@ import (
 // @Summary      Add Data Banner
 // @Description  add data of Banner
 // @Tags         Data Banner
+// @Param 		 Authorization header string true "Bearer token"
 // @Param        payload    body   request.BannerReq  true  "body payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
@@ -46,6 +47,7 @@ func (h salesHandler) AddBannerSales(c *fiber.Ctx) (err error) {
 // @Summary      Get List Banner
 // @Description  show list of Banner
 // @Tags         Data Banner
+// @Param 		 Authorization header string true "Bearer token"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
 // @Router       /sales/banner [get]
@@ -65,12 +67,12 @@ func (h salesHandler) GetListBannerSales(c *fiber.Ctx) (err error) {
 // Get Public Banner godoc
 // @Summary      Get Public Banner
 // @Description  show public of Banner
-// @Tags         Data Banner
+// @Tags         Public
 // @param        subdomain path string true "subdomain"
 // @param        referral path string true "referral"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /public/banner/{subdomain}/{refferal} [get]
+// @Router       /public/banner/{subdomain} [get]
 func (h salesHandler) GetBannerPublicSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
@@ -82,8 +84,7 @@ func (h salesHandler) GetBannerPublicSales(c *fiber.Ctx) (err error) {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
-	referral := c.Params("*")
-	resp, err := h.feature.GetListBannerPublic(ctx, subdomain, referral)
+	resp, err := h.feature.GetListBannerPublic(ctx, subdomain)
 	if err != nil {
 		err = sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 		return
@@ -96,6 +97,7 @@ func (h salesHandler) GetBannerPublicSales(c *fiber.Ctx) (err error) {
 // @Summary      Get Detail Banner
 // @Description  show detail of Banner
 // @Tags         Data Banner
+// @Param 		 Authorization header string true "Bearer token"
 // @Param        id path string false "id"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
@@ -123,6 +125,7 @@ func (h salesHandler) GetBannerSales(c *fiber.Ctx) (err error) {
 // @Summary      Update Data Banner
 // @Description  Update Data of Banner
 // @Tags         Data Banner
+// @Param 		 Authorization header string true "Bearer token"
 // @param        id path string true "id"
 // @Param        payload    body   request.BannerUpdateReq  true  "body payload"
 // @Success      200  {object}  response.Response

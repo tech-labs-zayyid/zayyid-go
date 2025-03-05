@@ -18,7 +18,7 @@ func (f salesFeature) AddTestimoniFeature(ctx context.Context, request modelRequ
 
 	valueCtx := sharedContext.GetValueContext(ctx)
 
-	exists, err := f.repo.CheckExistsUserId(ctx, valueCtx.UserId)
+	exists, err := f.userRepo.CheckExistsUserId(ctx, valueCtx.UserId)
 	if err != nil {
 		return
 	}
@@ -38,7 +38,7 @@ func (f salesFeature) UpdateTestimoniFeature(ctx context.Context, request modelR
 
 	valueCtx := sharedContext.GetValueContext(ctx)
 
-	exists, err := f.repo.CheckExistsUserId(ctx, valueCtx.UserId)
+	exists, err := f.userRepo.CheckExistsUserId(ctx, valueCtx.UserId)
 	if err != nil {
 		return
 	}
@@ -57,7 +57,7 @@ func (f salesFeature) GetTestimoniFeature(ctx context.Context, request modelRequ
 
 	valueCtx := sharedContext.GetValueContext(ctx)
 
-	exists, err := f.repo.CheckExistsUserId(ctx, valueCtx.UserId)
+	exists, err := f.userRepo.CheckExistsUserId(ctx, valueCtx.UserId)
 	if err != nil {
 		return
 	}
@@ -76,7 +76,7 @@ func (f salesFeature) GetListTestimoniFeature(ctx context.Context, request model
 
 	valueCtx := sharedContext.GetValueContext(ctx)
 
-	exists, err := f.repo.CheckExistsUserId(ctx, valueCtx.UserId)
+	exists, err := f.userRepo.CheckExistsUserId(ctx, valueCtx.UserId)
 	if err != nil {
 		return
 	}

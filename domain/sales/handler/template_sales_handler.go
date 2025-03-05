@@ -15,10 +15,11 @@ import (
 // @Summary      Add Data Template
 // @Description  add data of Template
 // @Tags         Data Template
+// @Param 		 Authorization header string true "Bearer token"
 // @Param        payload    body   request.AddTemplateReq  true  "body payload"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /sales/gallery [post]
+// @Router       /sales/template [post]
 func (h salesHandler) AddTemplateSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
@@ -41,9 +42,10 @@ func (h salesHandler) AddTemplateSales(c *fiber.Ctx) (err error) {
 // @Summary      Get List Template
 // @Description  show list of Template
 // @Tags         Data Template
+// @Param 		 Authorization header string true "Bearer token"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /sales/temlate [get]
+// @Router       /sales/template [get]
 func (h salesHandler) GetListTemplateSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
@@ -60,12 +62,12 @@ func (h salesHandler) GetListTemplateSales(c *fiber.Ctx) (err error) {
 // Get List Public Tamplate godoc
 // @Summary      Get List Public Template
 // @Description  show list of Public Template
-// @Tags         Data Template
+// @Tags         Public
 // @param        subdomain path string true "subdomain"
 // @param        referral path string true "referral"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
-// @Router       /public/temlate/{subdomain}/{referral} [get]
+// @Router       /public/template/{subdomain} [get]
 func (h salesHandler) GetListPublicTemplateSales(c *fiber.Ctx) (err error) {
 	ctx, cancel := context.CreateContextWithTimeout()
 	defer cancel()
@@ -77,8 +79,7 @@ func (h salesHandler) GetListPublicTemplateSales(c *fiber.Ctx) (err error) {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
 
-	referral := c.Params("*")
-	resp, err := h.feature.GetListPublicTemplateSales(ctx, subdomain, referral)
+	resp, err := h.feature.GetListPublicTemplateSales(ctx, subdomain)
 	if err != nil {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.slackConf)
 	}
@@ -90,6 +91,7 @@ func (h salesHandler) GetListPublicTemplateSales(c *fiber.Ctx) (err error) {
 // @Summary      Get Detail Template
 // @Description  show detail of Template
 // @Tags         Data Template
+// @Param 		 Authorization header string true "Bearer token"
 // @Param        id path string false "id"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
@@ -117,6 +119,7 @@ func (h salesHandler) GetTemplateSales(c *fiber.Ctx) (err error) {
 // @Summary      Update Data Template
 // @Description  Update Data of Template
 // @Tags         Data Template
+// @Param 		 Authorization header string true "Bearer token"
 // @Param        id path string false "id"
 // @Param        payload    body   request.UpdateTemplateReq  true  "body payload"
 // @Success      200  {object}  response.Response

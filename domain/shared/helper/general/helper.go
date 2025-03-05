@@ -1,11 +1,13 @@
-package helper
+package general
 
 import (
 	"errors"
 	"fmt"
 	"math/rand"
 	"net/http"
+	"net/url"
 	"os"
+	"reflect"
 	"strings"
 	"time"
 	"unicode"
@@ -143,4 +145,48 @@ func GenerateRandomString(length int) (string, error) {
 		b[i] = charset[seededRand.Intn(len(charset))]
 	}
 	return string(b), nil
+}
+
+func SetDefaults(obj interface{}) {
+	v := reflect.ValueOf(obj).Elem()
+	t := v.Type()
+
+	for i := 0; i < v.NumField(); i++ {
+		field := v.Field(i)
+		defaultTag := t.Field(i).Tag.Get("default")
+
+		if field.Kind() == reflect.String && field.String() == "" {
+			field.SetString(defaultTag)
+		} else if field.Kind() == reflect.Int && field.Int() == 0 {
+			fmt.Sscanf(defaultTag, "%d", field.Addr().Interface()) // Konversi string ke int
+		}
+	}
+}
+
+func ValidationProductTier(limitation string, lengthLimitation, count int) bool {
+	switch limitation {
+	case "count":
+		if lengthLimitation == count {
+			return true
+		}
+	}
+
+	return false
+}
+
+func IsYouTubeURL(inputURL string) bool {
+	parsedURL, err := url.Parse(inputURL)
+	if err != nil {
+		return false // Jika parsing gagal, berarti bukan URL valid
+	}
+
+	// Cek domain YouTube
+	youtubeDomains := []string{"www.youtube.com", "youtube.com", "m.youtube.com", "youtu.be"}
+	for _, domain := range youtubeDomains {
+		if strings.EqualFold(parsedURL.Host, domain) {
+			return true
+		}
+	}
+
+	return false
 }

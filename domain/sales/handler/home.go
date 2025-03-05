@@ -13,9 +13,9 @@ import (
 // Get Data Home godoc
 // @Summary      Get Data Home
 // @Description  show list data of Home
-// @Tags         Home
+// @Tags         Public
 // @param        subdomain path string true "subdomain"
-// @param        referral path string true "referral"
+// @param        referral path string false "referral"
 // @Success      200  {object}  response.Response
 // @Failure      500  {object}  response.Response
 // @Failure      404  {object}  response.Response

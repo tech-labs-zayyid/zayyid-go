@@ -3,8 +3,8 @@ package feature
 import (
 	"context"
 	"net/http"
-	sharedHelper "zayyid-go/domain/shared/helper"
 	sharedHelperErr "zayyid-go/domain/shared/helper/error"
+	sharedHelper "zayyid-go/domain/shared/helper/general"
 	"zayyid-go/domain/user/model"
 )
 

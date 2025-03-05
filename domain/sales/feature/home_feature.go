@@ -10,7 +10,11 @@ import (
 )
 
 func (f salesFeature) HomeSalesData(ctx context.Context, subdomain, referral string) (resp response.DataHome, err error) {
-	exists, err := f.repo.CheckExistsSubdomainSales(ctx, subdomain)
+	var (
+		exists, existsReferral bool
+	)
+
+	exists, err = f.userRepo.CheckExistsSubdomain(ctx, subdomain)
 	if err != nil {
 		return
 	}
@@ -21,38 +25,36 @@ func (f salesFeature) HomeSalesData(ctx context.Context, subdomain, referral str
 
 	//validation referral
 	if referral != "" {
-		// logic validation referral
+		existsReferral, err = f.userRepo.CheckExistsCodeReferal(ctx, referral)
+		if err != nil {
+			return
+		}
 
+		if !existsReferral {
+			err = sharedError.New(http.StatusNotFound, errors.New(sharedConstant.ErrReferralCode).Error(), errors.New(sharedConstant.ErrReferralCode))
+		}
 	}
 
-	resp, err = f.repo.HomeData(ctx, subdomain)
+	resp, product, err := f.repo.HomeData(ctx, subdomain)
+	if err != nil {
+		return
+	}
 
-	//mocking value
-	resp.Agent.PhoneNumber = "0897567474747"
-	resp.Agent.Fullname = "dhany"
-	resp.Agent.Email = "www@gmail.com"
+	for _, v := range product {
+		resp.Product = append(resp.Product, *v)
+	}
 
-	resp.Fullname = "eko eka eke"
-	resp.PhoneNumber = "087635342667"
-	resp.Email = "eko@mail.com"
-	resp.Desc = "Stay Humble, peace love & Gaul"
-	resp.UrlImage = "https://res.cloudinary.com/dyj8vcauy/image/upload/v1740813846/hirm-astray_red_frame-1000x1000_nbfhbq.jpg"
-	resp.Testimony = append(resp.Testimony, response.TestimonyListHome{
-		IdTestimony: "01955073-a98d-7707-954b-540d8c37034b",
-		Name:        "Jefri Santuy",
-		Description: "waah keyen",
-		PhotoUrl:    "https://res.cloudinary.com/dyj8vcauy/image/upload/v1740811698/WhatsApp_Image_2025-02-28_at_17.46.01_ukk40e.jpg",
-	})
+	if existsReferral {
+		dataAgent, errAgent := f.userRepo.GetDataAgentByReferralCode(ctx, referral)
+		if errAgent != nil {
+			err = errAgent
+			return
+		}
 
-	resp.Product = append(resp.Product, response.BestProduct{
-		IdProduct:          "0195508a-8ec1-7a78-8236-8ab98a4854a7",
-		ProductName:        "Lambo Lambe",
-		Price:              1.500000000,
-		ProductSubCategory: "Sports Car",
-		TDP:                700000000,
-		Installment:        125000000,
-		CityId:             "01951519-c232-775a-b8ef-76c2d0e2fa7e",
-		BestProduct:        true,
-	})
+		resp.Agent.Fullname = dataAgent.Name
+		resp.Agent.PhoneNumber = dataAgent.WhatsappNumber
+		resp.Agent.Email = dataAgent.Email
+	}
+
 	return
 }

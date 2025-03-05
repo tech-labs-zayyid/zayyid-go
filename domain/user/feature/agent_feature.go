@@ -2,18 +2,18 @@ package feature
 
 import (
 	"context"
-	sharedHelper "zayyid-go/domain/shared/helper"
 	sharedHelperErr "zayyid-go/domain/shared/helper/error"
+	sharedHelper "zayyid-go/domain/shared/helper/general"
 	sharedHelperRepo "zayyid-go/domain/shared/repository"
 	"zayyid-go/domain/user/model"
 )
 
 func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.RegisterRequest, userId string) (resp model.UserRes, err error) {
 
-	// if role not agent return error 
+	// if role not agent return error
 	if payload.Role != "agent" {
 		err = sharedHelperErr.New(403, "Role should be an agent", nil)
-		return 
+		return
 	}
 
 	// if agent was register generate referal code
@@ -25,19 +25,19 @@ func (f UserFeature) CreateAgentFeature(ctx context.Context, payload model.Regis
 
 	payload.ReferalCode = referalCode
 
-	// generate random string for password 
+	// generate random string for password
 	password, err := sharedHelper.GenerateRandomString(5)
 	if err != nil {
-		return 
+		return
 	}
 
-	// encrypt password 
+	// encrypt password
 	encryptedPassword, err := sharedHelper.HashPassword(password)
 	if err != nil {
-		return 
+		return
 	}
 
-	// set up password 
+	// set up password
 	payload.Password = encryptedPassword
 
 	// generate agent id

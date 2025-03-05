@@ -52,7 +52,7 @@ func SetupContainer() Container {
 
 	userMenuFeature := UserMenu.NewUserMenuFeature(config, UserMenuRepo.NewUserMenuRepository(db), atomicRepo.NewUOWRepository(db), notifBug)
 	masterFeature := Master.NewMasterFeature(config, MasterRepo.NewMasterRepository(db), atomicRepo.NewUOWRepository(db), notifBug)
-	salesFeature := Sales.NewSalesFeature(SalesRepo.NewSalesRepository(db))
+	salesFeature := Sales.NewSalesFeature(SalesRepo.NewSalesRepository(db), UserRepo.NewUserRepository(db))
 	userFeature := User.NewUserFeature(UserRepo.NewUserRepository(db), notifBug)
 	thirdPartyFeature := ThirdParty.NewThirdPartyFeature(ThirdPartyRepo.NewThirdPartyRepository(db), &config)
 

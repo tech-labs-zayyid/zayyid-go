@@ -113,8 +113,6 @@ definitions:
         type: string
       product_sub_category:
         type: string
-      public_access:
-        type: string
       tdp:
         type: number
     type: object
@@ -160,6 +158,13 @@ definitions:
       image_url:
         type: string
     type: object
+  request.ProductImageUpdate:
+    properties:
+      image_url:
+        type: string
+      is_active:
+        type: boolean
+    type: object
   request.SocialMediaListReq:
     properties:
       link_embed:
@@ -173,7 +178,9 @@ definitions:
     properties:
       created_at:
         type: string
-      deskripsi:
+      description:
+        type: string
+      full_name:
         type: string
       id:
         type: string
@@ -183,9 +190,7 @@ definitions:
         type: string
       photo_url:
         type: string
-      position:
-        type: string
-      user_name:
+      public_access:
         type: string
     type: object
   request.UpdateGalleryParam:
@@ -194,6 +199,46 @@ definitions:
         type: string
     required:
     - image_url
+    type: object
+  request.UpdateProductSales:
+    properties:
+      best_product:
+        type: boolean
+      city_id:
+        type: string
+      description:
+        type: string
+      id_description:
+        type: string
+      images:
+        items:
+          $ref: '#/definitions/request.ProductImageUpdate'
+        type: array
+      installment:
+        type: number
+      price:
+        type: number
+      product_name:
+        type: string
+      product_sub_category:
+        type: string
+      slug:
+        type: string
+      status:
+        type: string
+      tdp:
+        type: number
+    type: object
+  request.UpdateSocialMediaSales:
+    properties:
+      is_active:
+        type: boolean
+      link_embed:
+        type: string
+      social_media_name:
+        type: string
+      user_account:
+        type: string
     type: object
   request.UpdateTemplateReq:
     properties:
@@ -252,7 +297,7 @@ paths:
       summary: Create agent
       tags:
       - Agent
-  /public/banner/{subdomain}/{refferal}:
+  /public/banner/{subdomain}:
     get:
       description: show public of Banner
       parameters:
@@ -277,8 +322,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get Public Banner
       tags:
-      - Data Banner
-  /public/gallery/{subdomain}/{referral}:
+      - Public
+  /public/gallery/{subdomain}:
     get:
       description: show detail of Gallery
       parameters:
@@ -303,7 +348,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get Detail Gallery
       tags:
-      - Data Gallery
+      - Public
   /public/home/{subdomain}/{referral}:
     get:
       description: show list data of Home
@@ -316,7 +361,6 @@ paths:
       - description: referral
         in: path
         name: referral
-        required: true
         type: string
       responses:
         "200":
@@ -333,8 +377,38 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get Data Home
       tags:
-      - Home
-  /public/social-media/{subdomain}/{referral}:
+      - Public
+  /public/product/{domain}:
+    get:
+      description: show List of Product Public
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get List Product Public
+      tags:
+      - Public
+  /public/product/detai/{domain}/{slug}:
+    get:
+      description: show Detail of Product Public
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Detail Product Public
+      tags:
+      - Public
+  /public/social-media/{subdomain}:
     get:
       description: show list of Public Social Media
       parameters:
@@ -359,8 +433,8 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get List Public Social Media
       tags:
-      - Data Social Media
-  /public/temlate/{subdomain}/{referral}:
+      - Public
+  /public/template/{subdomain}:
     get:
       description: show list of Public Template
       parameters:
@@ -385,10 +459,16 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: Get List Public Template
       tags:
-      - Data Template
+      - Public
   /sales/banner:
     get:
       description: show list of Banner
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       responses:
         "200":
           description: OK
@@ -404,6 +484,11 @@ paths:
     post:
       description: add data of Banner
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: body payload
         in: body
         name: payload
@@ -426,6 +511,11 @@ paths:
     get:
       description: show detail of Banner
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: id
         in: path
         name: id
@@ -445,6 +535,11 @@ paths:
     put:
       description: Update Data of Banner
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: id
         in: path
         name: id
@@ -471,6 +566,12 @@ paths:
   /sales/gallery:
     get:
       description: show List of Gallery
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       responses:
         "200":
           description: OK
@@ -484,14 +585,19 @@ paths:
       tags:
       - Data Gallery
     post:
-      description: add data of Template
+      description: add data of Gallery
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: body payload
         in: body
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/request.AddTemplateReq'
+          $ref: '#/definitions/request.AddGalleryParam'
       responses:
         "200":
           description: OK
@@ -501,13 +607,18 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      summary: Add Data Template
+      summary: Add Data Gallery
       tags:
-      - Data Template
+      - Data Gallery
   /sales/gallery/{id}:
     get:
       description: show detail of Gallery
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: id
         in: path
         name: id
@@ -527,6 +638,11 @@ paths:
     put:
       description: Update Data of Gallery
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: id
         in: path
         name: id
@@ -550,9 +666,34 @@ paths:
       tags:
       - Data Gallery
   /sales/product:
+    get:
+      description: show List of Product
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get List Product
+      tags:
+      - Data Product
     post:
       description: add data of Banner
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: body payload
         in: body
         name: payload
@@ -572,14 +713,75 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Response'
-      security:
-      - ApiKeyAuth: []
       summary: Add Data Banner
+      tags:
+      - Data Product
+  /sales/product/{id}:
+    get:
+      description: show Detail of Product
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Detail Product
+      tags:
+      - Data Product
+    put:
+      description: update of Product
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: body payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateProductSales'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Update Product
       tags:
       - Data Product
   /sales/social-media:
     get:
       description: show list of Social Media
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       responses:
         "200":
           description: OK
@@ -595,6 +797,11 @@ paths:
     post:
       description: add data of Social Media
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: body payload
         in: body
         name: payload
@@ -613,9 +820,70 @@ paths:
       summary: Add Data Social Media
       tags:
       - Data Social Media
-  /sales/temlate:
+  /sales/social-media/{id}:
+    get:
+      description: show detail of Public Social Media
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Detail Social Media
+      tags:
+      - Data Social Media
+    put:
+      description: Update Social Media
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        type: string
+      - description: body payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateSocialMediaSales'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Update Social Media
+      tags:
+      - Data Social Media
+  /sales/template:
     get:
       description: show list of Template
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       responses:
         "200":
           description: OK
@@ -628,10 +896,41 @@ paths:
       summary: Get List Template
       tags:
       - Data Template
+    post:
+      description: add data of Template
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: body payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/request.AddTemplateReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add Data Template
+      tags:
+      - Data Template
   /sales/template/{id}:
     get:
       description: show detail of Template
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: id
         in: path
         name: id
@@ -651,6 +950,11 @@ paths:
     put:
       description: Update Data of Template
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: id
         in: path
         name: id
@@ -753,6 +1057,27 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: Get List Customer
+      tags:
+      - Data Testimoni
+  /testimony/list/{subdomain}/{referral}:
+    get:
+      description: show list of Customer
+      parameters:
+      - description: sub domain
+        in: path
+        name: subdomain
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Public public List Customer
       tags:
       - Data Testimoni
   /user/login:

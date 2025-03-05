@@ -160,3 +160,15 @@ func (r salesRepository) UpdateGallerySales(ctx context.Context, req request.Upd
 
 	return
 }
+
+func (r salesRepository) CheckExistsGalleryId(ctx context.Context, id, salesId string) (exists bool, err error) {
+	query := `SELECT EXISTS(SELECT 1 FROM product_marketing.sales_gallery 
+        	WHERE id = $1 AND sales_id = $2)`
+
+	logger.LogInfo(constant.QUERY, query)
+	if err = r.database.QueryRowContext(ctx, query, id, salesId).Scan(&exists); err != nil {
+		err = sharedError.HandleError(err)
+	}
+
+	return
+}

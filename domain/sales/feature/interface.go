@@ -6,6 +6,7 @@ import (
 	"zayyid-go/domain/sales/model/response"
 	"zayyid-go/domain/sales/repository"
 	sharedModel "zayyid-go/domain/shared/model"
+	repoUser "zayyid-go/domain/user/repository"
 )
 
 type SalesFeature interface {
@@ -13,30 +14,37 @@ type SalesFeature interface {
 
 	//product
 	AddProductSales(ctx context.Context, param request.AddProductReq) (err error)
+	ListProductSales(ctx context.Context, paramFilter sharedModel.QueryRequest) (resp []response.ProductListBySales, pagination *sharedModel.Pagination, err error)
+	GetDetailSalesProduct(ctx context.Context, id string) (resp response.ProductDetailResp, err error)
+	UpdateProductSales(ctx context.Context, param request.UpdateProductSales) (err error)
+	GetListProductSalesPublic(ctx context.Context, filter request.ProductListPublic, subdomain string) (resp []response.ProductListSalesPublic, pagination *sharedModel.Pagination, err error)
+	DetailProductSalesPublic(ctx context.Context, subdomain, slug string) (resp response.ProductDetailPublicResp, err error)
 
 	//banner
 	AddBannerSales(ctx context.Context, param request.BannerReq) (err error)
 	GetListBannerSales(ctx context.Context) (resp response.BannerListSalesResp, err error)
-	GetListBannerPublic(ctx context.Context, subdomain, referral string) (resp response.BannerListPublicSalesResp, err error)
+	GetListBannerPublic(ctx context.Context, subdomain string) (resp response.BannerListPublicSalesResp, err error)
 	GetBannerSales(ctx context.Context, id string) (resp response.BannerResp, err error)
 	UpdateBanner(ctx context.Context, req request.BannerUpdateReq) (err error)
 
 	//gallery
 	AddGallerySales(ctx context.Context, param request.AddGalleryParam) (err error)
 	GetDataListGallery(ctx context.Context) (resp response.GalleryResp, err error)
-	GetDataListGalleryPublic(ctx context.Context, subdomain, referral string) (resp response.GalleryPublicResp, err error)
+	GetDataListGalleryPublic(ctx context.Context, subdomain string) (resp response.GalleryPublicResp, err error)
 	GetDataGallerySales(ctx context.Context, id string) (resp response.GalleryDataResp, err error)
 	UpdateGallery(ctx context.Context, req request.UpdateGalleryParam) (err error)
 
 	//social_media
 	AddSocialMediaSales(ctx context.Context, req request.AddSocialMediaReq) (err error)
 	GetListSocialMediaSales(ctx context.Context) (resp response.SocialMediaListResp, err error)
-	GetListSocialMediaPublicSales(ctx context.Context, subdomain, referral string) (resp response.SocialMediaListResp, err error)
+	GetListSocialMediaPublicSales(ctx context.Context, subdomain string) (resp response.SocialMediaListResp, err error)
+	GetDetailSocialMediaSales(ctx context.Context, id string) (resp response.DetailSocialMediaListRes, err error)
+	UpdateSocialMediaSales(ctx context.Context, param request.UpdateSocialMediaSales) (err error)
 
 	//template
 	AddTemplateSales(ctx context.Context, param request.AddTemplateReq) (err error)
 	GetListTemplateSales(ctx context.Context) (resp response.TemplateListSalesResp, err error)
-	GetListPublicTemplateSales(ctx context.Context, subdomain, referral string) (resp response.TemplateListPublicResp, err error)
+	GetListPublicTemplateSales(ctx context.Context, subdomain string) (resp response.TemplateListPublicResp, err error)
 	GetDetailTemplateSales(ctx context.Context, id string) (resp response.TemplateDetailResp, err error)
 	UpdateTemplateSales(ctx context.Context, req request.UpdateTemplateReq) (err error)
 
@@ -49,11 +57,13 @@ type SalesFeature interface {
 }
 
 type salesFeature struct {
-	repo repository.SalesRepository
+	repo     repository.SalesRepository
+	userRepo repoUser.UserRepository
 }
 
-func NewSalesFeature(repo repository.SalesRepository) SalesFeature {
+func NewSalesFeature(repo repository.SalesRepository, userRepo repoUser.UserRepository) SalesFeature {
 	return &salesFeature{
-		repo: repo,
+		repo:     repo,
+		userRepo: userRepo,
 	}
 }

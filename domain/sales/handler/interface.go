@@ -26,6 +26,11 @@ type SalesHandlerInterface interface {
 
 	//product
 	AddProductSales(c *fiber.Ctx) (err error)
+	GetListProductSales(c *fiber.Ctx) (err error)
+	GetDetailProductSales(c *fiber.Ctx) (err error)
+	UpdateProductSales(c *fiber.Ctx) (err error)
+	GetListProductSalesPublic(c *fiber.Ctx) (err error)
+	GetDetailProductSalesPublic(c *fiber.Ctx) (err error)
 
 	//gallery
 	AddGallerySales(c *fiber.Ctx) (err error)
@@ -59,4 +64,6 @@ type SalesHandlerInterface interface {
 	AddSocialMediaSales(c *fiber.Ctx) (err error)
 	GetListSocialMediaSales(c *fiber.Ctx) (err error)
 	GetListPublicSocialMediaSales(c *fiber.Ctx) (err error)
+	GetSocialMediaSales(c *fiber.Ctx) (err error)
+	UpdateSocialMediaSales(c *fiber.Ctx) (err error)
 }

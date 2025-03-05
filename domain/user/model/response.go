@@ -29,4 +29,6 @@ type UserDataResp struct {
 	WhatsappNumber string `json:"whatsapp_number"`
 	Email          string `json:"email"`
 	Role           string `json:"role"`
+	Desc           string `json:"desc"`
+	ImageUrl       string `json:"image_url"`
 }

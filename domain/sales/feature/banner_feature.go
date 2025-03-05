@@ -7,9 +7,9 @@ import (
 	"zayyid-go/domain/sales/model/request"
 	"zayyid-go/domain/sales/model/response"
 	sharedContext "zayyid-go/domain/shared/context"
-	sharedHelper "zayyid-go/domain/shared/helper"
 	sharedConstant "zayyid-go/domain/shared/helper/constant"
 	sharedError "zayyid-go/domain/shared/helper/error"
+	sharedHelper "zayyid-go/domain/shared/helper/general"
 )
 
 func (f salesFeature) AddBannerSales(ctx context.Context, param request.BannerReq) (err error) {
@@ -33,11 +33,20 @@ func (f salesFeature) AddBannerSales(ctx context.Context, param request.BannerRe
 		}
 	}()
 
-	//mocking sales id
-	valueCtx.SalesId = "01951f6b-db3f-7d07-8b2c-80d2e2d1be30"
-	valueCtx.Username = "ekotoyota"
+	exists, err := f.userRepo.CheckExistsUserId(ctx, valueCtx.UserId)
+	if err != nil {
+		return
+	}
 
-	//validation exists or not sales id
+	if !exists {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrDataUserIdNotFound, errors.New(sharedConstant.ErrDataUserIdNotFound))
+		return
+	}
+
+	dataUser, err := f.userRepo.GetDataUserByUserId(ctx, valueCtx.UserId)
+	if err != nil {
+		return
+	}
 
 	for _, req := range param.DataBanner {
 		err = sharedHelper.Validate(req)
@@ -56,7 +65,7 @@ func (f salesFeature) AddBannerSales(ctx context.Context, param request.BannerRe
 	}
 
 	param.SalesId = valueCtx.SalesId
-	param.PublicAccess = valueCtx.Username
+	param.PublicAccess = dataUser.Username
 	err = f.repo.AddBannerSales(ctx, tx, param)
 	return
 }
@@ -66,21 +75,29 @@ func (f salesFeature) GetListBannerSales(ctx context.Context) (resp response.Ban
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
 
-	//mocking sales id
-	valueCtx.SalesId = "01951f6b-db3f-7d07-8b2c-80d2e2d1be30"
+	exists, err := f.userRepo.CheckExistsUserId(ctx, valueCtx.UserId)
+	if err != nil {
+		return
+	}
 
-	//validation sales id
+	if !exists {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrDataUserIdNotFound, errors.New(sharedConstant.ErrDataUserIdNotFound))
+		return
+	}
 
-	resp, err = f.repo.GetListBannerSales(ctx, valueCtx.SalesId)
+	resp, err = f.repo.GetListBannerSales(ctx, valueCtx.UserId)
 	return
 }
 
-func (f salesFeature) GetListBannerPublic(ctx context.Context, subdomain, referral string) (resp response.BannerListPublicSalesResp, err error) {
-	//validation subdomain
+func (f salesFeature) GetListBannerPublic(ctx context.Context, subdomain string) (resp response.BannerListPublicSalesResp, err error) {
+	exists, err := f.userRepo.CheckExistsSubdomain(ctx, subdomain)
+	if err != nil {
+		return
+	}
 
-	//validation referal
-	if referral != "" {
-
+	if !exists {
+		err = sharedError.New(http.StatusNotFound, sharedConstant.ErrDataUserIdNotFound, errors.New(sharedConstant.ErrDataUserIdNotFound))
+		return
 	}
 
 	resp, err = f.repo.GetListBannerPublicSales(ctx, subdomain)
@@ -92,10 +109,25 @@ func (f salesFeature) GetBannerSales(ctx context.Context, id string) (resp respo
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
 
-	//mocking sales id
-	valueCtx.SalesId = "01951f6b-db3f-7d07-8b2c-80d2e2d1be30"
+	exists, err := f.userRepo.CheckExistsUserId(ctx, valueCtx.UserId)
+	if err != nil {
+		return
+	}
 
-	//validation sales id
+	if !exists {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrDataUserIdNotFound, errors.New(sharedConstant.ErrDataUserIdNotFound))
+		return
+	}
+
+	existBannerId, err := f.repo.CheckExistsBannerId(ctx, id, valueCtx.UserId)
+	if err != nil {
+		return
+	}
+
+	if !existBannerId {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrIdBannerNotFound, errors.New(sharedConstant.ErrIdBannerNotFound))
+		return
+	}
 
 	resp, err = f.repo.GetBannerSales(ctx, id, valueCtx.SalesId)
 	return
@@ -106,17 +138,32 @@ func (f salesFeature) UpdateBanner(ctx context.Context, req request.BannerUpdate
 		valueCtx = sharedContext.GetValueContext(ctx)
 	)
 
-	//mocking sales id
-	valueCtx.SalesId = "01951f6b-db3f-7d07-8b2c-80d2e2d1be30"
+	exists, err := f.userRepo.CheckExistsUserId(ctx, valueCtx.UserId)
+	if err != nil {
+		return
+	}
+
+	if !exists {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrDataUserIdNotFound, errors.New(sharedConstant.ErrDataUserIdNotFound))
+		return
+	}
+
+	existBannerId, err := f.repo.CheckExistsBannerId(ctx, req.Id, valueCtx.UserId)
+	if err != nil {
+		return
+	}
+
+	if !existBannerId {
+		err = sharedError.New(http.StatusBadRequest, sharedConstant.ErrIdBannerNotFound, errors.New(sharedConstant.ErrIdBannerNotFound))
+		return
+	}
 
 	err = sharedHelper.Validate(req)
 	if err != nil {
 		return
 	}
 
-	//validation sales id
-
-	req.SalesId = valueCtx.SalesId
+	req.SalesId = valueCtx.UserId
 	err = f.repo.UpdateBannerSales(ctx, req)
 	return
 }

@@ -19,3 +19,13 @@ func (s StatusProduct) StatusProduct() string {
 
 	return statusProductList[s]
 }
+
+func (s StatusProductStr) IsValid() bool {
+	status := map[StatusProductStr]bool{
+		PRODUCT_LISTED_STRING: true,
+		PRODUCT_BOOKED_STRING: true,
+		PRODUCT_SOLD_STRING:   true,
+	}
+
+	return status[s]
+}

@@ -3,8 +3,8 @@ package handler
 import (
 	"errors"
 	"zayyid-go/domain/shared/context"
-	sharedHelper "zayyid-go/domain/shared/helper"
 	sharedError "zayyid-go/domain/shared/helper/error"
+	sharedHelper "zayyid-go/domain/shared/helper/general"
 	sharedResponse "zayyid-go/domain/shared/response"
 	"zayyid-go/domain/user/model"
 
@@ -44,7 +44,7 @@ func (h UserHandler) UpdateHandler(c *fiber.Ctx) (err error) {
 		return sharedError.ResponseErrorWithContext(ctx, err, h.feature.SlackConf)
 	}
 
-	// Get user_id from local fiber 
+	// Get user_id from local fiber
 	userId, ok := c.Locals("user_id").(string)
 	if !ok {
 		return sharedError.ResponseErrorWithContext(ctx, errors.New("invalid user_id type"), h.feature.SlackConf)

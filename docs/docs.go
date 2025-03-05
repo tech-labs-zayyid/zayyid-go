@@ -73,11 +73,11 @@ const docTemplate = `{
                 }
             }
         },
-        "/public/banner/{subdomain}/{refferal}": {
+        "/public/banner/{subdomain}": {
             "get": {
                 "description": "show public of Banner",
                 "tags": [
-                    "Data Banner"
+                    "Public"
                 ],
                 "summary": "Get Public Banner",
                 "parameters": [
@@ -112,11 +112,11 @@ const docTemplate = `{
                 }
             }
         },
-        "/public/gallery/{subdomain}/{referral}": {
+        "/public/gallery/{subdomain}": {
             "get": {
                 "description": "show detail of Gallery",
                 "tags": [
-                    "Data Gallery"
+                    "Public"
                 ],
                 "summary": "Get Detail Gallery",
                 "parameters": [
@@ -155,7 +155,7 @@ const docTemplate = `{
             "get": {
                 "description": "show list data of Home",
                 "tags": [
-                    "Home"
+                    "Public"
                 ],
                 "summary": "Get Data Home",
                 "parameters": [
@@ -170,8 +170,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "referral",
                         "name": "referral",
-                        "in": "path",
-                        "required": true
+                        "in": "path"
                     }
                 ],
                 "responses": {
@@ -196,11 +195,57 @@ const docTemplate = `{
                 }
             }
         },
-        "/public/social-media/{subdomain}/{referral}": {
+        "/public/product/detai/{domain}/{slug}": {
+            "get": {
+                "description": "show Detail of Product Public",
+                "tags": [
+                    "Public"
+                ],
+                "summary": "Get Detail Product Public",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/public/product/{domain}": {
+            "get": {
+                "description": "show List of Product Public",
+                "tags": [
+                    "Public"
+                ],
+                "summary": "Get List Product Public",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/public/social-media/{subdomain}": {
             "get": {
                 "description": "show list of Public Social Media",
                 "tags": [
-                    "Data Social Media"
+                    "Public"
                 ],
                 "summary": "Get List Public Social Media",
                 "parameters": [
@@ -235,11 +280,11 @@ const docTemplate = `{
                 }
             }
         },
-        "/public/temlate/{subdomain}/{referral}": {
+        "/public/template/{subdomain}": {
             "get": {
                 "description": "show list of Public Template",
                 "tags": [
-                    "Data Template"
+                    "Public"
                 ],
                 "summary": "Get List Public Template",
                 "parameters": [
@@ -281,6 +326,15 @@ const docTemplate = `{
                     "Data Banner"
                 ],
                 "summary": "Get List Banner",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -303,6 +357,13 @@ const docTemplate = `{
                 ],
                 "summary": "Add Data Banner",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "body payload",
                         "name": "payload",
@@ -339,6 +400,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "id",
                         "name": "id",
                         "in": "path"
@@ -366,6 +434,13 @@ const docTemplate = `{
                 ],
                 "summary": "Update Data Banner",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "id",
@@ -406,6 +481,15 @@ const docTemplate = `{
                     "Data Gallery"
                 ],
                 "summary": "Get List Gallery",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -422,19 +506,26 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "add data of Template",
+                "description": "add data of Gallery",
                 "tags": [
-                    "Data Template"
+                    "Data Gallery"
                 ],
-                "summary": "Add Data Template",
+                "summary": "Add Data Gallery",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "body payload",
                         "name": "payload",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.AddTemplateReq"
+                            "$ref": "#/definitions/request.AddGalleryParam"
                         }
                     }
                 ],
@@ -464,6 +555,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "id",
                         "name": "id",
                         "in": "path"
@@ -491,6 +589,13 @@ const docTemplate = `{
                 ],
                 "summary": "Update Data Gallery",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "id",
@@ -524,18 +629,50 @@ const docTemplate = `{
             }
         },
         "/sales/product": {
-            "post": {
-                "security": [
+            "get": {
+                "description": "show List of Product",
+                "tags": [
+                    "Data Product"
+                ],
+                "summary": "Get List Product",
+                "parameters": [
                     {
-                        "ApiKeyAuth": []
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
                 "description": "add data of Banner",
                 "tags": [
                     "Data Product"
                 ],
                 "summary": "Add Data Banner",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "body payload",
                         "name": "payload",
@@ -568,6 +705,91 @@ const docTemplate = `{
                 }
             }
         },
+        "/sales/product/{id}": {
+            "get": {
+                "description": "show Detail of Product",
+                "tags": [
+                    "Data Product"
+                ],
+                "summary": "Get Detail Product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "update of Product",
+                "tags": [
+                    "Data Product"
+                ],
+                "summary": "Update Product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "body payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateProductSales"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/sales/social-media": {
             "get": {
                 "description": "show list of Social Media",
@@ -575,6 +797,15 @@ const docTemplate = `{
                     "Data Social Media"
                 ],
                 "summary": "Get List Social Media",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -597,6 +828,13 @@ const docTemplate = `{
                 ],
                 "summary": "Add Data Social Media",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "body payload",
                         "name": "payload",
@@ -623,13 +861,144 @@ const docTemplate = `{
                 }
             }
         },
-        "/sales/temlate": {
+        "/sales/social-media/{id}": {
+            "get": {
+                "description": "show detail of Public Social Media",
+                "tags": [
+                    "Data Social Media"
+                ],
+                "summary": "Get Detail Social Media",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update Social Media",
+                "tags": [
+                    "Data Social Media"
+                ],
+                "summary": "Update Social Media",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path"
+                    },
+                    {
+                        "description": "body payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateSocialMediaSales"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/sales/template": {
             "get": {
                 "description": "show list of Template",
                 "tags": [
                     "Data Template"
                 ],
                 "summary": "Get List Template",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "add data of Template",
+                "tags": [
+                    "Data Template"
+                ],
+                "summary": "Add Data Template",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "body payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.AddTemplateReq"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -654,6 +1023,13 @@ const docTemplate = `{
                 ],
                 "summary": "Get Detail Template",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "id",
@@ -683,6 +1059,13 @@ const docTemplate = `{
                 ],
                 "summary": "Update Data Template",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "id",
@@ -823,6 +1206,38 @@ const docTemplate = `{
                         "description": "id",
                         "name": "id",
                         "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/testimony/list/{subdomain}/{referral}": {
+            "get": {
+                "description": "show list of Customer",
+                "tags": [
+                    "Data Testimoni"
+                ],
+                "summary": "Get Public public List Customer",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "sub domain",
+                        "name": "subdomain",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1251,9 +1666,6 @@ const docTemplate = `{
                 "product_sub_category": {
                     "type": "string"
                 },
-                "public_access": {
-                    "type": "string"
-                },
                 "tdp": {
                     "type": "number"
                 }
@@ -1325,6 +1737,17 @@ const docTemplate = `{
                 }
             }
         },
+        "request.ProductImageUpdate": {
+            "type": "object",
+            "properties": {
+                "image_url": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                }
+            }
+        },
         "request.SocialMediaListReq": {
             "type": "object",
             "properties": {
@@ -1345,7 +1768,10 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
-                "deskripsi": {
+                "description": {
+                    "type": "string"
+                },
+                "full_name": {
                     "type": "string"
                 },
                 "id": {
@@ -1360,10 +1786,7 @@ const docTemplate = `{
                 "photo_url": {
                     "type": "string"
                 },
-                "position": {
-                    "type": "string"
-                },
-                "user_name": {
+                "public_access": {
                     "type": "string"
                 }
             }
@@ -1375,6 +1798,67 @@ const docTemplate = `{
             ],
             "properties": {
                 "image_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.UpdateProductSales": {
+            "type": "object",
+            "properties": {
+                "best_product": {
+                    "type": "boolean"
+                },
+                "city_id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id_description": {
+                    "type": "string"
+                },
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/request.ProductImageUpdate"
+                    }
+                },
+                "installment": {
+                    "type": "number"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "product_name": {
+                    "type": "string"
+                },
+                "product_sub_category": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tdp": {
+                    "type": "number"
+                }
+            }
+        },
+        "request.UpdateSocialMediaSales": {
+            "type": "object",
+            "properties": {
+                "is_active": {
+                    "type": "boolean"
+                },
+                "link_embed": {
+                    "type": "string"
+                },
+                "social_media_name": {
+                    "type": "string"
+                },
+                "user_account": {
                     "type": "string"
                 }
             }

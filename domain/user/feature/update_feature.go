@@ -2,7 +2,7 @@ package feature
 
 import (
 	"context"
-	sharedHelper "zayyid-go/domain/shared/helper"
+	sharedHelper "zayyid-go/domain/shared/helper/general"
 	"zayyid-go/domain/user/model"
 )
 
@@ -11,9 +11,9 @@ func (f UserFeature) UpdateFeature(ctx context.Context, payload model.UpdateUser
 	// hash password when not null
 	if payload.Password != "" {
 		encryptedPassword, errHashPassword := sharedHelper.HashPassword(payload.Password)
-		if  errHashPassword != nil {
-			err =  errHashPassword
-			return 
+		if errHashPassword != nil {
+			err = errHashPassword
+			return
 		}
 
 		payload.Password = encryptedPassword
